@@ -1,2 +1,3 @@
 # SweepicBE
-Sweepic Android Webhooks Test 입니다.
+Sweepic Server Webhooks Test 입니다.
+Sweepic Server Jira Test 입니다.
