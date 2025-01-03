@@ -88,11 +88,12 @@
 
 ![git_flow](https://github.com/user-attachments/assets/0379b23a-5323-4303-9bcb-eed4eb18eec9)
 
-- feature/SWEP-?: 각자 기능 개발할 때 사용, 로컬에서 각자 테스트
-  - Squash and Merge
-- develop: 개발한 기능을 병합, 로컬에서 테스트 진행
-- hotfixes: 배포 후 발견하지 못한 버그 발생 시, 긴급 버그 수정 및 배포 (임시 생성)
-- main:실제 운영할 서버 및 개발시 테스트용 서버로 배포, develop에서 QA 후 main으로 merge도 가능.
+- 브랜치 설명
+  - feature/SWEP-?: 각자 기능 개발할 때 사용, 로컬에서 각자 테스트
+    - Squash and Merge
+  - develop: 개발한 기능을 병합, 로컬에서 테스트 진행
+  - hotfixes: 배포 후 발견하지 못한 버그 발생 시, 긴급 버그 수정 및 배포 (임시 생성)
+  - main:실제 운영할 서버 및 개발시 테스트용 서버로 배포, develop에서 QA 후 main으로 merge도 가능.
 
 1. **main** 브랜치에서 시작
 2. 동일한 브랜치를 **develop**에도 생성 후 개발자들이 **develop** 브랜치에서 개발을 진행
@@ -122,7 +123,7 @@
   - ex. PR 제목: [SWEP-16] 소셜로그인 구현
     - [SWEP-16] 사용자 추가 정보 입력 API
     - [SWEP-16] 네이버 소셜로그인 구현
-    - [SWEP-16] 카카오 소셜로그인 구현현
+    - [SWEP-16] 카카오 소셜로그인 구현
 
 ### PR rule
 
@@ -131,21 +132,20 @@
 
 ![PR1](https://github.com/user-attachments/assets/816ea931-fd49-40f5-98ed-4b4cd62431d9)
 
-- _feature/SWEP-? -> develop_ 에서 적용
-- PR 제목: **[SWEP-?] 작업 내용**
-
+- _feature/SWEP-? 브랜치 -> develop 브랜치_ 에서 적용
+- **0. PR 제목**: **[SWEP-?] 작업 내용**
 - **1. close 키워드** : PR 생성 시 내용에 관련 *github 이슈 번호*를 꼭 입력. 사용 시 merge 시 자동으로 issue가 닫힘. (close #?)
 - **2. Reviewers 설정**: 다른 Server 다섯 팀원 모두
 - **3. Assignees 설정**: 본인
 - **4. Labels 설정**
 - **5. 코드 리뷰 진행**
 - **6. merge 시 Squash and Merge로 진행**
+  ![PR2](https://github.com/user-attachments/assets/327f5e01-25e4-4157-a03a-c577c4e24c11)
 
-- **feature → develop Merge 시 Squash and Merge**가 유용하다**.**
-  feature 브랜치에서 기능을 개발하기 위한 지저분한 커밋 내역을 하나의 커밋으로 묶어 develop 브랜치에 병합하면서, develop에는 기능 단위로 커밋이 추가되도록 정리할 수 있다.
-  또한 feature 브랜치는 develop 브랜치에 병합 후 제거되므로, Merge Commit을 남길 필요가 없다.
-- **develop → main Merge 시에는 Rebase And Merge**가 적합하다.
-  main 브랜치는 지금까지 작업한 모든 기능을 배포할 때 병합한다. develop 브랜치를 Squash and Merge하게 되면 커밋 이력이 모두 사라져, 특정 기능에서 문제가 생겼을 때 롤백할 수 없게 된다. main 브랜치 또한 Merge Commit을 남길 필요가 없다. 따라서 **Rebase And Merge**가 적합하다.
+- **feature → develop Merge 시 Squash and Merge**가 적합
+  - feature 브랜치에서 기능을 개발하기 위한 지저분한 커밋 내역을 하나의 커밋으로 묶어 develop 브랜치에 병합하면서, develop에는 기능 단위로 커밋이 추가되도록 정리할 수 있다. 또한 feature 브랜치는 develop 브랜치에 병합 후 제거되므로, Merge Commit을 남길 필요가 없다.
+- **develop → main Merge 시에는 Rebase And Merge**가 적합
+  - main 브랜치는 지금까지 작업한 모든 기능을 배포할 때 병합한다. develop 브랜치를 Squash and Merge하게 되면 커밋 이력이 모두 사라져, 특정 기능에서 문제가 생겼을 때 롤백할 수 없게 된다. main 브랜치 또한 Merge Commit을 남길 필요가 없다. 따라서 **Rebase And Merge**가 적합하다.
 
 ---
 
