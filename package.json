@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon -e js,json,prisma,ts --exec \"prisma generate && tsx src/app.ts\"",
     "build": "tsx scripts/build.ts",
-    "start": "node dist/index.cjs"
+    "start": "node dist/app.cjs"
   },
   "author": "",
   "license": "ISC",
