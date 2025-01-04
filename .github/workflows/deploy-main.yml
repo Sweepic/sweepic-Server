@@ -1,0 +1,106 @@
+name: deploy-main # 파이프라인 이름
+
+on:
+    push:
+        branches:
+            - develop # main 브랜치에 새로운 커밋이 올라왔을 때만 실행
+    workflow_dispatch: # 필요한 경우 사용자가 수동 실행
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            # CI/CD 파이프라인이 실행될 운영체제 환경 지정
+            - name: Checkout 
+              uses: actions/checkout@v4
+
+            # prisma 폴더 파일의 변경사항이 있는지 검사
+            - name: Check prisma has changes 
+              uses: dorny/paths-filter@v3 
+              id: paths-filter
+              with:
+                filters: |
+                    prisma: ["prisma/**"]
+                
+            # SSH 설정
+            - name: Configure SSH
+              run: |
+                mkdir -p ~/.ssh
+                echo "$EC2_SSH_KEY" > ~/.ssh/id_rsa
+                chmod 600 ~/.ssh/id_rsa
+
+                cat >>~/.ssh/config <<END
+                Host sweepic-ec2
+                    HostName $EC2_HOST
+                    User $EC2_USER
+                    IdentityFile ~/.ssh/id_rsa
+                    StrictHostKeyChecking no
+                END
+              env:
+                EC2_USER: ubuntu
+                EC2_HOST: ${{ secrets.EC2_HOST }}
+                EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+            
+            # 프로젝트 폴더의 모든 파일을 EC2 서버로 전송
+            - name: Copy Workspace
+              run: |
+                ssh sweepic-ec2 'sudo mkdir -p /opt/app'
+                ssh sweepic-ec2 'sudo chown ubuntu:ubuntu /opt/app'
+                scp -r ./[!.]* sweepic-ec2:/opt/app
+
+            # # RDS 환경 변수 설정
+            # - name: Set RDS Environment Variables
+            #   run: |
+            #     ssh sweepic-ec2 '
+            #         echo "DB_HOST=${{ secrets.RDS_HOST }}" >> /opt/app/.env &&
+            #         ehco "DB_PORT=${{ secrets.RDS_PORT }}" >> /opt/app/.env &&
+            #         echo "DB_USER=${{ secrets.RDS_USER }}" >> /opt/app/.env &&
+            #         echo "DB_PASSWORD=${{ secrets.RDS_PASSWORD }}" >> /opt/app/.env &&
+            #         echo "DB_NAME=${{ secrets.RDS_DATABASE }}" >> /opt/app/.env
+            #     '
+            
+            # # RDS 연결 확인 - DB 스키마를 가져와 prisma 모델과 동기화
+            # - name: Check RDS Connection
+            #   run: |
+            #     ssh sweepic-ec2 'cd /opt/app; yarn prisma db pull'
+
+            # 의존성 설치 및 빌드
+            - name: Install dependencies
+              run: |
+                ssh sweepic-ec2 'cd /opt/app; yarn install'
+                ssh sweepic-ec2 'cd /opt/app; yarn prisma generate'
+                ssh sweepic-ec2 'cd /opt/app; yarn build'
+
+            # prisma 폴더의 파일의 변경 사항이 있다면 EC2 서버에 추가적으로 DB Migrate 실행
+            - name: Apply prisma migrations 
+              if: steps.paths-filter.outputs.prisma == 'true'
+              run: |
+                ssh sweepic-ec2 'cd /opt/app; yarn prisma migrate deploy'
+            
+            # 원격 서버에서 애플리케이션을 Systemd 서비스로 등록하는 과정
+            - name: Copy systemd service file
+              run: |
+                ssh sweepic-ec2 '
+                    echo "[Unit]
+                    Description=Sweepic Project
+                    After=network.target
+                    
+                    [Service]
+                    User=${USER}
+                    ExecStart=/usr/bin/yarn start --cwd /opt/app/
+                    Restart=always
+                    
+                    [Install]
+                    WantedBy=multi-user.target" | sudo tee /etc/systemd/system/app.service
+                    '
+                
+            # systemd 서비스 활성화
+            - name: Enable systemd service
+              run: |
+                ssh sweepic-ec2 'sudo systemctl daemon-reload'
+                ssh sweepic-ec2 'sudo systemctl enable app'
+            
+            # systemd 서비스 재시작
+            - name: Restart systemd service
+              run: |
+                ssh sweepic-ec2 'sudo systemctl restart app'
