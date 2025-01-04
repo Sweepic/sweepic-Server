@@ -53,7 +53,7 @@ jobs:
             #   run: |
             #     ssh sweepic-ec2 '
             #         echo "DB_HOST=${{ secrets.RDS_HOST }}" >> /opt/app/.env &&
-            #         ehco "DB_PORT=${{ secrets.RDS_PORT }}" >> /opt/app/.env &&
+            #         echo "DB_PORT=${{ secrets.RDS_PORT }}" >> /opt/app/.env &&
             #         echo "DB_USER=${{ secrets.RDS_USER }}" >> /opt/app/.env &&
             #         echo "DB_PASSWORD=${{ secrets.RDS_PASSWORD }}" >> /opt/app/.env &&
             #         echo "DB_NAME=${{ secrets.RDS_DATABASE }}" >> /opt/app/.env
@@ -63,6 +63,18 @@ jobs:
             # - name: Check RDS Connection
             #   run: |
             #     ssh sweepic-ec2 'cd /opt/app; yarn prisma db pull'
+
+            # 글로벌로 yarn 설치
+            - name: Install yarn
+              run: |
+                ssh sweepic-ec2 '
+                    npm install -g yarn
+                '
+            
+            # yarn 버전 확인
+            - name: Check yarn version
+              run: |
+                ssh sweepic-ec2 'yarn --version'
 
             # 의존성 설치 및 빌드
             - name: Install dependencies
