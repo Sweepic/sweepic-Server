@@ -68,7 +68,7 @@ jobs:
             - name: Install yarn
               run: |
                 ssh sweepic-ec2 '
-                    npm install -g yarn
+                    sudo npm install -g yarn
                 '
             
             # yarn 버전 확인
