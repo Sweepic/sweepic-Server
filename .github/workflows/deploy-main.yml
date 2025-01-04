@@ -48,21 +48,21 @@ jobs:
                 ssh sweepic-ec2 'sudo chown ubuntu:ubuntu /opt/app'
                 scp -r ./[!.]* sweepic-ec2:/opt/app
 
-            # # RDS 환경 변수 설정
-            # - name: Set RDS Environment Variables
-            #   run: |
-            #     ssh sweepic-ec2 '
-            #         echo "DB_HOST=${{ secrets.RDS_HOST }}" >> /opt/app/.env &&
-            #         echo "DB_PORT=${{ secrets.RDS_PORT }}" >> /opt/app/.env &&
-            #         echo "DB_USER=${{ secrets.RDS_USER }}" >> /opt/app/.env &&
-            #         echo "DB_PASSWORD=${{ secrets.RDS_PASSWORD }}" >> /opt/app/.env &&
-            #         echo "DB_NAME=${{ secrets.RDS_DATABASE }}" >> /opt/app/.env
-            #     '
+            # RDS 환경 변수 설정
+            - name: Set RDS Environment Variables
+              run: |
+                ssh sweepic-ec2 '
+                    echo "DB_HOST=${{ secrets.RDS_HOST }}" >> /opt/app/.env &&
+                    echo "DB_PORT=${{ secrets.RDS_PORT }}" >> /opt/app/.env &&
+                    echo "DB_USER=${{ secrets.RDS_USER }}" >> /opt/app/.env &&
+                    echo "DB_PASSWORD=${{ secrets.RDS_PASSWORD }}" >> /opt/app/.env &&
+                    echo "DB_NAME=${{ secrets.RDS_DATABASE }}" >> /opt/app/.env
+                '
             
-            # # RDS 연결 확인 - DB 스키마를 가져와 prisma 모델과 동기화
-            # - name: Check RDS Connection
-            #   run: |
-            #     ssh sweepic-ec2 'cd /opt/app; yarn prisma db pull'
+            # RDS 연결 확인 - DB 스키마를 가져와 prisma 모델과 동기화
+            - name: Check RDS Connection
+              run: |
+                ssh sweepic-ec2 'cd /opt/app; yarn prisma db pull'
 
             # 글로벌로 yarn 설치
             - name: Install yarn
