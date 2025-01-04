@@ -85,7 +85,7 @@ jobs:
 
             # prisma 폴더의 파일의 변경 사항이 있다면 EC2 서버에 추가적으로 DB Migrate 실행
             - name: Apply prisma migrations 
-            #   if: steps.paths-filter.outputs.prisma == 'true'
+              if: steps.paths-filter.outputs.prisma == 'true'
               run: |
                 ssh sweepic-ec2 'cd /opt/app; yarn prisma migrate deploy'
             
