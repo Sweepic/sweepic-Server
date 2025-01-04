@@ -99,7 +99,8 @@ jobs:
                     
                     [Service]
                     User=${USER}
-                    ExecStart=/usr/bin/yarn start --cwd /opt/app/
+                    WorkingDirectory=/opt/app
+                    ExecStart=/usr/bin/yarn start
                     Restart=always
                     
                     [Install]
