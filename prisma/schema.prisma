@@ -14,9 +14,9 @@ datasource db {
 }
 
 model User {
-  id    BigInt     @id @default(autoincrement())
-  email String  @unique
-  name  String
+  id    BigInt @id @default(autoincrement())
+  email String @db.VarChar(100) @unique
+  name  String @db.VarChar(30)
   imageMax Int
   isLocalGalleryAccesible Boolean @default(false)
   enableNotification Boolean @default(false)
