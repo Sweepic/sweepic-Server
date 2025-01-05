@@ -48,10 +48,10 @@ jobs:
                 ssh sweepic-ec2 'sudo chown ubuntu:ubuntu /opt/app'
                 scp -r ./[!.]* sweepic-ec2:/opt/app
             
-            # RDS 연결 확인 - DB 스키마를 가져와 prisma 모델과 동기화
-            - name: Check RDS Connection
-              run: |
-                ssh sweepic-ec2 'cd /opt/app; yarn prisma db pull'
+            # # RDS 연결 확인 - DB 스키마를 가져와 prisma 모델과 동기화
+            # - name: Check RDS Connection
+            #   run: |
+            #     ssh sweepic-ec2 'cd /opt/app; yarn prisma db pull'
 
             # 글로벌로 yarn 설치
             - name: Install yarn
