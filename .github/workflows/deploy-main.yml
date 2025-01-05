@@ -35,6 +35,10 @@ jobs:
                     User $EC2_USER
                     IdentityFile ~/.ssh/id_rsa
                     StrictHostKeyChecking no
+                    
+                Host *
+                  ServerAliveInterval 120
+                  TCPKeepAlive no
                 END
               env:
                 EC2_USER: ubuntu
