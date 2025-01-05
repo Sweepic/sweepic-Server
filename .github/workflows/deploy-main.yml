@@ -61,12 +61,12 @@ jobs:
                 ssh sweepic-ec2 '
                   for var in DB_HOST DB_PORT DB_USER DB_PASSWORD DB_NAME DATABASE_URL; do
                     case $var in
-                      DB_HOST) value=$RDS_PORT ;;
-                      DB_PORT) value=$RDS_PORT ;;
-                      DB_USER) value=$RDS_USER ;;
-                      DB_PASSWORD) value=$RDS_PASSWORD ;;
-                      DB_NAME) value=$RDS_DATABASE ;;
-                      DATABASE_URL) value=$RDS_DATABASE_URL ;;
+                      DB_HOST) value="$RDS_HOST" ;;
+                      DB_PORT) value="$RDS_PORT" ;;
+                      DB_USER) value="$RDS_USER" ;;
+                      DB_PASSWORD) value="$RDS_PASSWORD" ;;
+                      DB_NAME) value="$RDS_DATABASE" ;;
+                      DATABASE_URL) value="$RDS_DATABASE_URL" ;;
                     esac
                     if grep -q "^$var=" /opt/app/.env; then
                       sed -i "s/^$var=.*/$var=$value/" /opt/app/.env
