@@ -47,11 +47,6 @@ jobs:
                 ssh sweepic-ec2 'sudo mkdir -p /opt/app'
                 ssh sweepic-ec2 'sudo chown ubuntu:ubuntu /opt/app'
                 scp -r ./[!.]* sweepic-ec2:/opt/app
-            
-            # # RDS 연결 확인 - DB 스키마를 가져와 prisma 모델과 동기화
-            # - name: Check RDS Connection
-            #   run: |
-            #     ssh sweepic-ec2 'cd /opt/app; yarn prisma db pull'
 
             # 글로벌로 yarn 설치
             - name: Install yarn
@@ -74,7 +69,7 @@ jobs:
 
             # prisma 폴더의 파일의 변경 사항이 있다면 EC2 서버에 추가적으로 DB Migrate 실행
             - name: Apply prisma migrations 
-              # if: steps.paths-filter.outputs.prisma == 'true'
+              if: steps.paths-filter.outputs.prisma == 'true'
               run: |
                 ssh sweepic-ec2 'cd /opt/app; yarn prisma migrate deploy'
             
