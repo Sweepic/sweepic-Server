@@ -49,14 +49,23 @@ jobs:
                 scp -r ./[!.]* sweepic-ec2:/opt/app
 
             # RDS 환경 변수 설정
-            - name: Set RDS Environment Variables
+            - name: Set Environment Variables
               run: |
                 ssh sweepic-ec2 '
-                    echo "DB_HOST=${{ secrets.RDS_HOST }}" >> /opt/app/.env &&
-                    echo "DB_PORT=${{ secrets.RDS_PORT }}" >> /opt/app/.env &&
-                    echo "DB_USER=${{ secrets.RDS_USER }}" >> /opt/app/.env &&
-                    echo "DB_PASSWORD=${{ secrets.RDS_PASSWORD }}" >> /opt/app/.env &&
-                    echo "DB_NAME=${{ secrets.RDS_DATABASE }}" >> /opt/app/.env
+                  for var in DB_HOST DB_PORT DB_USER DB_PASSWORD DB_NAME; do
+                      case $var in
+                          DB_HOST) value=${{ secrets.RDS_HOST }} ;;
+                          DB_PORT) value=${{ secrets.RDS_PORT }} ;;
+                          DB_USER) value=${{ secrets.RDS_USER }} ;;
+                          DB_PASSWORD) value=${{ secrets.RDS_PASSWORD }} ;;
+                          DB_NAME) value=${{ secrets.RDS_DATABASE }} ;;
+                          DATABASE_URL) value=${{ secrets.RDS_DATABASE_URL }} ;;
+                      esac
+                      # 갱신
+                      sed -i "s/^$var=.*/$var=$value/" /opt/app/.env ||
+                      # 없으면 추가
+                      grep -q "^$var=" /opt/app/.env || echo "$var=$value" >> /opt/app/.env
+                  done
                 '
             
             # RDS 연결 확인 - DB 스키마를 가져와 prisma 모델과 동기화
