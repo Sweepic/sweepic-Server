@@ -3,7 +3,7 @@ name: deploy-main # 파이프라인 이름
 on:
     push:
         branches:
-            - main # main 브랜치에 새로운 커밋이 올라왔을 때만 실행
+            - develop # main 브랜치에 새로운 커밋이 올라왔을 때만 실행
     workflow_dispatch: # 필요한 경우 사용자가 수동 실행
 
 jobs:

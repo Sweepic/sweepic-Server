@@ -4,7 +4,7 @@ on:
     pull_request: # Pull Request 생성 또는 업데이트 시 트리거
     push:
         branches:
-            - main
+            - develop
 
 jobs:
     test:
