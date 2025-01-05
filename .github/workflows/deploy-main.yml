@@ -34,7 +34,7 @@ jobs:
                     HostName $EC2_HOST
                     User $EC2_USER
                     IdentityFile ~/.ssh/id_rsa
-                    LocalForward 3306  sweepic-db.cbeke440c09r.ap-northeast-2.rds.amazonaws.com:3306
+                    LocalForward 3306 sweepic-db.cbeke440c09r.ap-northeast-2.rds.amazonaws.com:3306
                     StrictHostKeyChecking no
 
                 Host *
