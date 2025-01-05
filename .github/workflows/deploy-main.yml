@@ -50,21 +50,29 @@ jobs:
 
             # RDS 환경 변수 설정
             - name: Set Environment Variables
+              env:
+                RDS_HOST: ${{ secrets.RDS_HOST }}
+                RDS_PORT: ${{ secrets.RDS_PORT }}
+                RDS_USER: ${{ secrets.RDS_USER }}
+                RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
+                RDS_DATABASE: ${{ secrets.RDS_DATABASE }}
+                RDS_DATABASE_URL: ${{ secrets.RDS_DATABASE_URL }}
               run: |
                 ssh sweepic-ec2 '
                   for var in DB_HOST DB_PORT DB_USER DB_PASSWORD DB_NAME DATABASE_URL; do
-                      case $var in
-                          DB_HOST) value=${{ secrets.RDS_HOST }} ;;
-                          DB_PORT) value=${{ secrets.RDS_PORT }} ;;
-                          DB_USER) value=${{ secrets.RDS_USER }} ;;
-                          DB_PASSWORD) value=${{ secrets.RDS_PASSWORD }} ;;
-                          DB_NAME) value=${{ secrets.RDS_DATABASE }} ;;
-                          DATABASE_URL) value=${{ secrets.RDS_DATABASE_URL }} ;;
-                      esac
-                      # 갱신
-                      sed -i "s/^$var=.*/$var=$value/" /opt/app/.env ||
-                      # 없으면 추가
-                      grep -q "^$var=" /opt/app/.env || echo "$var=$value" >> /opt/app/.env
+                    case $var in
+                      DB_HOST) value=$RDS_PORT ;;
+                      DB_PORT) value=$RDS_PORT ;;
+                      DB_USER) value=$RDS_USER ;;
+                      DB_PASSWORD) value=$RDS_PASSWORD ;;
+                      DB_NAME) value=$RDS_DATABASE ;;
+                      DATABASE_URL) value=$RDS_DATABASE_URL ;;
+                    esac
+                    if grep -q "^$var=" /opt/app/.env; then
+                      sed -i "s/^$var=.*/$var=$value/" /opt/app/.env
+                    else
+                      echo "$var=$value" >> /opt/app/.env
+                    fi
                   done
                 '
             
