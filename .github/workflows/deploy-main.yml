@@ -52,7 +52,7 @@ jobs:
             - name: Set Environment Variables
               run: |
                 ssh sweepic-ec2 '
-                  for var in DB_HOST DB_PORT DB_USER DB_PASSWORD DB_NAME; do
+                  for var in DB_HOST DB_PORT DB_USER DB_PASSWORD DB_NAME DATABASE_URL; do
                       case $var in
                           DB_HOST) value=${{ secrets.RDS_HOST }} ;;
                           DB_PORT) value=${{ secrets.RDS_PORT }} ;;
