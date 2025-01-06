@@ -2,6 +2,8 @@ name: PR test
 
 on: 
     pull_request: # Pull Request 생성 또는 업데이트 시 트리거
+      branches:
+        - main # main 브랜치로의 PR에 대해서만 트리거
     push:
         branches:
             - main
