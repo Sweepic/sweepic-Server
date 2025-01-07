@@ -4,10 +4,13 @@
 
 - **언어**: TypeScript
 - **런타임**: Node.js
-- **데이터베이스**: MySQL
+- **웹 프레임워크**: Express
+- **데이터베이스**: MySQL (Amazon RDS에서 운영)
 - **ORM**: Prisma
 - **빌드 도구**: Esbuild
 - **환경 변수 관리**: dotenv
+- **인프라 및 배포**: AWS EC2, SSH, Systemd
+- **CI/CD**: GitHub Actions
 
 ---
 
