@@ -5,12 +5,13 @@
 - **언어**: TypeScript
 - **런타임**: Node.js
 - **웹 프레임워크**: Express
-- **데이터베이스**: MySQL (Amazon RDS에서 운영)
+- **데이터베이스**: Amazon RDS
 - **ORM**: Prisma
 - **빌드 도구**: Esbuild
 - **환경 변수 관리**: dotenv
 - **인프라 및 배포**: AWS EC2, SSH, Systemd
 - **CI/CD**: GitHub Actions
+- **formatter & linter**: GTS(Google Typescript Style)
 
 ---
 
@@ -30,6 +31,7 @@
 
 - **nodemon** (`^3.1.9`): 개발 중 애플리케이션 변경 사항을 감지하여 자동으로 서버를 재시작
 - **tsx** (`^4.19.2`): TypeScript 실행 및 개발 서버를 간편하게 관리
+- **gts**: TypeScript style guide, formatter, and linter
 - **typescript** (`^5.7.2`): TypeScript 컴파일러
 - **@tsconfig/node20** (`^20.1.4`): Node.js 20 버전에서 TypeScript 설정을 위한 공유 설정
 - **@types/cors** (`^2.8.17`): `cors` 라이브러리의 TypeScript 타입 정의 제공
