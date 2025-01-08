@@ -154,4 +154,6 @@
 
 ---
 
-## 코딩 컨벤션
+## 코드 컨벤션
+
+- [Code Convention](docs/CODE_CONVENTION.md)
