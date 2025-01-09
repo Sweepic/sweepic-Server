@@ -25,7 +25,7 @@ const options: swaggerJsDoc.Options = {
     },
     servers: [
       {
-        url: 'http://localhost:3000',
+        url: 'http://l43.201.52.196:3000',
         description: '배포 서버',
       },
     ],
