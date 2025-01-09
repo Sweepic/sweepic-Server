@@ -3,7 +3,6 @@ import cors from 'cors';
 import express, {Request, Response, Express, NextFunction} from 'express';
 import swaggerAutogen from 'swagger-autogen';
 import swaggerUiExpress from 'swagger-ui-express';
-import {log} from './../node_modules/handlebars/types/index.d';
 
 dotenv.config();
 
