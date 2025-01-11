@@ -1,4 +1,5 @@
 import esbuild from 'esbuild';
+import {copy} from 'esbuild-plugin-copy';
 
 async function build() {
   await esbuild.build({
@@ -11,6 +12,16 @@ async function build() {
     target: 'node20',
     minify: true,
     keepNames: true,
+    plugins: [
+      copy({
+        assets: [
+          {
+            from: ['./node_modules/swagger-ui-dist/*'],
+            to: ['./'],
+          },
+        ],
+      }),
+    ],
   });
 }
 

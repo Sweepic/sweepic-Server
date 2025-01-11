@@ -49,7 +49,7 @@ app.get(
         description: 'Sweepic 프로젝트입니다.',
         version: '1.0.0',
       },
-      host: '43.201.52.196:3000',
+      host: 'localhost:3000',
     };
     const result = await swaggerAutogen(options)(outputFile, routes, doc);
     res.json(result ? result.data : null);
