@@ -7,7 +7,7 @@ async function build() {
     bundle: true,
     format: 'cjs',
     outdir: './dist',
-    outExtension: {'.js': '.cjs'},
+    outExtension: { '.js': '.cjs' },
     platform: 'node',
     target: 'node20',
     minify: true,

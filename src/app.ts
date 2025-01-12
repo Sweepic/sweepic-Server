@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import cors from 'cors';
-import express, {Request, Response, Express, NextFunction} from 'express';
+import express, { Request, Response, Express, NextFunction } from 'express';
 import swaggerAutogen from 'swagger-autogen';
 import swaggerUiExpress from 'swagger-ui-express';
 
@@ -12,7 +12,7 @@ const port = process.env.PORT;
 app.use(cors());
 app.use(express.static('public'));
 app.use(express.json());
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({ extended: false }));
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Sweepic');
