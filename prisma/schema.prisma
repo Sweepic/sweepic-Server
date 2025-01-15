@@ -15,12 +15,234 @@ datasource db {
 
 model User {
   id    BigInt @id @default(autoincrement())
-  email String @db.VarChar(100) @unique
+  email String @db.VarChar(50) @unique(map: "email")
   name  String @db.VarChar(30)
-  imageMax Int
-  isLocalGalleryAccesible Boolean @default(false)
-  enableNotification Boolean @default(false)
-  createdAt DateTime @db.Timestamp(6) @default(now())
-  updatedAt DateTime @db.Timestamp(6) @default(now())
-  status Boolean @default(true)
+  goalCount Int @default(0) @map("goal_count")
+  createdAt DateTime @db.Timestamp(6) @default(now()) @map("created_at")
+  updatedAt DateTime? @db.Timestamp(6) @updatedAt @map("updated_at")
+  status Int @db.TinyInt @default(1)
+
+  sessions Session[]
+  socialAccounts SocialAccount[]
+  notification Notification?
+  images Image[]
+  memoFolders MemoFolder[]
+  challenges Challenge[]
+  awards Award[]
+  cards Card[]
+  @@map("users")
+}
+
+model SocialAccount {
+  id BigInt @id @default(autoincrement())
+  provider String @db.VarChar(30)
+  providerUserId String @db.VarChar(255) @map("provider_user_id")
+  createdAt DateTime @db.Timestamp(6) @default(now()) @map("created_at")
+  updatedAt DateTime? @db.Timestamp(6) @updatedAt @map("updated_at")
+  status Int @db.TinyInt @default(1)
+
+  userId BigInt @map("user_id")
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@map("social_accounts")
+}
+
+model Notification {
+  id BigInt @id @default(autoincrement())
+  enableAllNotification Boolean @default(false) @map("enable_all_notification")
+  realTimeNotification Boolean @default(false) @map("real_time_notification")
+  challengeRecommendation Boolean @default(false) @map("challenge_recommendation")
+  createdAt DateTime @db.Timestamp(6) @default(now()) @map("created_at")
+  updatedAt DateTime? @db.Timestamp(6) @updatedAt @map("updated_at")
+  status Int @db.TinyInt @default(1)
+
+  userId BigInt @map("user_id") @unique
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@map("notifications")
+}
+
+model Session {
+  id String @id @db.VarChar(255)
+  sid String @db.VarChar(255)
+  data String @db.VarChar(512)
+  expiresAt DateTime? @db.Timestamp(3) @map("expires_at")
+  
+  userId BigInt @map("user_id")
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@map("session")
+}
+
+model Image {
+  id BigInt @id @default(autoincrement())
+  mediaId BigInt @map("media_id")
+  location Unsupported("geometry")?
+  createdAt DateTime @db.Timestamp(6) @default(now()) @map("created_at")
+  updatedAt DateTime? @db.Timestamp(6) @updatedAt @map("updated_at")
+  status Int @db.TinyInt @default(1)
+
+  userId BigInt @map("user_id")
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  tags ImageTag[]
+  challenges ChallengeImage[]
+  award AwardImage?
+  @@map("images")
+  @@unique([userId, mediaId])
+}
+
+model ImageTag{
+  id BigInt @id @default(autoincrement())
+  createdAt DateTime @db.Timestamp(6) @default(now()) @map("created_at")
+  updatedAt DateTime? @db.Timestamp(6) @updatedAt @map("updated_at")
+  status Int @db.TinyInt @default(1)
+
+  imageId BigInt @map("image_id")
+  image Image @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  tagId BigInt @map("tag_id")
+  tag Tag @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@map("images_tags")
+}
+
+model Tag {
+  id BigInt @id @default(autoincrement())
+  content String @db.VarChar(10)
+  createdAt DateTime @db.Timestamp(6) @default(now()) @map("created_at")
+  updatedAt DateTime? @db.Timestamp(6) @updatedAt @map("updated_at")
+  status Int @db.TinyInt @default(1)
+
+  tagCategoryId BigInt @map("tag_category_id")
+  tagCategory TagCategory @relation(fields: [tagCategoryId], references: [id], onDelete: Cascade)
+
+  images ImageTag[]
+  card Card?
+  @@map("tags")
+}
+
+model TagCategory {
+  id BigInt @id @default(autoincrement())
+  tagType String @db.VarChar(50) @map("tag_type")
+  createdAt DateTime @db.Timestamp(6) @default(now()) @map("created_at")
+  updatedAt DateTime? @db.Timestamp(6) @updatedAt @map("updated_at")
+  status Int @db.TinyInt @default(1)
+
+  tags Tag[]
+  @@map("tag_categories")
+}
+
+model MemoFolder {
+  id BigInt @id @default(autoincrement())
+  name String @db.VarChar(30)
+  imageText String @db.Text
+  createdAt DateTime @db.Timestamp(6) @default(now()) @map("created_at")
+  updatedAt DateTime? @db.Timestamp(6) @updatedAt @map("updated_at")
+  status Int @db.TinyInt @default(1)
+
+  userId BigInt @map("user_id")
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  memoImages MemoImage[]
+  @@map("memo_folders")
+}
+
+model MemoImage {
+  id BigInt @id @default(autoincrement())
+  url String @db.Text
+  createdAt DateTime @db.Timestamp(6) @default(now()) @map("created_at")
+  updatedAt DateTime? @db.Timestamp(6) @updatedAt @map("updated_at")
+  status Int @db.TinyInt @default(1)
+
+  folderId BigInt @map("folder_id")
+  memoFolder MemoFolder @relation(fields: [folderId],references: [id], onDelete: Cascade)
+
+  @@map("memo_images")
+}
+
+model Challenge {
+  id BigInt @id @default(autoincrement())
+  title String @db.VarChar(100)
+  context String @db.Text
+  requiredCount Int @db.Int @map("required_count")
+  remainingCount Int @db.Int @default(0) @map("remaining_count")
+  createdAt DateTime @db.Timestamp(6) @default(now()) @map("created_at")
+  updatedAt DateTime? @db.Timestamp(6) @updatedAt @map("updated_at")
+  acceptedAt DateTime? @db.Timestamp(6) @map("accepted_at")
+  completedAt DateTime? @db.Timestamp(6) @map("completed_at")
+  status Int @db.TinyInt @default(1)
+  
+  userId BigInt @map("user_id")
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  images ChallengeImage[]
+  locationChallenge LocationChallenge?
+  dateChallenge DateChallenge?
+  @@map("challenges")
+}
+
+model ChallengeImage {
+  id BigInt @id @default(autoincrement())
+  createdAt DateTime @db.Timestamp(6) @default(now()) @map("created_at")
+  updatedAt DateTime? @db.Timestamp(6) @updatedAt @map("updated_at")
+  status Int @db.TinyInt @default(1)
+
+  imageId BigInt @map("image_id")
+  image Image @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  challengeId BigInt @map("challenge_id")
+  challenge Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  @@map("challenges_images")
+}
+
+model LocationChallenge {
+  challengeId BigInt @id @map("challenge_id")
+  challengeLocation String @db.VarChar(30) @map("challenge_location")
+  challenge Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  @@map("location_challenges")
+}
+
+model DateChallenge {
+  challengeId BigInt @id @map("challenge_id")
+  challengeDate DateTime @db.Timestamp(6) @map("challenge_date")
+  challenge Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  @@map("date_challenges")
+}
+
+model Award {
+  id BigInt @id @default(autoincrement())
+  awardMonth DateTime @db.Timestamp(6) @map("award_month")
+  createdAt DateTime @db.Timestamp(6) @default(now()) @map("created_at")
+  updatedAt DateTime? @db.Timestamp(6) @updatedAt @map("updated_at")
+  status Int @db.TinyInt @default(1)
+
+  userId BigInt @map("user_id")
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  images AwardImage[]
+  @@map("awards")
+}
+
+model AwardImage {
+  id BigInt @id @default(autoincrement())
+  createdAt DateTime @db.Timestamp(6) @default(now()) @map("created_at")
+  updatedAt DateTime? @db.Timestamp(6) @updatedAt @map("updated_at")
+  status Int @db.TinyInt @default(1)
+
+  imageId BigInt @map("image_id") @unique
+  image Image @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  awardId BigInt @map("award_id")
+  award Award @relation(fields: [awardId], references: [id], onDelete: Cascade)
+
+  @@map("award_images")
+}
+
+model Card {
+  id BigInt @id @default(autoincrement())
+  createdAt DateTime @db.Timestamp(6) @default(now()) @map("created_at")
+  updatedAt DateTime? @db.Timestamp(6) @updatedAt @map("updated_at")
+  status Int @db.TinyInt @default(1)
+  
+  userId BigInt @map("user_id")
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tagId BigInt @map("tag_id") @unique
+  tag Tag @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@map("cards")
 }
