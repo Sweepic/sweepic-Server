@@ -4,10 +4,13 @@ import express, {Request, Response, Express, NextFunction} from 'express';
 import swaggerAutogen from 'swagger-autogen';
 import swaggerUiExpress from 'swagger-ui-express';
 
+import {getText} from './ai/controllers/ocrController.js';
+import {getLabel} from './ai/controllers/labelController.js';
+
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT;
+const port = 3003;
 
 app.use(cors());
 app.use(express.static('public'));
@@ -56,6 +59,8 @@ app.get(
   },
 );
 
+app.post('/ai/text', getText); //이미지 문자로 변환 API
+//app.post('/ai/label', getlabel);
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
