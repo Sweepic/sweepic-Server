@@ -3,6 +3,7 @@ import cors from 'cors';
 import express, {Request, Response, Express, NextFunction} from 'express';
 import swaggerAutogen from 'swagger-autogen';
 import swaggerUiExpress from 'swagger-ui-express';
+import { memoFolderRouter } from './routers/memo.router.js';
 
 dotenv.config();
 
@@ -55,6 +56,36 @@ app.get(
     res.json(result ? result.data : null);
   },
 );
+
+app.use((req, res, next) => {
+  res.success = (success) => {
+    return res.json({ resultType: 'SUCCESS', error: null, success });
+  };
+
+  res.error = ({ errorCode = 'unknown', reason = null, data = null }) => {
+    return res.json({
+      resultType: 'FAIL',
+      error: { errorCode, reason, data },
+      success: null,
+    });
+  };
+
+  next();
+});
+
+app.use('/memo', memoFolderRouter);
+
+// 응답 통일 (임시)
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  if (res.headersSent) { // 응답 헤더가 이미 클라이언트로 전송되었는지 확인
+    return next(err); // 추가적인 응답을 보낼 수 없으므로 에러를 다음 미들웨어로 전달
+  }
+  res.status(err.statusCode || 500).error({
+    errorCode: err.errorCode || 'unknown',
+    reason: err.reason || err.message || null,
+    data: err.data || null,
+  });
+});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
