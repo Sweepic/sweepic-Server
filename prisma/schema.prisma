@@ -66,8 +66,8 @@ model Session {
   data String @db.VarChar(512)
   expiresAt DateTime? @db.Timestamp(3) @map("expires_at")
   
-  userId BigInt @map("user_id")
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId BigInt? @map("user_id")
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
   @@map("session")
 }
 
