@@ -81,6 +81,23 @@ export const googleStrategy = new GoogleStrategy(
   }
 );
 
+// 카카오 로그인
+export const kakaoStrategy = new KakaoStrategy(
+  {
+    clientID: process.env.PASSPORT_KAKAO_CLIENT_ID!,
+    clientSecret: process.env.PASSPORT_KAKAO_CLIENT_SECRET!, // Optional in Kakao
+    callbackURL: 'http://localhost:3000/oauth2/callback/kakao',
+  },
+  async (accessToken, refreshToken, profile, cb) => {
+    try {
+      const user = await verifyUser(profile as KakaoProfile, 'KAKAO');
+      cb(null, user as UserModel);
+    } catch (err) {
+      cb(err); // Pass the error if something goes wrong
+    }
+  }
+);
+
 // 사용자 검증 및 생성 함수
 const verifyUser = async (profile: SocialProfile, provider: string) => {
   const email = provider === 'KAKAO'
