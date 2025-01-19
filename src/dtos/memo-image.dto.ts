@@ -1,7 +1,7 @@
 import { BodyToMemoImage } from '../models/memo-image.model.js';
 
-export const bodyToMemoImage = (body: BodyToMemoImage) => {
+export const bodyToMemoImage = ({url}: BodyToMemoImage) => {
     return {
-        url: body.url
+        url
     };
 };

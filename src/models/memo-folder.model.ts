@@ -1,5 +1,3 @@
-import { UserModel } from './user.model.js';
-
 export interface BodyToMemoFolder {
     folderName: string;
 }

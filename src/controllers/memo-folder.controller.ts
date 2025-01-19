@@ -1,7 +1,7 @@
 import { Response, Request, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { bodyToMemoFolder } from '../dtos/memo-folder.dto.js';
-import {  memoFolderCreate, memoFolderImageCreate } from '../services/memo-folder.service.js';
+import { memoFolderCreate, memoFolderImageCreate } from '../services/memo-folder.service.js';
 
 export const handlerMemoFolderImageCreate = async (req: Request, res: Response, next: NextFunction) => {
     /*
@@ -57,7 +57,10 @@ export const handlerMemoFolderImageCreate = async (req: Request, res: Response, 
     // if (!req.user) {
     //     throw new Error('로그인을 하지 않았습니다.');
     // }
-    const imageUrl = (req.file as any).key;
+    if (!req.file) {
+        throw new Error('첨부한 사진이 없습니다.');
+    }
+    const imageUrl = (req.file as Express.MulterS3File).key;
     const folderId = req.uploadDirectory;
     console.log('imageUrl', imageUrl);
     const memoFolderImage = await memoFolderImageCreate(folderId, imageUrl);

@@ -1,27 +1,27 @@
-import { BodyToMemoFolder, ResponseFromMemoFolder, ResponseFromMemo } from '../models/memo-folder.model.js';
+import { BodyToMemoFolder, ResponseFromMemoFolder } from '../models/memo-folder.model.js';
 import { ResponseFromMemoImage } from '../models/memo-image.model.js';
 
-export const bodyToMemoFolder = (body: BodyToMemoFolder) => {
+export const bodyToMemoFolder = ({ folderName }: BodyToMemoFolder) => {
     return {
-        folderName: body.folderName
+        folderName
     };
 };
 
-export const responseFromMemoFolder = (data: ResponseFromMemoFolder) => {
+export const responseFromMemoFolder = ({ id, name }: ResponseFromMemoFolder) => {
     return {
-        id: data.id,
-        folderName: data.name
+        id,
+        folderName: name
     };
 };
 
-export const responseFromMemoFolderImage = ({ memoFolder, memoImage }: {
+export const responseFromMemoFolderImage = ({ memoFolder: { id: folderId, name: folderName }, memoImage: { id: imageId, url: imageUrl }}: {
     memoFolder: ResponseFromMemoFolder
     memoImage: ResponseFromMemoImage
 }) => {
     return {
-        folderId: memoFolder.id,
-        folderName: memoFolder.name,
-        imageId: memoImage.id,
-        imageUrl: memoImage.url
+        folderId,
+        folderName,
+        imageId,
+        imageUrl
     };
 };
