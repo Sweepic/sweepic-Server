@@ -57,7 +57,7 @@ app.get(
   },
 );
 
-app.use((req, res, next) => {
+app.use((req: Request, res: Response, next: NextFunction) => {
   res.success = (success) => {
     return res.json({ resultType: 'SUCCESS', error: null, success });
   };
