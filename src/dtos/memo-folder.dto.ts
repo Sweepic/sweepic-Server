@@ -1,13 +1,13 @@
-import { BodyToMemoFolder, ResponseFromMemo, ResponseFromMemoFolder, ResponseFromMemoList } from '../models/memo-folder.model.js';
+import { BodyToMemoFolder, MemoFolderImageResponseDto, MemoFolderListResponseDto, MemoFolderRequestDto, MemoFolderResponseDto, MemoTextImageListResponseDto, ResponseFromMemo, ResponseFromMemoFolder, ResponseFromMemoList } from '../models/memo-folder.model.js';
 import { ResponseFromMemoImage } from '../models/memo-image.model.js';
 
-export const bodyToMemoFolder = ({ folderName }: BodyToMemoFolder) => {
+export const bodyToMemoFolder = ({ folderName }: BodyToMemoFolder): MemoFolderRequestDto => {
     return {
         folderName
     };
 };
 
-export const responseFromMemoFolder = ({ id, name }: ResponseFromMemoFolder) => {
+export const responseFromMemoFolder = ({ id, name }: ResponseFromMemoFolder): MemoFolderResponseDto => {
     return {
         id,
         folderName: name
@@ -17,7 +17,7 @@ export const responseFromMemoFolder = ({ id, name }: ResponseFromMemoFolder) => 
 export const responseFromMemoFolderImage = ({ memoFolder: { id: folderId, name: folderName }, memoImage: { id: imageId, url: imageUrl }}: {
     memoFolder: ResponseFromMemoFolder
     memoImage: ResponseFromMemoImage
-}) => {
+}): MemoFolderImageResponseDto => {
     return {
         folderId,
         folderName,
@@ -26,7 +26,7 @@ export const responseFromMemoFolderImage = ({ memoFolder: { id: folderId, name: 
     };
 };
 
-export const responseFromMemoFolderList = (searchMemoList: ResponseFromMemoList[]) => {
+export const responseFromMemoFolderList = (searchMemoList: ResponseFromMemoList[]):{ data: MemoFolderListResponseDto[] }=> {
     return {
         data: searchMemoList.map(({ id: folderId, name: folderName, imageCount, imageText, memoImages }) => {
             const [firstImage] = memoImages; // memoImages의 첫 번째 항목 구조 분해
@@ -42,7 +42,7 @@ export const responseFromMemoFolderList = (searchMemoList: ResponseFromMemoList[
     };
 };
 
-export const responseFromMemoTextImageList = ({id, name, imageText, memoImages}: ResponseFromMemo) => {
+export const responseFromMemoTextImageList = ({id, name, imageText, memoImages}: ResponseFromMemo) : MemoTextImageListResponseDto => {
     return {
         folderId: id,
         folderName: name,

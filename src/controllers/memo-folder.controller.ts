@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { bodyToMemoFolder } from '../dtos/memo-folder.dto.js';
 import { listMemoFolder, listMemoTextImage, memoFolderCreate, memoFolderImageCreate, memoSearch } from '../services/memo-folder.service.js';
 
-export const handlerMemoFolderImageCreate = async (req: Request, res: Response, next: NextFunction) => {
+export const handlerMemoFolderImageCreate = async (req: Request, res: Response, next: NextFunction): Promise<void> =>{
     /*
     #swagger.tags = ['memo-folder-controller']
     #swagger.summary = '폴더 생성 및 사진 저장 API';
@@ -67,7 +67,7 @@ export const handlerMemoFolderImageCreate = async (req: Request, res: Response, 
     res.status(StatusCodes.OK).success(memoFolderImage);
 };
 
-export const handlerMemoFolderAdd = async (req: Request, res: Response, next: NextFunction) => {
+export const handlerMemoFolderAdd = async (req: Request, res: Response, next: NextFunction): Promise<void> =>{
     /*
     #swagger.tags = ['memo-folder-controller']
     #swagger.summary = '폴더 생성 API';
@@ -118,7 +118,7 @@ export const handlerMemoFolderAdd = async (req: Request, res: Response, next: Ne
     res.status(StatusCodes.OK).success(memoFolder);
 };
 
-export const handlerMemoFolderList = async (req: Request, res: Response, next: NextFunction) => {
+export const handlerMemoFolderList = async (req: Request, res: Response, next: NextFunction): Promise<void> =>{
     /*
     #swagger.tags = ['memo-folder-controller']
     #swagger.summary = '모든 메모 조회 API';
@@ -167,7 +167,7 @@ export const handlerMemoFolderList = async (req: Request, res: Response, next: N
     res.status(StatusCodes.OK).success(memoList);
 };
 
-export const handlerMemoSearch = async (req: Request, res: Response, next: NextFunction) => {
+export const handlerMemoSearch = async (req: Request, res: Response, next: NextFunction): Promise<void> =>{
     /*
     #swagger.tags = ['memo-folder-controller']
     #swagger.summary = '메모 검색 API';
@@ -228,7 +228,7 @@ export const handlerMemoSearch = async (req: Request, res: Response, next: NextF
     res.status(StatusCodes.OK).success(searchMemoList);
 };
 
-export const handlerMemoTextImageList = async (req: Request, res: Response, next: NextFunction) => {
+export const handlerMemoTextImageList = async (req: Request, res: Response, next: NextFunction): Promise<void> =>{
     /*
     #swagger.tags = ['memo-folder-controller']
     #swagger.summary = '특정 폴더의 메모 조회 API';
