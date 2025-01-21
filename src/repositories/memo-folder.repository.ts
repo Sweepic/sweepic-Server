@@ -75,7 +75,7 @@ export const getMemoFolderList = async (userId: bigint) => {
             }
         });
 
-        const formattedMemoFolderList = await Promise.all(
+        const formattedMemoFolderList = await Promise.all( // 비동기 작업이 완료될 때까지 기다린 후 처리된 결과를 배열로 반환
             memoFolderList.map(async (memoFolder) => ({
                 ...memoFolder,
                 id: memoFolder.id.toString(),
