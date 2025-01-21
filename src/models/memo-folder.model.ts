@@ -39,3 +39,21 @@ export interface ResponseFromMemo {
         url: string;
     }[];
 }
+
+export interface ResponseFromMemo {
+    id: string;
+    userId: bigint;
+    name: string;
+    imageText: string;
+    createdAt: Date;
+    updatedAt: Date | null;
+    status: number;
+    memoImages: {
+        id: string;
+        createdAt: Date;
+        updatedAt: Date | null;
+        status: number;
+        folderId: string;
+        url: string;
+    }[];
+}
