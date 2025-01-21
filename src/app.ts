@@ -1,9 +1,10 @@
 import dotenv from 'dotenv';
 import cors from 'cors';
-import express, {Request, Response, Express, NextFunction} from 'express';
+import express, { Request, Response, Express, NextFunction } from 'express';
 import swaggerAutogen from 'swagger-autogen';
 import swaggerUiExpress from 'swagger-ui-express';
 import { memoFolderRouter } from './routers/memo.router.js';
+import { handleGetLocationChallenge, handleUpdateLocationChallenge, handleNewLocationChallenge, handleLocationLogic, handleRemoveLocationChallenge } from './controllers/challenge.controllers.js';
 
 dotenv.config();
 
@@ -13,7 +14,7 @@ const port = process.env.PORT;
 app.use(cors());
 app.use(express.static('public'));
 app.use(express.json());
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({ extended: false }));
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Sweepic');
@@ -74,6 +75,16 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 app.use('/memo', memoFolderRouter);
+
+app.post('/challenge/location_challenge/create', handleNewLocationChallenge);
+
+app.get('/challenge/location_challenge/get', handleGetLocationChallenge);
+
+app.patch('/challenge/location_challenge/update', handleUpdateLocationChallenge);
+
+app.get('/challenge/location_logic/test', handleLocationLogic);
+
+app.delete('/challenge/location_challenge/delete', handleRemoveLocationChallenge);
 
 // 응답 통일 (임시)
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
