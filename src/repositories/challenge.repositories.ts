@@ -1,7 +1,8 @@
 import { prisma } from '../db.config.js';
 import { ChallengeModify, LocationChallengeCreation } from '../models/challenge.entities.js';
+import { Challenge, LocationChallenge } from '@prisma/client';
 
-export const newLocationChallenge = async (data: LocationChallengeCreation) => {
+export const newLocationChallenge = async (data: LocationChallengeCreation): Promise<Challenge | null> => {
     const existingChallenge = await prisma.challenge.findFirst({
         where: {
             userId: data.userId,
@@ -11,7 +12,7 @@ export const newLocationChallenge = async (data: LocationChallengeCreation) => {
 
     if(existingChallenge){
         console.log('Already Exists');
-        return;
+        return null;
     }
 
     const newChal = await prisma.challenge.create({
@@ -37,7 +38,7 @@ export const newLocationChallenge = async (data: LocationChallengeCreation) => {
     return newChal;
 };
 
-export const updateLocationChallenge = async (data: ChallengeModify) => {
+export const updateLocationChallenge = async (data: ChallengeModify): Promise<Challenge> => {
     const updated = await prisma.challenge.update({
         where: { id: data.id },
         data: {
@@ -49,7 +50,7 @@ export const updateLocationChallenge = async (data: ChallengeModify) => {
     return updated;
 };
 
-export const deleteLocationChallenge = async (data: bigint) => {
+export const deleteLocationChallenge = async (data: bigint): Promise<bigint> => {
     const deleted = await prisma.challenge.delete({
         where: {id: data}
     });
@@ -57,7 +58,7 @@ export const deleteLocationChallenge = async (data: bigint) => {
     return deleted.id;
 };
 
-export const getChallenge = async (data: bigint) => {
+export const getChallenge = async (data: bigint): Promise<Challenge | null> => {
     const idBigNum = data;
     const userChallenge = await prisma.challenge.findFirst({
         where: {id: idBigNum}
@@ -66,7 +67,7 @@ export const getChallenge = async (data: bigint) => {
     return userChallenge;
 };
 
-export const getLocation = async (data: bigint) => {
+export const getLocation = async (data: bigint): Promise<LocationChallenge | null> => {
     const idBigNum = data;
     const challengeLocation = await prisma.locationChallenge.findFirst({
         where: {challengeId: idBigNum}

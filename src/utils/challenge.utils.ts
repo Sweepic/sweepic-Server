@@ -1,8 +1,8 @@
 import CoordinateParser from 'coordinate-parser';
 import { encodeBase32 } from 'geohashing';
 
-export const getIdNumber = (data: {id: bigint}): bigint => {
-    return data.id;
+export const getIdNumber = (data: {id: string}): bigint => {
+    return BigInt(data.id);
 };
 
 export const getHashedLocation = (data: string): string => {
