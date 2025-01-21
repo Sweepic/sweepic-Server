@@ -63,6 +63,11 @@ export const getMemoFolderList = async (userId: bigint) => {
                 createdAt: true,
                 updatedAt: true,
                 status: true,
+                _count: { // 이미지 개수를 세는 필드 추가
+                    select: {
+                        memoImages: true, // memoImages의 개수를 가져온다.
+                    },
+                },
                 memoImages: {
                     take: 1, // 각 폴더에서 첫 번째 사진만 가져오기
                     orderBy: {
@@ -79,6 +84,7 @@ export const getMemoFolderList = async (userId: bigint) => {
             memoFolderList.map(async (memoFolder) => ({
                 ...memoFolder,
                 id: memoFolder.id.toString(),
+                imageCount: memoFolder._count?.memoImages || 0, // 이미지 개수 추가
                 memoImages: await Promise.all(
                     memoFolder.memoImages.map(async (memoImage) => {
                         const presignedUrl = await getPresignedUrl(memoImage.url);
@@ -111,6 +117,11 @@ export const getSearchMemoList = async (userId: bigint, searchKeyword: string) =
                 updatedAt: true,
                 status: true,
                 userId: true,
+                _count: { // 이미지 개수를 세는 필드 추가
+                    select: {
+                        memoImages: true, // memoImages의 개수를 가져온다.
+                    },
+                },
                 memoImages: {
                     take: 1, 
                     orderBy: {
@@ -146,6 +157,7 @@ export const getSearchMemoList = async (userId: bigint, searchKeyword: string) =
             memoSearchList.map(async (memoSearch) => ({
                 ...memoSearch,
                 id: memoSearch.id.toString(),
+                imageCount: memoSearch._count?.memoImages || 0, // 이미지 개수 추가
                 memoImages: await Promise.all(
                     memoSearch.memoImages.map(async (memoImage) => {
                         const presignedUrl = await getPresignedUrl(memoImage.url);

@@ -143,6 +143,7 @@ export const handlerMemoFolderList = async (req: Request, res: Response, next: N
                                             folderId: { type: "string", example: "1" },
                                             folderName: { type: "string" },
                                             imageText: { type: "string" },
+                                            imageCount: { type: "integer", example: 0 },
                                             firstImageId: { type: "string", example: "1" },
                                             firstImageUrl: { type: "string" },
                                             createdAt: { type: "string", example: "2025-01-17T03:50:25.923Z"}
@@ -198,6 +199,7 @@ export const handlerMemoSearch = async (req: Request, res: Response, next: NextF
                                         properties: {
                                             folderId: { type: "string", example: "1" },
                                             folderName: { type: "string" },
+                                            imageCount: { type: "integer", example: 0 },
                                             imageText: { type: "string" },
                                             firstImageId: { type: "string", example: "1" },
                                             firstImageUrl: { type: "string" },
