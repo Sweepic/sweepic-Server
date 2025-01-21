@@ -2,7 +2,7 @@ import { Response, Request, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { memoImageAdd } from '../services/memo-image.service.js';
 
-export const handlerMemoImageAdd = async (req: Request, res: Response, next: NextFunction) => {
+export const handlerMemoImageAdd = async (req: Request, res: Response, next: NextFunction): Promise<void> =>{
     /*
     #swagger.tags = ['memo-image-controller']
     #swagger.summary = '사진 저장 API';

@@ -2,7 +2,7 @@ import { CopyObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { s3 } from './awsS3Client.js';
 
 // AWS S3에서 특정 이미지의 디렉토리를 변경하는 함수
-export const imageMover = async (userId: bigint, key: string, directory: bigint) => {
+export const imageMover = async (userId: bigint, key: string, directory: bigint): Promise<void> =>{
     // 원본 경로
     const bucketName = process.env.AWS_S3_BUCKET_NAME; // S3 버킷 이름
     const copySource = `${bucketName}/${key}`; // S3 복사 작업에서의 원본 객체(버킷이름/객체키)

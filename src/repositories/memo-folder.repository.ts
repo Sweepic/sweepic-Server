@@ -1,8 +1,8 @@
 import { prisma } from '../db.config.js';
-import { BodyToMemoFolder } from '../models/memo-folder.model.js';
+import { BodyToMemoFolder, createdMemoFolderId, MemoFolderList, MemoFoler, MemoTextImageList } from '../models/memo-folder.model.js';
 import { getPresignedUrl } from '../s3/get-presigned-url.js';
 
-export const createMemoFolder = async (data: BodyToMemoFolder, userId: bigint) => {
+export const createMemoFolder = async (data: BodyToMemoFolder, userId: bigint) : Promise<bigint> => {
     try {
         const createdMemoFolder = await prisma.memoFolder.create({
             data: {
@@ -19,7 +19,7 @@ export const createMemoFolder = async (data: BodyToMemoFolder, userId: bigint) =
     }
 };
 
-export const getMemoFolder = async (memoFolderId: bigint) => {
+export const getMemoFolder = async (memoFolderId: bigint) : Promise<MemoFoler | null>=> {
     try {
         const memoFolder = await prisma.memoFolder.findFirst({
             where: {
@@ -52,7 +52,7 @@ export const getMemoFolder = async (memoFolderId: bigint) => {
     }
 };
 
-export const getMemoFolderList = async (userId: bigint) => {
+export const getMemoFolderList = async (userId: bigint): Promise<MemoFolderList[]> => {
     try {
         const memoFolderList = await prisma.memoFolder.findMany({
             select: {
@@ -106,7 +106,7 @@ export const getMemoFolderList = async (userId: bigint) => {
     }
 };
 
-export const getSearchMemoList = async (userId: bigint, searchKeyword: string) => {
+export const getSearchMemoList = async (userId: bigint, searchKeyword: string): Promise<MemoFolderList[]> => {
     try {
         const memoSearchList = await prisma.memoFolder.findMany({
             select: {
@@ -179,7 +179,7 @@ export const getSearchMemoList = async (userId: bigint, searchKeyword: string) =
     }
 };
 
-export const getMemoTextImageList = async (userId: bigint, folderId: bigint) => {
+export const getMemoTextImageList = async (userId: bigint, folderId: bigint): Promise<MemoTextImageList | null> => {
     try {
         const memoTextImageList = await prisma.memoFolder.findFirst({
             select: {
