@@ -22,7 +22,7 @@ export interface ResponseFromMemoFolderImage {
     status: number;
 }
 
-export interface ResponseFromMemo {
+export interface ResponseFromMemoList {
     id: string;
     userId: bigint;
     name: string;
@@ -30,6 +30,7 @@ export interface ResponseFromMemo {
     createdAt: Date;
     updatedAt: Date | null;
     status: number;
+    imageCount: number;
     memoImages: {
         id: string;
         createdAt: Date;
@@ -38,7 +39,7 @@ export interface ResponseFromMemo {
         folderId: string;
         url: string;
     }[];
-}
+};
 
 export interface ResponseFromMemo {
     id: string;
