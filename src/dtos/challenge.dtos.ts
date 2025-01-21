@@ -1,5 +1,5 @@
 import { Challenge, LocationChallenge } from '@prisma/client';
-import { PhotoInfo } from '../models/challenge.entities.js';
+import { BodyToLocationCreation, PhotoInfo } from '../models/challenge.entities.js';
 
 export const locationChallengeToClient = ({
     location,
@@ -8,42 +8,62 @@ export const locationChallengeToClient = ({
     location: LocationChallenge;
     challenge: Challenge;
 }) => {
-    const id: string = challenge.id.toString();   //json에서 bigint 처리 불가하여 string으로 반환합니다.
-    const userId: string = challenge.userId.toString();
+    const {id, title, context, requiredCount, remainingCount,
+        userId, createdAt, updatedAt, acceptedAt, completedAt, status
+    } = challenge;
+
+    const {challengeLocation} = location;
     return {
-        id: id,
-        title: challenge.title,
-        context: challenge.context,
-        location: location.challengeLocation,
-        requiredCount: challenge.requiredCount,
-        remainingCount: challenge.remainingCount,
-        userId: userId,
-        createdAt: challenge.createdAt,
-        updatedAt: challenge.updatedAt,
-        acceptedAt: challenge.acceptedAt,
-        completedAt: challenge.completedAt,
-        status: challenge.status
+        id: id.toString(), //json에서 bigint 처리 불가능하여 string으로 처리합니다.
+        title,
+        context,
+        location: challengeLocation,
+        requiredCount,
+        remainingCount,
+        userId: userId.toString(),
+        createdAt,
+        updatedAt,
+        acceptedAt,
+        completedAt,
+        status
     };
 };
 
 export const responseFromChallenge = (challenge: Challenge) => {
-    const id: string = challenge.id.toString();
-    const userId: string = challenge.userId.toString();
+    const {id, title, context, requiredCount, remainingCount, userId,
+        createdAt, updatedAt, acceptedAt, completedAt, status
+    } = challenge;
+
+    const idString: string = challenge.id.toString();
+    const userIdString: string = challenge.userId.toString();
+
     return {
-        id: id,
-        title: challenge.title,
-        context: challenge.context,
-        requiredCount: challenge.requiredCount,
-        remainingCount: challenge.remainingCount,
-        userId: userId,
-        createdAt: challenge.createdAt,
-        updatedAt: challenge.updatedAt,
-        acceptedAt: challenge.acceptedAt,
-        completedAt: challenge.completedAt,
-        status: challenge.status
+        id: idString,
+        title,
+        context,
+        requiredCount,
+        remainingCount,
+        userId: userIdString,
+        createdAt,
+        updatedAt,
+        acceptedAt,
+        completedAt,
+        status
     };
 };
 
 export const bodyToLocationLogic = (photo: PhotoInfo[]) => {
     return photo;
+};
+
+export const bodyToLocationCreation = (data: BodyToLocationCreation) => {
+    const {userId, title, context, location, required} = data;
+    const userIdNum: bigint = BigInt(userId);
+    return {
+        userId: userIdNum,
+        title,
+        context,
+        location,
+        required
+    };
 };

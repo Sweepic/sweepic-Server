@@ -1,3 +1,11 @@
+export interface BodyToLocationCreation {
+    userId: string;
+    title: string;
+    context: string;
+    location: string;
+    required: number;
+}
+
 export interface LocationChallengeCreation {
     userId: bigint;
     title: string;

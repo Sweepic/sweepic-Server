@@ -5,8 +5,8 @@ import { updateLocationChallenge, newLocationChallenge, deleteLocationChallenge,
 import { getHashedLocation } from '../utils/challenge.utils.js';
 
 export const serviceCreateNewLocationChallenge = async (data: LocationChallengeCreation): Promise<ResponseFromChallenge> => {
-    const newChallenge: Challenge | undefined = await newLocationChallenge(data);
-    if(newChallenge === undefined){
+    const newChallenge: Challenge | null = await newLocationChallenge(data);
+    if(newChallenge === null){
         throw new Error('Invalid creation error.');
     }
 

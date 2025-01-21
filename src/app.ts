@@ -4,7 +4,7 @@ import express, { Request, Response, Express, NextFunction } from 'express';
 import swaggerAutogen from 'swagger-autogen';
 import swaggerUiExpress from 'swagger-ui-express';
 import { memoFolderRouter } from './routers/memo.router.js';
-import { handleGetLocationChallenge, handleUpdateLocationChallenge, handleNewLocationChallenge, handleLocationLogic, handleRemoveLocationChallenge } from './controllers/challenge.controllers.js';
+import { challengeRouter } from './routers/challenge.router.js';
 
 dotenv.config();
 
@@ -76,15 +76,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 app.use('/memo', memoFolderRouter);
 
-app.post('/challenge/location_challenge/create', handleNewLocationChallenge);
-
-app.get('/challenge/location_challenge/get', handleGetLocationChallenge);
-
-app.patch('/challenge/location_challenge/update', handleUpdateLocationChallenge);
-
-app.get('/challenge/location_logic/test', handleLocationLogic);
-
-app.delete('/challenge/location_challenge/delete', handleRemoveLocationChallenge);
+app.use('/challenge', challengeRouter);
 
 // 응답 통일 (임시)
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
