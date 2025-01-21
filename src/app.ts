@@ -4,7 +4,7 @@ import express, {Request, Response, Express, NextFunction} from 'express';
 import swaggerAutogen from 'swagger-autogen';
 import swaggerUiExpress from 'swagger-ui-express';
 
-import {getText} from './ai/controllers/ocrController.js';
+import {handleOCRrequest} from './ai/controllers/ocrController.js';
 import {getLabel} from './ai/controllers/labelController.js';
 
 dotenv.config();
@@ -59,8 +59,10 @@ app.get(
   },
 );
 
-app.post('/ai/text', getText); //이미지 문자로 변환 API
+app.post('/ai/text', handleOCRrequest); //이미지 문자로 변환 API (새새 폴더인 경우)
+app.patch('/ai/text', handleOCRrequest); //이미지 문자로 변환 API (이미 텍스트가 저장되어 있는 기존 폴더인 경우)
 //app.post('/ai/label', getlabel);
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
