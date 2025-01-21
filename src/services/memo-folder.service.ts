@@ -1,6 +1,6 @@
-import { responseFromMemoFolder, responseFromMemoFolderImage } from '../dtos/memo-folder.dto.js';
+import { responseFromMemoFolder, responseFromMemoFolderImage, responseFromMemoFolderList, responseFromMemoTextImageList } from '../dtos/memo-folder.dto.js';
 import { BodyToMemoFolder } from '../models/memo-folder.model.js';
-import { createMemoFolder, getMemoFolder } from '../repositories/memo-folder.repository.js';
+import { createMemoFolder, getMemoFolder, getMemoFolderList, getMemoTextImageList, getSearchMemoList } from '../repositories/memo-folder.repository.js';
 import { addMemoImage, getMemoImage } from '../repositories/memo-image.repository.js';
 
 export const memoFolderCreate = async (userId: bigint, body: BodyToMemoFolder) => {
@@ -25,4 +25,22 @@ export const memoFolderImageCreate = async (folderId: bigint, imageUrl: string) 
         throw new Error('메모 사진 추가 에러');
     }
     return responseFromMemoFolderImage({ memoFolder, memoImage });
+};
+
+export const listMemoFolder = async (userId: bigint) => {
+    const memoFolderList = await getMemoFolderList(userId);
+    return responseFromMemoFolderList(memoFolderList);
+};
+
+export const memoSearch = async (userId: bigint, searchKeyword: string) => {
+    const searchMemoList = await getSearchMemoList(userId, searchKeyword);
+    return responseFromMemoFolderList(searchMemoList);
+};
+
+export const listMemoTextImage = async (userId: bigint, folderId: bigint) => {
+    const memoTextImageList = await getMemoTextImageList(userId, folderId);
+    if (memoTextImageList === null) {
+        throw new Error('해당 폴더가 존재하지 않습니다.');
+    }
+    return responseFromMemoTextImageList(memoTextImageList);
 };
