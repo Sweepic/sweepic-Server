@@ -22,7 +22,6 @@ model User {
   updatedAt DateTime? @db.Timestamp(6) @updatedAt @map("updated_at")
   status Int @db.TinyInt @default(1)
 
-  sessions Session[]
   socialAccounts SocialAccount[]
   notification Notification?
   images Image[]
@@ -62,12 +61,10 @@ model Notification {
 
 model Session {
   id String @id @db.VarChar(255)
-  sid String @db.VarChar(255)
+  sid String @unique @db.VarChar(255)
   data String @db.VarChar(512)
-  expiresAt DateTime? @db.Timestamp(3) @map("expires_at")
+  expiresAt DateTime @db.Timestamp(3) @map("expires_at")
   
-  userId BigInt @map("user_id")
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   @@map("session")
 }
 
