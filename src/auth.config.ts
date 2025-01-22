@@ -4,7 +4,7 @@ import { Strategy as NaverStrategy, Profile as NaverProfile } from 'passport-nav
 import { Strategy as GoogleStrategy, Profile as GoogleProfile } from 'passport-google-oauth20';
 import { prisma } from './db.config.js';
 import { UserModel } from './models/user.model.js';
-import { SocialProfile } from './entities.js';
+import { SocialProfile } from './models/auth.entities.js';
 
 
 dotenv.config();
