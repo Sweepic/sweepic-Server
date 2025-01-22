@@ -8,10 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Google Cloud Vision 클라이언트 초기화
-const keyFilename = path.join(
-  __dirname,
-  '../../../sweepicai-00d515e813ea.json',
-);
+const keyFilename = path.join(__dirname, '../../sweepicai-00d515e813ea.json');
 const visionClient = new ImageAnnotatorClient({keyFilename});
 
 export const processOCRAndSave = async ({
@@ -42,9 +39,9 @@ export const processOCRAndSave = async ({
       throw new Error('해당 이름의 폴더가 이미 존재합니다');
     }
 
-    // 폴더 생성
+    // 폴더 생성 (folder_name을 사용)
     folder = await folderRepository.createFolder(userIdBigInt, folder_name);
-    folder_id = Number(folder_id); // 생성된 폴더 ID 업데이트
+    folder_id = Number(folder.folder_id); // 생성된 폴더 ID를 number로 변환하여 업데이트
   } else {
     // PATCH 요청 - folder_id로 폴더 조회
     folder = await folderRepository.findFolderById(
@@ -62,16 +59,22 @@ export const processOCRAndSave = async ({
 
   // 폴더에 텍스트 저장 또는 추가
   if (folder.imageText) {
-    await folderRepository.appendFolderImageText(BigInt(folder_id), ocrText);
+    await folderRepository.appendFolderImageText(
+      BigInt(folder.folder_id),
+      ocrText,
+    );
   } else {
-    await folderRepository.updateFolderImageText(BigInt(folder_id), ocrText);
+    await folderRepository.updateFolderImageText(
+      BigInt(folder.folder_id),
+      ocrText,
+    );
   }
 
   // 폴더에 이미지 저장
-  await folderRepository.addImageToFolder(BigInt(folder_id), image_url);
+  await folderRepository.addImageToFolder(BigInt(folder.folder_id), image_url);
 
   return {
-    folder_id: folder_id,
+    folder_id: folder.folder_id,
     image_text: ocrText,
     image_url,
   };

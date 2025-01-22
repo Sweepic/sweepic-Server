@@ -2924,6 +2924,11 @@ cookie@0.7.1:
   resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.7.1.tgz#2f73c42142d5d5cf71310a74fc4ae61670e5dbc9"
   integrity sha512-6DnInpx7SJ2AK3+CTUE/ZM0vWTUboZCegxhC2xiIydHR9jNuTAASBrfEpHhiGOZw/nX51bHt6YQl8jsGo4y/0w==
 
+coordinate-parser@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/coordinate-parser/-/coordinate-parser-1.0.7.tgz#9350485f03146af0f377dd51a0907a0ac684363e"
+  integrity sha512-pkcjigkAEjU5JsTYnuXLkRgR6T5fF/7GXR4p9vWJesy8fKwsheN8zC5d3sSvdMmWihHB4u48xWZ5mUCcgBIEpw==
+
 core-util-is@~1.0.0:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.3.tgz#a6042d3634c2b27e9328f837b965fac83808db85"
@@ -3790,6 +3795,11 @@ generate-function@^2.3.1:
   integrity sha512-eeB5GfMNeevm/GRYq20ShmsaGcmI81kIX2K9XQx5miC8KdHaC6Jm0qQ8ZNeGOi7wYB8OsdxKs+Y2oVuTFuVwKQ==
   dependencies:
     is-property "^1.0.2"
+
+geohashing@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/geohashing/-/geohashing-2.0.1.tgz#c081070a2b6ca551930f75ce8586afe0dd179944"
+  integrity sha512-u0H29yhqHEyBBgwv1GJrvqbD33AnQm2lbWOLNbXLZEWVrCKNoblyiWWnVGeYGaM4NNM7rBBTqvJZhZ/CDfrBVw==
 
 get-caller-file@^2.0.5:
   version "2.0.5"

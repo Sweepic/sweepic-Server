@@ -4,11 +4,12 @@ import express, {Request, Response, Express, NextFunction} from 'express';
 import swaggerAutogen from 'swagger-autogen';
 import swaggerUiExpress from 'swagger-ui-express';
 import {memoFolderRouter} from './routers/memo.router.js';
+import {challengeRouter} from './routers/challenge.router.js';
 
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3003;
+const port = process.env.PORT;
 
 app.use(cors());
 app.use(express.static('public'));
@@ -75,6 +76,9 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 app.use('/memo', memoFolderRouter);
 
+app.use('/challenge', challengeRouter);
+
+// 응답 통일 (임시)
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   if (res.headersSent) {
     // 응답 헤더가 이미 클라이언트로 전송되었는지 확인
