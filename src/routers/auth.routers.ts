@@ -1,8 +1,7 @@
 import express, {Request} from 'express';
 export const authRouter = express.Router();
 import { UserModel } from '../models/user.model.js';
-import session from 'express-session';
-import { PrismaSessionStore } from '@quixo3/prisma-session-store';
+
 import passport from 'passport';
 import { naverStrategy,googleStrategy,kakaoStrategy } from '../auth.config.js';
 import { prisma } from '../db.config.js';
@@ -36,35 +35,6 @@ passport.deserializeUser(async (id: bigint, done) => {
     done(error, null);
   }
 });
-
-// 세션 설정
-authRouter.use(
-  session({
-    secret: process.env.EXPRESS_SESSION_SECRET!,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    },
-    store: new PrismaSessionStore(prisma, {
-      checkPeriod: 2 * 60 * 1000,
-      dbRecordIdIsSessionId: true,
-      serializer: {
-        // BigInt를 문자열로 변환하여 저장
-        stringify: (obj: unknown) =>
-          JSON.stringify(obj, (_, value) =>
-            typeof value === 'bigint' ? value.toString() : value
-          ),
-        parse: (str: string) =>
-          JSON.parse(str, (_, value) =>
-            typeof value === 'string' && /^\d+$/.test(value) ? BigInt(value) : value
-          ),
-      },
-    }),
-  })
-);
-
-
 
 
 //네이버 로그인 라우트
