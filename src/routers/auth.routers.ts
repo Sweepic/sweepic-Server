@@ -65,9 +65,7 @@ authRouter.use(
 );
 
 
-//passport 초기화
-authRouter.use(passport.initialize());
-authRouter.use(passport.session());
+
 
 //네이버 로그인 라우트
 authRouter.get('/login/naver', passport.authenticate('naver', {scope: ['email', 'name']}));

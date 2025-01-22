@@ -6,6 +6,7 @@ import swaggerUiExpress from 'swagger-ui-express';
 import { memoFolderRouter } from './routers/memo.router.js';
 import { challengeRouter } from './routers/challenge.router.js';
 import { authRouter } from './routers/auth.routers.js';
+import passport from 'passport';
 
 dotenv.config();
 
@@ -80,6 +81,10 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use('/memo', memoFolderRouter);
 
 app.use('/challenge', challengeRouter);
+
+//passport 초기화
+authRouter.use(passport.initialize());
+authRouter.use(passport.session());
 
 app.use('/oauth2', authRouter);
 
