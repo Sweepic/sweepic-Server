@@ -4,7 +4,6 @@ import express, {Request, Response, Express, NextFunction} from 'express';
 import swaggerAutogen from 'swagger-autogen';
 import swaggerUiExpress from 'swagger-ui-express';
 import {memoFolderRouter} from './routers/memo.router.js';
-import {getLabel} from './ai/controllers/labelController.js';
 
 dotenv.config();
 
