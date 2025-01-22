@@ -4,11 +4,10 @@ import { Strategy as NaverStrategy, Profile as NaverProfile } from 'passport-nav
 import { Strategy as GoogleStrategy, Profile as GoogleProfile } from 'passport-google-oauth20';
 import { prisma } from './db.config.js';
 import { UserModel } from './models/user.model.js';
+import { SocialProfile } from './entities.js';
+
 
 dotenv.config();
-
-// 공통 SocialAccount 처리
-type SocialProfile = KakaoProfile | NaverProfile | GoogleProfile;
 
 const updateOrCreateSocialAccount = async (userId: bigint, profile: SocialProfile, provider: string):Promise<void> => {
   const providerUserId = profile.id.toString();
