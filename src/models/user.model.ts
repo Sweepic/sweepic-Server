@@ -5,5 +5,5 @@ export interface UserModel {
   goalCount: number;
   createdAt: Date;
   updatedAt: Date;
-  status: boolean;
+  status: number;
 }
