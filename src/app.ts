@@ -9,7 +9,7 @@ import { UserModel } from './models/user.model.js';
 import session from 'express-session';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import passport from 'passport';
-import { naverStrategy,googleStrategy } from './auth.config.js';
+import { naverStrategy,googleStrategy,kakaoStrategy } from './auth.config.js';
 import { prisma } from './db.config.js';
 
 dotenv.config();
@@ -21,6 +21,7 @@ dotenv.config();
 //passport 전략 설정
 passport.use(naverStrategy);
 passport.use(googleStrategy);
+passport.use(kakaoStrategy);
 // serialize 설정
 passport.serializeUser((user, done) => done(null, user));
 // deserializeUser 설정
@@ -117,6 +118,18 @@ app.get('/auth/login/google', passport.authenticate('google', {scope: ['profile'
 app.get(
   '/oauth2/callback/google',
   passport.authenticate('google', { failureRedirect: '/' }),
+  (req, res) => {
+    // 로그인 성공 시 처리
+    res.redirect('/'); // 온보딩 페이지로 리디렉션(예정)
+  }
+);
+// 카카오 로그인 라우트
+app.get('/auth/login/kakao', passport.authenticate('kakao', {scope: ['profile_nickname', 'account_email']}));
+
+// 카카오 로그인 콜백 라우트
+app.get(
+  '/oauth2/callback/kakao',
+  passport.authenticate('kakao', { failureRedirect: '/' }),
   (req, res) => {
     // 로그인 성공 시 처리
     res.redirect('/'); // 온보딩 페이지로 리디렉션(예정)
