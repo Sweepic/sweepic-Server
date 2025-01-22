@@ -34,8 +34,8 @@ const updateOrCreateSocialAccount = async (
         provider,
         providerUserId: providerUserId.toString(),
         userId,
-        createdAt: updatedAt,
-        updatedAt,
+        createdAt: new Date(),
+        updatedAt: new Date(),
         status: 1,
       },
     });
@@ -123,9 +123,10 @@ const verifyUser = async (
   const createdAt = new Date();
   if (user) {
     // SocialAccount 데이터 추가 또는 업데이트
-    await updateOrCreateSocialAccount(user.id, profile, provider);
-
-    return { id: user.id, email: user.email, name: user.name };
+    const { id, email, name } = user;
+    await updateOrCreateSocialAccount(id, profile, provider);
+    
+    return { id, email, name };
   }
 
   // 새로운 사용자 생성
@@ -134,14 +135,15 @@ const verifyUser = async (
       email,
       name,
       goalCount: 0, // default
-      createdAt,
-      updatedAt: createdAt,
+      createdAt: new Date(),
+      updatedAt: new Date(),
       status: 1,
     },
   });
 
   // SocialAccount 데이터 추가
-  await updateOrCreateSocialAccount(createdUser.id, profile, provider);
+  const { id, email: createdEmail, name: createdName } = createdUser;
+  await updateOrCreateSocialAccount(id, profile, provider);
 
-  return { id: createdUser.id, email: createdUser.email, name: createdUser.name };
+  return { id, email, name };
 };
