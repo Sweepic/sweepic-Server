@@ -63,6 +63,23 @@ export const naverStrategy = new NaverStrategy(
     }
   );
 
+// 구글 로그인
+export const googleStrategy = new GoogleStrategy(
+    {
+      clientID: process.env.PASSPORT_GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.PASSPORT_GOOGLE_CLIENT_SECRET!,
+      callbackURL: 'http://localhost:3000/oauth2/callback/google',
+    },
+    async (accessToken, refreshToken, profile, cb) => {
+      try {
+        const user = await verifyUser(profile as GoogleProfile, 'GOOGLE');
+        cb(null, user as UserModel);
+      } catch (err) {
+        cb(err); // Pass the error if something goes wrong
+      }
+    }
+  );
+
   // 사용자 검증 및 생성 함수
 const verifyUser = async (profile: SocialProfile, provider: string) => {
     const email = provider === 'KAKAO'
