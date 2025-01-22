@@ -10,7 +10,7 @@ dotenv.config();
 // 공통 SocialAccount 처리
 type SocialProfile = KakaoProfile | NaverProfile | GoogleProfile;
 
-const updateOrCreateSocialAccount = async (userId: bigint, profile: SocialProfile, provider: string) => {
+const updateOrCreateSocialAccount = async (userId: bigint, profile: SocialProfile, provider: string):Promise<void> => {
   const providerUserId = profile.id.toString();
 
   // 기존 SocialAccount 조회
@@ -98,7 +98,7 @@ export const kakaoStrategy = new KakaoStrategy(
   );
 
   // 사용자 검증 및 생성 함수
-const verifyUser = async (profile: SocialProfile, provider: string) => {
+const verifyUser = async (profile: SocialProfile, provider: string): Promise<{id:bigint; email: string; name:string}> => {
     const email = provider === 'KAKAO'
       ? (profile as KakaoProfile)._json?.kakao_account?.email
       : provider === 'NAVER'
@@ -138,5 +138,5 @@ const verifyUser = async (profile: SocialProfile, provider: string) => {
     // SocialAccount 데이터 추가
     await updateOrCreateSocialAccount(createdUser.id, profile, provider);
   
-    return { id: createdUser.id.toString(), email: createdUser.email, name: createdUser.name };
+    return { id: createdUser.id, email: createdUser.email, name: createdUser.name };
   };
