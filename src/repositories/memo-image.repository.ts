@@ -1,7 +1,8 @@
 import { prisma } from '../db.config.js';
+import { MemoImage } from '../models/memo-image.model.js';
 import { getPresignedUrl } from '../s3/get-presigned-url.js';
 
-export const addMemoImage = async (memoFolderId: bigint, imageUrl: string) => {
+export const addMemoImage = async (memoFolderId: bigint, imageUrl: string): Promise<bigint> => {
     try {
         const addedMemoImageId = await prisma.memoImage.create({
             data: {
@@ -17,7 +18,7 @@ export const addMemoImage = async (memoFolderId: bigint, imageUrl: string) => {
     }
 };
 
-export const getMemoImage = async (memoImageId: bigint) => {
+export const getMemoImage = async (memoImageId: bigint): Promise<MemoImage | null> => {
     try {
         const memoImage = await prisma.memoImage.findFirst({
             where: {

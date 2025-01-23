@@ -2,7 +2,7 @@ import { DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { s3 } from './awsS3Client.js';
 
 // AWS S3에서 특정 이미지를 삭제하는 함수
-export const imageDeleter = async (key: string) => {
+export const imageDeleter = async (key: string): Promise<void> =>{
     const bucketName = process.env.AWS_S3_BUCKET_NAME; // S3 버킷 이름
 
     // 삭제할 파일 정보 설정
