@@ -55,7 +55,7 @@ export const responseFromWeeklyChallenge = ({
         acceptedAt,
         completedAt,
         status
-    }
+    };
 };
 
 export const responseFromChallenge = (challenge: Challenge) => {
@@ -103,5 +103,5 @@ export const bodyToWeeklyCreation = (data: BodyToWeeklyCreation) => {
         context,
         challengeDate,
         required
-    }
-}
+    };
+};

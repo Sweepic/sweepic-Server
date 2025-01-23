@@ -1,8 +1,8 @@
-import { Response, Request, NextFunction } from "express";
-import { ResponseFromChallenge, WeeklyChallengeCreation } from "../models/challenge.entities.js";
-import { bodyToWeeklyCreation } from "../dtos/challenge.dtos.js";
-import { StatusCodes } from "http-status-codes";
-import { serviceCreateNewWeeklyChallenge, serviceGetWeeklyChallenge } from "../services/challenge.weekly.services.js";
+import { Response, Request, NextFunction } from 'express';
+import { ResponseFromChallenge, WeeklyChallengeCreation } from '../models/challenge.entities.js';
+import { bodyToWeeklyCreation } from '../dtos/challenge.dtos.js';
+import { StatusCodes } from 'http-status-codes';
+import { serviceCreateNewWeeklyChallenge, serviceGetWeeklyChallenge } from '../services/challenge.weekly.services.js';
 
 export const handleNewWeeklyChallenge = async(
     req: Request,
@@ -121,4 +121,4 @@ export const handleGetWeeklyChallenge = async(
     */
     const result = await serviceGetWeeklyChallenge(BigInt(req.params.id));
     res.status(StatusCodes.OK).success(result);
-}
+};

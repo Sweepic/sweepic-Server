@@ -39,7 +39,7 @@ export const getWeekly = async(data: bigint): Promise<DateChallenge | null> => {
         where: {
             challengeId: data
         }
-    })
+    });
 
     return challenge;
-}
+};

@@ -22,4 +22,4 @@ export const serviceGetWeeklyChallenge = async(data: bigint) => {
     }
 
     return responseFromWeeklyChallenge({weekly, challenge});
-}
+};
