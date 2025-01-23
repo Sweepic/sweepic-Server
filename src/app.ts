@@ -89,8 +89,35 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 app.use('/memo', memoFolderRouter);
 RegisterRoutes(app);
-
 app.use('/challenge', challengeRouter);
+
+app.use(
+  session({
+    secret: process.env.EXPRESS_SESSION_SECRET!,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    },
+    store: new PrismaSessionStore(prisma, {
+      checkPeriod: 2 * 60 * 1000,
+      dbRecordIdIsSessionId: true,
+      serializer: {
+        // BigInt를 문자열로 변환하여 저장
+        stringify: (obj: unknown) =>
+          JSON.stringify(obj, (_, value) =>
+            typeof value === 'bigint' ? value.toString() : value,
+          ),
+        parse: (str: string) =>
+          JSON.parse(str, (_, value) =>
+            typeof value === 'string' && /^\d+$/.test(value)
+              ? BigInt(value)
+              : value,
+          ),
+      },
+    }),
+  }),
+);
 
 //passport 초기화
 app.use(passport.initialize());
@@ -104,7 +131,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     // 응답 헤더가 이미 클라이언트로 전송되었는지 확인
     return next(err); // 추가적인 응답을 보낼 수 없으므로 에러를 다음 미들웨어로 전달
   }
-  res.status(err.statusCode).error({
+  res.status(err.statusCode || 500).error({
     errorCode: err.errorCode || 'unknown',
     reason: err.reason || err.message || null,
     data: err.data || null,

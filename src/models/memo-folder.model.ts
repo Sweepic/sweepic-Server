@@ -1,149 +1,151 @@
 export interface BodyToMemoFolder {
-    folderName: string;
+  folderName: string;
 }
 
 export interface ResponseFromMemoFolder {
-    id: string;
-    userId: bigint;
-    name: string;
-    imageText: string;
-    createdAt: Date;
-    updatedAt: Date | null;
-    status: number;
+  id: string;
+  userId: bigint;
+  name: string;
+  imageText: string;
+  createdAt: Date;
+  updatedAt: Date | null;
+  status: number;
 }
 
 export interface MemoFolderResponseDto {
-    id: string;
-    folderName: string;
+  id: string;
+  folderName: string;
 }
 
 export interface MemoFolderImageResponseDto {
-    folderId: string;
-    folderName: string;
-    imageId: string;
-    imageUrl: string;
+  folderId: string;
+  folderName: string;
+  imageId: string;
+  imageUrl: string;
 }
 
 export interface MemoFolderRequestDto {
-    folderName: string;
+  folderName: string;
 }
 
 export interface MemoFolderListResponseDto {
-    folderId: string ;
-    folderName: string;
-    imageText: string;
-    imageCount: number;
-    firstImageId: string | null;
-    firstImageUrl: string | null;
+  folderId: string;
+  folderName: string;
+  imageText: string;
+  imageCount: number;
+  firstImageId: string | null;
+  firstImageUrl: string | null;
 }
 
 export interface MemoTextImageListResponseDto {
-    folderId: string;
-    folderName: string;
-    imageText: string;
-    images: {
+  folderId: string;
+  folderName: string;
+  imageText: string;
+  images:
+    | {
         imageId: string;
         imageUrl: string;
-    }[] | null;
+      }[]
+    | null;
 }
 
 export interface ResponseFromMemoFolderImage {
-    id: string;
-    userId: bigint;
-    name: string;
-    imageText: string;
-    createdAt: Date;
-    updatedAt: Date | null;
-    status: number;
+  id: string;
+  userId: bigint;
+  name: string;
+  imageText: string;
+  createdAt: Date;
+  updatedAt: Date | null;
+  status: number;
 }
 
 export interface ResponseFromMemoList {
+  id: string;
+  userId: bigint;
+  name: string;
+  imageText: string;
+  createdAt: Date;
+  updatedAt: Date | null;
+  status: number;
+  imageCount: number;
+  memoImages: {
     id: string;
-    userId: bigint;
-    name: string;
-    imageText: string;
     createdAt: Date;
     updatedAt: Date | null;
     status: number;
-    imageCount: number;
-    memoImages: {
-        id: string;
-        createdAt: Date;
-        updatedAt: Date | null;
-        status: number;
-        folderId: string;
-        url: string;
-    }[];
-};
+    folderId: string;
+    url: string;
+  }[];
+}
 
 export interface ResponseFromMemo {
+  id: string;
+  userId: bigint;
+  name: string;
+  imageText: string;
+  createdAt: Date;
+  updatedAt: Date | null;
+  status: number;
+  memoImages: {
     id: string;
-    userId: bigint;
-    name: string;
-    imageText: string;
     createdAt: Date;
     updatedAt: Date | null;
     status: number;
-    memoImages: {
-        id: string;
-        createdAt: Date;
-        updatedAt: Date | null;
-        status: number;
-        folderId: string;
-        url: string;
-    }[];
+    folderId: string;
+    url: string;
+  }[];
 }
 
 export interface createdMemoFolderId {
-    id: bigint;
+  id: bigint;
 }
 
 export interface MemoFoler {
-    id: string;
-    name: string;
-    imageText: string;
-    createdAt: Date;
-    updatedAt: Date | null;
-    status: number;
-    userId: bigint;
+  id: string;
+  name: string;
+  imageText: string;
+  createdAt: Date;
+  updatedAt: Date | null;
+  status: number;
+  userId: bigint;
 }
 
 export interface MemoFolderList {
+  id: string;
+  imageCount: number;
+  memoImages: {
     id: string;
-    imageCount: number;
-    memoImages: {
-        id: string;
-        folderId: string;
-        url: string;
-        createdAt: Date;
-        updatedAt: Date | null;
-        status: number;
-    }[];
-    name: string;
-    imageText: string;
+    folderId: string;
+    url: string;
     createdAt: Date;
     updatedAt: Date | null;
     status: number;
-    userId: bigint;
-    _count: {
-        memoImages: number;
-    };
+  }[];
+  name: string;
+  imageText: string;
+  createdAt: Date;
+  updatedAt: Date | null;
+  status: number;
+  userId: bigint;
+  _count: {
+    memoImages: number;
+  };
 }
 
 export interface MemoTextImageList {
+  id: string;
+  memoImages: {
     id: string;
-    memoImages: {
-        id: string;
-        folderId: string;
-        url: string;
-        createdAt: Date;
-        updatedAt: Date | null;
-        status: number;
-    }[];
-    name: string;
-    imageText: string;
+    folderId: string;
+    url: string;
     createdAt: Date;
     updatedAt: Date | null;
     status: number;
-    userId: bigint;
-};
+  }[];
+  name: string;
+  imageText: string;
+  createdAt: Date;
+  updatedAt: Date | null;
+  status: number;
+  userId: bigint;
+}
