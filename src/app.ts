@@ -12,6 +12,7 @@ import {memoFolderRouter} from './routers/memo.router.js';
 import {challengeRouter} from './routers/challenge.router.js';
 import {authRouter} from './routers/auth.routers.js';
 import {tagRouter} from './routers/tag.router.js';
+import {trustRouter} from './routers/trust.router.js';
 
 dotenv.config();
 
@@ -86,6 +87,8 @@ app.use('/memo', memoFolderRouter);
 app.use('/challenge', challengeRouter);
 
 app.use('/tag', tagRouter);
+
+app.use('/trust', trustRouter);
 
 app.use(
   session({
