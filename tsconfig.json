@@ -4,11 +4,12 @@
     "./node_modules/gts/tsconfig-google.json"
   ],
   "compilerOptions": {
-    "moduleResolution": "Node16",
-    "module": "Node16",
+    "moduleResolution": "Nodenext",
+    "module": "NodeNext",
     "noEmit": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "resolveJsonModule": true
   },
   "include": ["src/**/*.ts", "scripts/**/*.ts", "./@types/**/*.d.ts"],
   "exclude": ["node_modules", "dist", "build"]
