@@ -1,5 +1,10 @@
-export interface BodyToTag {
+export interface BaseBodyToTag {
   content: string;
+}
+
+export interface BaseTagRequestDto extends BaseBodyToTag {}
+
+export interface BodyToTag extends BaseBodyToTag {
   tag_category_id: bigint;
 }
 

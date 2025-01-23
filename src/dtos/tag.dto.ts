@@ -1,4 +1,6 @@
 import {
+  BaseBodyToTag,
+  BaseTagRequestDto,
   BodyToTag,
   TagRequsetDto,
   ResponseFromTag,
@@ -12,6 +14,12 @@ export function bodyToTag({
   return {
     content,
     tag_category_id,
+  };
+}
+
+export function bodyToUpdateTag({content}: BaseBodyToTag): BaseTagRequestDto {
+  return {
+    content,
   };
 }
 

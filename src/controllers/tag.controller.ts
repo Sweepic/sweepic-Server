@@ -1,7 +1,7 @@
 import {Request, Response, NextFunction} from 'express';
 import {StatusCodes} from 'http-status-codes';
 import {bodyToTag} from '../dtos/tag.dto.js';
-import {tagCreate} from '../services/tag.service.js';
+import {tagCreate, tagUpdate} from '../services/tag.service.js';
 
 async function handleNewTag(
   req: Request,
@@ -58,4 +58,17 @@ async function handleNewTag(
   res.status(StatusCodes.OK).success(newTag);
 }
 
-export {handleNewTag};
+async function handleUpdateTag(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  console.log('태그 수정 컨트롤러 실행');
+  console.log('body: ', req.body);
+  console.log('params: ', req.params.id);
+
+  const updateTag = await tagUpdate(Number(req.params.id), bodyToTag(req.body));
+  res.status(StatusCodes.OK).success(updateTag);
+}
+
+export {handleNewTag, handleUpdateTag};

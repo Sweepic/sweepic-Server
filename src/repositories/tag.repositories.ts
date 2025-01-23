@@ -1,5 +1,5 @@
 import {prisma} from '../db.config.js';
-import {ResponseFromTag} from '../models/tag.model.js';
+import {ResponseFromTag, BodyToTag} from '../models/tag.model.js';
 
 export async function addTag(
   content: string,
@@ -40,6 +40,48 @@ export async function addTag(
   } // 태그 생성 실패 시 null 반환
 
   return created.id;
+}
+
+export async function updateTag(id: number, tag: BodyToTag): Promise<bigint> {
+  const {content} = tag;
+  console.log('updateTag 실행' + content);
+
+  const tagId = await prisma.tag.findFirst({
+    where: {
+      id,
+    },
+  });
+
+  if (tagId === null) {
+    throw new Error('태그 조회 에러');
+  } // 태그 조회 실패 시 null 반환
+
+  // 중복 이름 체크
+  const tagContent = await prisma.tag.findFirst({
+    where: {
+      content,
+    },
+  });
+
+  if (tagContent !== null) {
+    throw new Error('태그 중복 확인 에러');
+  } // 중복된 태그
+
+  const updated = await prisma.tag.update({
+    where: {
+      id,
+    },
+    data: {
+      content,
+      updatedAt: new Date(),
+    },
+  }); // 태그 수정
+
+  if (updated === null) {
+    throw new Error('태그 수정 에러');
+  } // 태그 수정 실패 시 null 반환
+
+  return updated.id;
 }
 
 export async function getTag(tagId: bigint): Promise<ResponseFromTag> {

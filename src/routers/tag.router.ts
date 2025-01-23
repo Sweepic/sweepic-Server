@@ -1,6 +1,6 @@
-import express, {Request} from 'express';
+import express from 'express';
 export const tagRouter = express.Router();
-import {handleNewTag} from '../controllers/tag.controller.js';
+import {handleNewTag, handleUpdateTag} from '../controllers/tag.controller.js';
 
-tagRouter.post('/create', handleNewTag); // 태그 생성
-// tagRouter.patch('/tag/info/:id', handleUpdateTag);
+tagRouter.post('/', handleNewTag); // 태그 생성
+tagRouter.patch('/:id', handleUpdateTag);
