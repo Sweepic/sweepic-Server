@@ -67,6 +67,7 @@ export async function deleteImage(userId: bigint): Promise<boolean> {
   const deleted = await prisma.image.deleteMany({
     where: {
       userId,
+      status: 0,
     },
   });
 
