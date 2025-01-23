@@ -18,6 +18,16 @@ export async function addTag(
     throw new Error('태그 중복 확인 에러');
   } // 중복된 태그가 있을 경우 null 반환
 
+  const tagCategoryId = await prisma.tagCategory.findFirst({
+    where: {
+      id: tag_category_id,
+    },
+  }); // 태그 카테고리 조회
+
+  if (tagCategoryId === null) {
+    throw new Error('태그 카테고리 조회 에러');
+  } // 태그 카테고리 조회 실패 시 null 반환
+
   const created = await prisma.tag.create({
     data: {
       content,
