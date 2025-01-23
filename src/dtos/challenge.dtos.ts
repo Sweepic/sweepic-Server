@@ -1,7 +1,7 @@
-import { Challenge, LocationChallenge } from '@prisma/client';
-import { BodyToLocationCreation, PhotoInfo } from '../models/challenge.entities.js';
+import { Challenge, LocationChallenge, DateChallenge } from '@prisma/client';
+import { BodyToLocationCreation, BodyToWeeklyCreation, PhotoInfo } from '../models/challenge.entities.js';
 
-export const locationChallengeToClient = ({
+export const responseFromLocationChallenge = ({
     location,
     challenge
 }: {
@@ -29,21 +29,47 @@ export const locationChallengeToClient = ({
     };
 };
 
+export const responseFromWeeklyChallenge = ({
+    weekly,
+    challenge
+}: {
+    weekly: DateChallenge;
+    challenge: Challenge
+}) => {
+    const {id, title, context, requiredCount, remainingCount,
+        userId, createdAt, updatedAt, acceptedAt, completedAt, status
+    } = challenge;
+
+    const {challengeDate} = weekly;
+
+    return{
+        id: id.toString(),
+        title,
+        context,
+        challengeDate,
+        requiredCount,
+        remainingCount,
+        userId: userId.toString(),
+        createdAt,
+        updatedAt,
+        acceptedAt,
+        completedAt,
+        status
+    }
+};
+
 export const responseFromChallenge = (challenge: Challenge) => {
     const {id, title, context, requiredCount, remainingCount, userId,
         createdAt, updatedAt, acceptedAt, completedAt, status
     } = challenge;
 
-    const idString: string = challenge.id.toString();
-    const userIdString: string = challenge.userId.toString();
-
     return {
-        id: idString,
+        id: id.toString(),
         title,
         context,
         requiredCount,
         remainingCount,
-        userId: userIdString,
+        userId: userId.toString(),
         createdAt,
         updatedAt,
         acceptedAt,
@@ -58,12 +84,24 @@ export const bodyToLocationLogic = (photo: PhotoInfo[]) => {
 
 export const bodyToLocationCreation = (data: BodyToLocationCreation) => {
     const {userId, title, context, location, required} = data;
-    const userIdNum: bigint = BigInt(userId);
+    
     return {
-        userId: userIdNum,
+        userId: BigInt(userId),
         title,
         context,
         location,
         required
     };
 };
+
+export const bodyToWeeklyCreation = (data: BodyToWeeklyCreation) => {
+    const {userId, title, context, challengeDate, required} = data;
+
+    return {
+        userId: BigInt(userId),
+        title,
+        context,
+        challengeDate,
+        required
+    }
+}
