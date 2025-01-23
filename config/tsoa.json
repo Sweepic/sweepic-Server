@@ -1,0 +1,15 @@
+{
+  "noImplicitAdditionalProperties": "throw-on-extras",
+  "entryFile": "src/app.ts",
+  "controllerPathGlobs": ["src/controllers/*.controller.ts"],
+  "spec": {
+    "outputDirectory": "./",
+    "specVersion": 3
+  },
+  "routes": {
+    "routesDir": "./src/routers",
+    "middleware": "express",
+    "routesFileName": "tsoaRoutes.ts",
+    "esm": true
+  }
+}
