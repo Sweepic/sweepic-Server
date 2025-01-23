@@ -21,10 +21,6 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false})); //true
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Sweepic');
-});
-
 app.use(
   '/docs',
   swaggerUiExpress.serve,
@@ -79,10 +75,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-app.use('/memo', memoFolderRouter);
-
-app.use('/challenge', challengeRouter);
-
 app.use(
   session({
     secret: process.env.EXPRESS_SESSION_SECRET!,
@@ -117,6 +109,14 @@ app.use(passport.session());
 
 app.use('/oauth2', authRouter);
 
+app.get('/', (req: Request, res: Response) => {
+  console.log(req.user);
+  res.send('Sweepic');
+});
+
+app.use('/memo', memoFolderRouter);
+
+app.use('/challenge', challengeRouter);
 // 응답 통일 (임시)
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   if (res.headersSent) {
