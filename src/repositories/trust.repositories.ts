@@ -50,6 +50,35 @@ export async function updateStatusImage(image: BodyToImage): Promise<bigint> {
   return updated.id;
 }
 
+export async function deleteImage(userId: bigint): Promise<boolean> {
+  console.log('deleteImage 실행');
+  console.log('userId: ', userId);
+
+  const user = await prisma.user.findFirst({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (user === null) {
+    throw new Error('유저 조회 에러');
+  }
+
+  const deleted = await prisma.image.deleteMany({
+    where: {
+      userId,
+    },
+  });
+
+  console.log('deleted: ', deleted);
+
+  if (deleted === null) {
+    throw new Error('이미지 삭제 에러');
+  }
+
+  return true;
+}
+
 export async function getImage(imageId: bigint): Promise<ResponseFromImage> {
   const image = await prisma.image.findFirst({
     where: {

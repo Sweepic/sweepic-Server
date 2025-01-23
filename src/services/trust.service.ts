@@ -3,6 +3,7 @@ import {responseFromImage} from '../dtos/image.dto.js';
 import {
   updateStatusImage,
   getImage,
+  deleteImage,
 } from '../repositories/trust.repositories.js';
 
 async function imageStatusUpdate(
@@ -17,4 +18,13 @@ async function imageStatusUpdate(
   return responseFromImage(imageData);
 }
 
-export {imageStatusUpdate};
+async function imageDelete(userId: bigint): Promise<boolean> {
+  console.log('imageDelete 실행');
+  console.log('userId: ', userId);
+
+  const deleted = await deleteImage(userId);
+
+  return deleted;
+}
+
+export {imageStatusUpdate, imageDelete};
