@@ -3,13 +3,16 @@ import cors from 'cors';
 import express, {Request, Response, Express, NextFunction} from 'express';
 import swaggerAutogen from 'swagger-autogen';
 import swaggerUiExpress from 'swagger-ui-express';
-import {memoFolderRouter} from './routers/memo.router.js';
-import {challengeRouter} from './routers/challenge.router.js';
-import {authRouter} from './routers/auth.routers.js';
 import passport from 'passport';
 import session from 'express-session';
 import {PrismaSessionStore} from '@quixo3/prisma-session-store';
+
 import {prisma} from './db.config.js';
+import {memoFolderRouter} from './routers/memo.router.js';
+import {challengeRouter} from './routers/challenge.router.js';
+import {authRouter} from './routers/auth.routers.js';
+import {tagRouter} from './routers/tag.router.js';
+import {trustRouter} from './routers/trust.router.js';
 
 dotenv.config();
 
@@ -82,6 +85,10 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use('/memo', memoFolderRouter);
 
 app.use('/challenge', challengeRouter);
+
+app.use('/tag', tagRouter);
+
+app.use('/trust', trustRouter);
 
 app.use(
   session({
