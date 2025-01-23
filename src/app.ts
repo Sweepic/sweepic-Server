@@ -4,12 +4,14 @@ import express, {Request, Response, Express, NextFunction} from 'express';
 import swaggerAutogen from 'swagger-autogen';
 import swaggerUiExpress from 'swagger-ui-express';
 import {memoFolderRouter} from './routers/memo.router.js';
+import {RegisterRoutes} from './routers/tsoaRoutes.js';
 import {challengeRouter} from './routers/challenge.router.js';
 import {authRouter} from './routers/auth.routers.js';
 import passport from 'passport';
 import session from 'express-session';
 import {PrismaSessionStore} from '@quixo3/prisma-session-store';
 import {prisma} from './db.config.js';
+import swaggerDocument from '../swagger/swagger.json' assert {type: 'json'};
 
 dotenv.config();
 
@@ -24,6 +26,12 @@ app.use(express.urlencoded({extended: false})); //true
 app.get('/', (req: Request, res: Response) => {
   res.send('Sweepic');
 });
+
+// app.use(
+//   '/docs',
+//   swaggerUiExpress.serve,
+//   swaggerUiExpress.setup(swaggerDocument),
+// );
 
 app.use(
   '/docs',
@@ -80,7 +88,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 app.use('/memo', memoFolderRouter);
-
+RegisterRoutes(app);
 app.use('/challenge', challengeRouter);
 
 app.use(

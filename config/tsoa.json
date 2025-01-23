@@ -1,0 +1,24 @@
+{
+  "noImplicitAdditionalProperties": "throw-on-extras",
+  "entryFile": "src/app.ts",
+  "controllerPathGlobs": ["src/controllers/*.controller.ts"],
+  "spec": {
+    "outputDirectory": "./swagger",
+    "host": "localhost:3000",
+    "specVersion": 3,
+    "spec": {
+      "servers": [
+        {
+          "url": "http://localhost:3000",
+          "description": "Sweepic server"
+        }
+      ]
+    }
+  },
+  "routes": {
+    "routesDir": "./src/routers",
+    "middleware": "express",
+    "routesFileName": "tsoaRoutes.ts",
+    "esm": true
+  }
+}
