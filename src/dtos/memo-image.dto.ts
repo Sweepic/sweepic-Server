@@ -1,6 +1,6 @@
-import { BodyToMemoImage } from '../models/memo-image.model.js';
+import { BodyToMemoImage, MemoImageRequestDto } from '../models/memo-image.model.js';
 
-export const bodyToMemoImage = ({url}: BodyToMemoImage) => {
+export const bodyToMemoImage = ({url}: BodyToMemoImage) : MemoImageRequestDto => {
     return {
         url
     };

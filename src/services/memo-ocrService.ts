@@ -4,7 +4,7 @@ import {fileURLToPath} from 'url';
 import {folderRepository} from '../repositories/memo-OCR.repositoy.js';
 import {OCRRequest} from '../models/memo-OCR.model.js';
 
-const __filename = fileURLToPath(import.meta.url);
+const __filename = path.resolve();
 const __dirname = path.dirname(__filename);
 
 // Google Cloud Vision 클라이언트 초기화
