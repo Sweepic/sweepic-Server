@@ -1,15 +1,17 @@
 import dotenv from 'dotenv';
 import cors from 'cors';
-import express, { Request, Response, Express, NextFunction } from 'express';
+import express, {Request, Response, Express, NextFunction} from 'express';
 import swaggerAutogen from 'swagger-autogen';
 import swaggerUiExpress from 'swagger-ui-express';
-import { memoFolderRouter } from './routers/memo.router.js';
-import { challengeRouter } from './routers/challenge.router.js';
-import { authRouter } from './routers/auth.routers.js';
 import passport from 'passport';
 import session from 'express-session';
-import { PrismaSessionStore } from '@quixo3/prisma-session-store';
-import { prisma } from './db.config.js';
+import {PrismaSessionStore} from '@quixo3/prisma-session-store';
+
+import {prisma} from './db.config.js';
+import {memoFolderRouter} from './routers/memo.router.js';
+import {challengeRouter} from './routers/challenge.router.js';
+import {authRouter} from './routers/auth.routers.js';
+import {tagRouter} from './routers/tag.router.js';
 
 dotenv.config();
 
@@ -19,8 +21,7 @@ const port = process.env.PORT;
 app.use(cors());
 app.use(express.static('public'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false })); //true
-
+app.use(express.urlencoded({extended: false})); //true
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Sweepic');
@@ -38,7 +39,6 @@ app.use(
     },
   ),
 );
-
 
 app.get(
   '/openapi.json',
@@ -66,14 +66,14 @@ app.get(
 );
 
 app.use((req: Request, res: Response, next: NextFunction) => {
-  res.success = (success) => {
-    return res.json({ resultType: 'SUCCESS', error: null, success });
+  res.success = success => {
+    return res.json({resultType: 'SUCCESS', error: null, success});
   };
 
-  res.error = ({ errorCode = 'unknown', reason = null, data = null }) => {
+  res.error = ({errorCode = 'unknown', reason = null, data = null}) => {
     return res.json({
       resultType: 'FAIL',
-      error: { errorCode, reason, data },
+      error: {errorCode, reason, data},
       success: null,
     });
   };
@@ -84,6 +84,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use('/memo', memoFolderRouter);
 
 app.use('/challenge', challengeRouter);
+
+app.use('/tag', tagRouter);
 
 app.use(
   session({
@@ -100,15 +102,17 @@ app.use(
         // BigInt를 문자열로 변환하여 저장
         stringify: (obj: unknown) =>
           JSON.stringify(obj, (_, value) =>
-            typeof value === 'bigint' ? value.toString() : value
+            typeof value === 'bigint' ? value.toString() : value,
           ),
         parse: (str: string) =>
           JSON.parse(str, (_, value) =>
-            typeof value === 'string' && /^\d+$/.test(value) ? BigInt(value) : value
+            typeof value === 'string' && /^\d+$/.test(value)
+              ? BigInt(value)
+              : value,
           ),
       },
     }),
-  })
+  }),
 );
 
 //passport 초기화
@@ -117,10 +121,10 @@ app.use(passport.session());
 
 app.use('/oauth2', authRouter);
 
-
 // 응답 통일 (임시)
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  if (res.headersSent) { // 응답 헤더가 이미 클라이언트로 전송되었는지 확인
+  if (res.headersSent) {
+    // 응답 헤더가 이미 클라이언트로 전송되었는지 확인
     return next(err); // 추가적인 응답을 보낼 수 없으므로 에러를 다음 미들웨어로 전달
   }
   res.status(err.statusCode || 500).error({
