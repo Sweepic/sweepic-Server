@@ -2,7 +2,7 @@ import { Response, Request, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { memoImageAdd } from '../services/memo-image.service.js';
 
-export const handlerMemoImageAdd = async (req: Request, res: Response, next: NextFunction) => {
+export const handlerMemoImageAdd = async (req: Request, res: Response, next: NextFunction): Promise<void> =>{
     /*
     #swagger.tags = ['memo-image-controller']
     #swagger.summary = '사진 저장 API';
@@ -63,7 +63,10 @@ export const handlerMemoImageAdd = async (req: Request, res: Response, next: Nex
     //     throw new Error('로그인을 하지 않았습니다.');
     // }
     const folderId = BigInt(req.params.folderId);
-    const imageUrl = (req.file as any).key;
+    if (!req.file) {
+        throw new Error('저장할 사진이 없습니다.');
+    }
+    const imageUrl = (req.file as Express.MulterS3File).key;
     const memoImage = await memoImageAdd(folderId, imageUrl);
     res.status(StatusCodes.OK).success(memoImage);
 };

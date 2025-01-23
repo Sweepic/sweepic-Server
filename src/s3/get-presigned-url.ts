@@ -2,7 +2,7 @@ import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { s3 } from './awsS3Client.js';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
-export const getPresignedUrl = async (key: string) => {
+export const getPresignedUrl = async (key: string): Promise<string> => {
     const bucketName = process.env.AWS_S3_BUCKET_NAME;
     
     // AWS 리소스에 접근할 수 있는 Pre-signed URL 생성
