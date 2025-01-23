@@ -126,5 +126,5 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-# ai
+# json api 키 값
 sweepicai-*.json
