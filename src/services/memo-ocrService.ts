@@ -13,7 +13,7 @@ const visionClient = new ImageAnnotatorClient({keyFilename});
 
 export const processOCRAndSave = async ({
   folder_id,
-  image_url,
+  base64_image,
   user_id,
   folder_name,
 }: OCRRequest) => {
@@ -55,7 +55,7 @@ export const processOCRAndSave = async ({
   }
 
   // OCR 수행 - 이미지를 문자로 변환 (AI 적용)
-  const ocrText = await performOCR(image_url);
+  const ocrText = await performOCR(base64_image);
 
   // 폴더에 텍스트 저장 또는 추가
   if (folder.imageText) {
@@ -70,20 +70,25 @@ export const processOCRAndSave = async ({
     );
   }
 
-  // 폴더에 이미지 저장
-  await folderRepository.addImageToFolder(BigInt(folder.folder_id), image_url);
-
   return {
     folder_id: folder.folder_id,
     image_text: ocrText,
-    image_url,
   };
 };
 
-// Google Vision API를 사용하여 OCR 수행 함수
-export const performOCR = async (image_url: string): Promise<string> => {
+// Google Vision API를 사용하여 OCR 수행 함수 (Base64 지원 및 MIME 제거)
+export const performOCR = async (base64_image: string): Promise<string> => {
   try {
-    const [result] = await visionClient.textDetection(image_url);
+    // Base64 데이터에서 MIME 타입 제거 (data:image/jpeg;base64, 등)
+    const base64Data = base64_image.replace(/^data:image\/\w+;base64,/, '');
+
+    // Vision API 요청 형식에 맞게 데이터 설정
+    const [result] = await visionClient.textDetection({
+      image: {
+        content: base64Data, // MIME 제거된 Base64 데이터 전달
+      },
+    });
+
     const annotations = result.textAnnotations;
 
     if (!annotations || annotations.length === 0) {

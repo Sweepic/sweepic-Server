@@ -139,45 +139,4 @@ export const folderRepository = {
 
     return formatted;
   },
-
-  /**
-   * 이미지 저장
-   */
-  addImageToFolder: async (
-    folder_id: bigint,
-    image_url: string,
-  ): Promise<OCRResponse> => {
-    // 중복된 이미지 URL인지 확인
-    const existingImage = await prisma.memoImage.findFirst({
-      where: {
-        folderId: folder_id,
-        url: image_url,
-      },
-    });
-
-    if (existingImage) {
-      return {
-        folder_id: existingImage.folderId.toString(),
-        user_id: folder_id, // folder_id를 user_id로 사용
-        image_url: existingImage.url,
-      };
-    }
-
-    // 중복되지 않은 경우 새로 저장
-    const newImage = await prisma.memoImage.create({
-      data: {
-        folderId: folder_id,
-        url: image_url,
-        status: 1,
-      },
-    });
-
-    const formattedResponse: OCRResponse = {
-      folder_id: newImage.folderId.toString(),
-      user_id: folder_id, // folder_id를 user_id로 사용
-      image_url: newImage.url,
-    };
-
-    return formattedResponse;
-  },
 };

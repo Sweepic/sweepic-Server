@@ -17,10 +17,10 @@ export const createFolderOCR = async (
                     type: "object",
                     required: ["image_url", "user_id", "folder_name"],
                     properties: {
-                        image_url: {
+                        base64_image: {
                             type: "string",
                             description: "OCR 처리를 위한 이미지 URL",
-                            example: "https://example.com/image.jpg"
+                            example: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA..."
                         },
                         user_id: {
                             type: "number",
@@ -38,7 +38,7 @@ export const createFolderOCR = async (
         }
     }
     #swagger.responses[201] = {
-        description: "폴더 생성 및 텍스트와 이미지 저장 성공",
+        description: "폴더 생성 및 텍스트 변환",
         content: {
             "application/json": {
                 schema: {
@@ -51,8 +51,7 @@ export const createFolderOCR = async (
                             properties: {
                                 folder_id: { type: "string", example: "1" },
                                 image_text: { type: "string", example: "이번 수업 시간은 사회 과학 시간이다." },
-                                image_url: { type: "string", example: "https://example.com/image.jpg" }
-                            }
+                               
                         }
                     }
                 }
@@ -93,11 +92,11 @@ export const createFolderOCR = async (
     }
   */
 
-  const {image_url, user_id, folder_name} = req.body;
+  const {base64_image, user_id, folder_name} = req.body;
 
   //유효성 검사
-  if (!image_url) {
-    res.status(400).json({error: 'image_url is required'});
+  if (!base64_image) {
+    res.status(400).json({error: 'image is required'});
     return;
   }
 
@@ -115,7 +114,7 @@ export const createFolderOCR = async (
 
   try {
     const result = await processOCRAndSave({
-      image_url,
+      base64_image,
       user_id,
       folder_name,
     });
