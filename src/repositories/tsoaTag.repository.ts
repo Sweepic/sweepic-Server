@@ -1,5 +1,5 @@
 import {Tag} from '@prisma/client';
-import {DateToTags} from '../dtos/tag.dto.js';
+import {DateToTags} from '../dtos/tsoaTag.dto.js';
 import {prisma} from '../db.config.js';
 
 export const selectTagsByDate = async (

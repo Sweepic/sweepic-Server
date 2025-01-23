@@ -1,5 +1,5 @@
-import {DateToTags} from '../dtos/tag.dto.js';
-import {selectTagsByDate} from '../repositories/tag.repository.js';
+import {DateToTags} from '../dtos/tsoaTag.dto.js';
+import {selectTagsByDate} from '../repositories/tsoaTag.repository.js';
 
 export const findTagsByDate = async (dto: DateToTags): Promise<string[]> => {
   let endDate = new Date(dto.createdAt);

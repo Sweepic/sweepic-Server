@@ -9,14 +9,16 @@ import {
   Route,
   SuccessResponse,
   TsoaResponse,
+  Tags,
 } from 'tsoa';
-import {findTagsByDate} from '../services/tag.service.js';
-import {DateToTags} from '../dtos/tag.dto.js';
+import {findTagsByDate} from '../services/tsoaTag.service.js';
+import {DateToTags} from '../dtos/tsoaTag.dto.js';
 import {StatusCodes} from 'http-status-codes';
 
 @Route('tags')
 export class TagsController extends Controller {
   @Get('/users/{userId}')
+  @Tags('Tag')
   @SuccessResponse('200', 'OK')
   public async getTagListWithDate(
     @Path() userId: string,

@@ -11,6 +11,7 @@ import passport from 'passport';
 import session from 'express-session';
 import {PrismaSessionStore} from '@quixo3/prisma-session-store';
 import {prisma} from './db.config.js';
+import swaggerDocument from '../swagger/swagger.json' assert {type: 'json'};
 
 dotenv.config();
 
@@ -25,6 +26,12 @@ app.use(express.urlencoded({extended: false})); //true
 app.get('/', (req: Request, res: Response) => {
   res.send('Sweepic');
 });
+
+// app.use(
+//   '/docs',
+//   swaggerUiExpress.serve,
+//   swaggerUiExpress.setup(swaggerDocument),
+// );
 
 app.use(
   '/docs',
@@ -84,34 +91,6 @@ app.use('/memo', memoFolderRouter);
 RegisterRoutes(app);
 
 app.use('/challenge', challengeRouter);
-
-app.use(
-  session({
-    secret: process.env.EXPRESS_SESSION_SECRET!,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    },
-    store: new PrismaSessionStore(prisma, {
-      checkPeriod: 2 * 60 * 1000,
-      dbRecordIdIsSessionId: true,
-      serializer: {
-        // BigInt를 문자열로 변환하여 저장
-        stringify: (obj: unknown) =>
-          JSON.stringify(obj, (_, value) =>
-            typeof value === 'bigint' ? value.toString() : value,
-          ),
-        parse: (str: string) =>
-          JSON.parse(str, (_, value) =>
-            typeof value === 'string' && /^\d+$/.test(value)
-              ? BigInt(value)
-              : value,
-          ),
-      },
-    }),
-  }),
-);
 
 //passport 초기화
 app.use(passport.initialize());
