@@ -13,7 +13,6 @@ import {challengeRouter} from './routers/challenge.router.js';
 import {authRouter} from './routers/auth.routers.js';
 import {tagRouter} from './routers/tag.router.js';
 
-
 dotenv.config();
 
 const app = express();
