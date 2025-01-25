@@ -1,7 +1,9 @@
 import { Response, Request, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { bodyToMemoFolder } from '../dtos/memo-folder.dto.js';
-import { listMemoFolder, listMemoTextImage, memoFolderCreate, memoFolderImageCreate, memoSearch } from '../services/memo-folder.service.js';
+import { bodyToMemoFolder, bodyToMemoTextToUpdate } from '../dtos/memo-folder.dto.js';
+import { listMemoFolder, listMemoTextImage, memoFolderCreate, memoFolderImageCreate, memoFolderUpdate, memoSearch, memoTextUpdate } from '../services/memo-folder.service.js';
+import { memoFolderDelete, memoImageDelete } from '../services/memo-image.service.js';
+import { bodyToMemoImagesToDelete } from '../dtos/memo-image.dto.js';
 
 export const handlerMemoFolderImageCreate = async (req: Request, res: Response, next: NextFunction): Promise<void> =>{
     /*
@@ -54,9 +56,9 @@ export const handlerMemoFolderImageCreate = async (req: Request, res: Response, 
     console.log('폴더 생성 및 사진 추가');
     console.log('body: ', req.body);
     console.log('image: ', req.file);
-    // if (!req.user) {
-    //     throw new Error('로그인을 하지 않았습니다.');
-    // }
+    if (!req.user) {
+        throw new Error('로그인을 하지 않았습니다.');
+    }
     if (!req.file) {
         throw new Error('저장할 사진이 없습니다.');
     }
@@ -110,10 +112,11 @@ export const handlerMemoFolderAdd = async (req: Request, res: Response, next: Ne
     */
     console.log('폴더 생성');
     console.log('body: ', req.body);
-    // if (!req.user) {
-    //     throw new Error('로그인을 하지 않았습니다.');
-    // }
-    const userId = BigInt(1); //BigInt(req.user!.id);
+    if (!req.user) {
+        throw new Error('로그인을 하지 않았습니다.');
+    }
+    console.log(req.user);
+    const userId = BigInt(req.user!.id);
     const memoFolder = await memoFolderCreate(userId, bodyToMemoFolder(req.body));
     res.status(StatusCodes.OK).success(memoFolder);
 };
@@ -159,10 +162,10 @@ export const handlerMemoFolderList = async (req: Request, res: Response, next: N
     };
     */
     console.log('메모 폴더 리스트 조회');
-    // if (!req.user) {
-    //     throw new Error('로그인을 하지 않았습니다.');
-    // }
-    const userId = BigInt(1); //BigInt(req.user!.id);
+    if (!req.user) {
+        throw new Error('로그인을 하지 않았습니다.');
+    }
+    const userId = BigInt(req.user!.id);
     const memoList = await listMemoFolder(userId);
     res.status(StatusCodes.OK).success(memoList);
 };
@@ -216,16 +219,86 @@ export const handlerMemoSearch = async (req: Request, res: Response, next: NextF
     };
     */
     console.log('메모 검색');
-    // if (!req.user) {
-    //     throw new Error('로그인을 하지 않았습니다.');
-    // }
-    const userId = BigInt(1); //BigInt(req.user!.id);
+    if (!req.user) {
+        throw new Error('로그인을 하지 않았습니다.');
+    }
+    const userId = BigInt(req.user!.id);
     const searchKeyword = req.query.keyword?.toString();
     if (searchKeyword == null) {
         throw new Error('검색어를 1자 이상 입력하세요.');
     }
     const searchMemoList = await memoSearch(userId, searchKeyword);
     res.status(StatusCodes.OK).success(searchMemoList);
+};
+
+export const handlerMemoImageDelete = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    /*
+    #swagger.tags = ['memo-image-controller']
+    #swagger.summary = '사진 삭제 API';
+    #swagger.description = '특정 폴더의 사진을 삭제하는 API입니다.'
+    #swagger.parameters['folderId'] = {
+        in: 'path',
+        required: true,
+        description: "폴더 ID 입력",
+        '@schema': {
+            type: "integer",
+            format: "int64"
+        }
+    };
+    #swagger.requestBody = {
+        required: true,
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    required: ['imageId'],
+                    properties: {
+                        imageId: { type: "array", items: { type: "integer" } }
+                    }
+                }
+            }
+        }
+    };
+    #swagger.responses[200] = {
+        description: "사진 삭제 성공 응답",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "SUCCESS" },
+                        error: { type: "object", nullable: true, example: null },
+                        success: {
+                            type: "object", 
+                            properties: {
+                                folderId: { type: "string", example: "1" },
+                                folderName: { type: "string" },
+                                imageText: { type: "string" },
+                                images: { 
+                                    type: "array", 
+                                    items: { 
+                                        type: "object", 
+                                        properties: { 
+                                            imageId: { type: "string", example: "1"}, 
+                                            imageUrl: { type: "string" }
+                                        }
+                                    }
+                                }
+                            }
+                        }    
+                    }
+                }
+            }
+        }
+    };
+    */
+    if(!req.user) {
+        throw new Error('로그인을 하지 않았습니다.');
+    }
+    const userId = BigInt(req.user!.id);
+    const folderId = BigInt(req.params.folderId);
+    const memoImagesToMove = await memoImageDelete(userId, folderId, bodyToMemoImagesToDelete(req.body));
+    res.status(StatusCodes.OK).success(memoImagesToMove);
 };
 
 export const handlerMemoTextImageList = async (req: Request, res: Response, next: NextFunction): Promise<void> =>{
@@ -266,8 +339,7 @@ export const handlerMemoTextImageList = async (req: Request, res: Response, next
                                             imageUrl: {type: "string" }
                                         }
                                     }
-                                },
-                                createdAt: { type: "string", example: "2025-01-17T03:50:25.923Z"}
+                                }
                             }
                         }     
                     }
@@ -277,11 +349,152 @@ export const handlerMemoTextImageList = async (req: Request, res: Response, next
     };
     */
     console.log('특정 폴더의 사진&텍스트 리스트 조회');
-    // if (!req.user) {
-    //     throw new Error('로그인을 하지 않았습니다.');
-    // }
-    const userId = BigInt(1);//BigInt(req.user!.id);
+    if (!req.user) {
+        throw new Error('로그인을 하지 않았습니다.');
+    }
+    const userId = BigInt(req.user!.id);
     const folderId = BigInt(req.params.folderId);
     const memoTextImageList = await listMemoTextImage(userId, folderId);
+    res.status(StatusCodes.OK).success(memoTextImageList);
+};
+
+export const handlerMemoFolderUpdate = async (req: Request, res: Response, next: NextFunction) :Promise<void> => {
+    /*
+    #swagger.tags = ['memo-folder-controller']
+    #swagger.summary = '메모 폴더 이름 수정 API';
+    #swagger.description = '특정 폴더의 이름을 수정하는 API입니다.'
+    #swagger.parameters['folderId'] = {
+        in: 'path',
+        required: true,
+        description: "폴더 ID 입력",
+        '@schema': {
+            type: "integer",
+            format: "int64"
+        }
+    };
+    #swagger.requestBody = {
+        required: true,
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    required: ['folderName'],
+                    properties: {
+                        folderName: { type: "string", description: "폴더 이름" }
+                    }
+                }
+            }
+        }
+    };
+    #swagger.responses[200] = {
+        description: "폴더 이름 수정 성공 응답",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "SUCCESS" },
+                        error: { type: "object", nullable: true, example: null },
+                        success: {
+                            type: "object", 
+                            properties: {
+                                folderId: { type: "string", example: "1" },
+                                folderName: { type: "string" },
+                                imageText: { type: "string" },
+                                images: { 
+                                    type: "array", 
+                                    items: { 
+                                        type: "object", 
+                                        properties: { 
+                                            imageId: {type: "string", example: "1"}, 
+                                            imageUrl: {type: "string" }
+                                        }
+                                    }
+                                }
+                            }
+                        }    
+                    }
+                }
+            }
+        }
+    };
+    */
+    if (!req.user) {
+        throw new Error('로그인을 하지 않았습니다.');
+    }
+    const userId = BigInt(req.user!.id);
+    const folderId = BigInt(req.params.folderId);
+    const updatedMemoFolder = await memoFolderUpdate(userId, folderId, bodyToMemoFolder(req.body));
+    res.status(StatusCodes.OK).success(updatedMemoFolder);
+};
+
+export const handlerMemoTextUpdate = async (req: Request, res: Response, next: NextFunction): Promise<void> =>{
+    /*
+    #swagger.tags = ['memo-folder-controller']
+    #swagger.summary = '특정 폴더의 메모 텍스트 수정 API';
+    #swagger.description = '특정 폴더의 메모 텍스트를 수정하는 API입니다.'
+    #swagger.parameters['folderId'] = {
+        in: 'path',
+        required: true,
+        description: "폴더 ID 입력",
+        '@schema': {
+            type: "integer",
+            format: "int64"
+        }
+    };
+    #swagger.requestBody = {
+        required: true,
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    required: ['memoText'],
+                    properties: {
+                        memoText: { type: "string", description: "메모 텍스트" }
+                    }
+                }
+            }
+        }
+    };    
+    #swagger.responses[200] = {
+        description: "메모 텍스트 수정 응답",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "SUCCESS" },
+                        error: { type: "object", nullable: true, example: null },
+                        success: {
+                            type: "object", 
+                            properties: {
+                                folderId: { type: "string", example: "1" },
+                                folderName: { type: "string" },
+                                imageText: { type: "string" },
+                                images: { 
+                                    type: "array", 
+                                    items: { 
+                                        type: "object", 
+                                        properties: { 
+                                            imageId: {type: "string", example: "1"}, 
+                                            imageUrl: {type: "string" }
+                                        }
+                                    }
+                                }
+                            }
+                        }     
+                    }
+                }
+            }
+        }
+    };
+    */
+    console.log('특정 폴더의 메모 텍스트 수정');
+    if (!req.user) {
+        throw new Error('로그인을 하지 않았습니다.');
+    }
+    const userId = BigInt(req.user!.id);
+    const folderId = BigInt(req.params.folderId);
+    const memoTextImageList = await memoTextUpdate(userId, folderId, bodyToMemoTextToUpdate(req.body));
     res.status(StatusCodes.OK).success(memoTextImageList);
 };

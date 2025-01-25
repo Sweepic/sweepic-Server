@@ -14,12 +14,15 @@ export const imageUploader = multer({ // 파일 업로드 미들웨어 설정
         bucket: process.env.AWS_S3_BUCKET_NAME, // 업로드할 S3 버킷 이름
         contentType: multerS3.AUTO_CONTENT_TYPE, // 업로드 파일의 MIME 타입 자동 설정
         key: async (req: Request, file, callback) => { // S3 버킷에 저장될 경로와 이름 정의
-            const userId = BigInt(1); // req.user!.id; // 사용자 ID
+            const userId = req.user!.id; // 사용자 ID
 
             // 디렉토리 path 설정 과정
             let uploadDirectory = null;
             if (req.body.folderName) {
                 const createdMemoFolderId = await createMemoFolder(bodyToMemoFolder(req.body), userId);
+                if (createdMemoFolderId === null) {
+                    return callback(new Error('이미 존재하는 폴더 이름입니다.'));
+                }
                 uploadDirectory = createdMemoFolderId;
                 req.uploadDirectory = uploadDirectory; // 디렉토리 정보 저장
             }
