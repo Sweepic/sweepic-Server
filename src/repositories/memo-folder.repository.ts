@@ -1,13 +1,25 @@
 import { prisma } from '../db.config.js';
-import { BodyToMemoFolder, createdMemoFolderId, MemoFolderList, MemoFoler, MemoTextImageList } from '../models/memo-folder.model.js';
+import { BodyToMemoFolder, BodyToMemoTextToUpdate, createdMemoFolderId, MemoFolderList, MemoFolderType, MemoFoler, MemoTextImageList, ResponseMessage } from '../models/memo-folder.model.js';
 import { getPresignedUrl } from '../s3/get-presigned-url.js';
+import { imageDeleter } from '../s3/image.deleter.js';
 
-export const createMemoFolder = async (data: BodyToMemoFolder, userId: bigint) : Promise<bigint> => {
+export const createMemoFolder = async (data: BodyToMemoFolder, userId: bigint) : Promise<bigint|null> => {
     try {
+        const confirmMemoFolder = await prisma.memoFolder.findFirst(
+            {
+                where: {
+                    name: data.folderName,
+                    userId
+                }
+            }
+        );
+        if (confirmMemoFolder) {
+            return null;
+        }
         const createdMemoFolder = await prisma.memoFolder.create({
             data: {
                 name: data.folderName,
-                userId: userId,
+                userId,
                 imageText: '',
             }
         });
@@ -76,7 +88,7 @@ export const getMemoFolderList = async (userId: bigint): Promise<MemoFolderList[
                 },
             },
             where: {
-                userId: userId
+                userId
             }
         });
 
@@ -132,7 +144,7 @@ export const getSearchMemoList = async (userId: bigint, searchKeyword: string): 
             where: { // 폴더 이름이나 메모 텍스트에 검색어가 포함된 데이터 필터링
                 AND: [
                     {
-                        userId: userId
+                        userId
                     },
                     {
                         OR: [
@@ -197,7 +209,7 @@ export const getMemoTextImageList = async (userId: bigint, folderId: bigint): Pr
                 },
             },
             where: {
-                userId: userId,
+                userId,
                 id: folderId
             }
         });
@@ -221,6 +233,118 @@ export const getMemoTextImageList = async (userId: bigint, folderId: bigint): Pr
         };
 
         return formattedMemoTextImageList;
+    }
+    catch (err) {
+        throw new Error('서버 내부 오류 또는 존재하지 않는 데이터');
+    }
+};
+
+export const updateMemoFolder = async (userId: bigint, folderId: bigint, folderName: string) :Promise<MemoFolderType | null> =>{
+    try {
+        const checkFolder = await prisma.memoFolder.findFirst({
+            where: {
+                name: folderName,
+                userId
+            }
+        });
+        if (checkFolder) {
+            return null;
+        }
+        const folder = await prisma.memoFolder.update({
+            where: {
+                userId,
+                id: folderId
+            },
+            data: {
+                name: folderName,
+                updatedAt: new Date()
+            }
+        });
+        return folder;
+    }
+    catch (err) {
+        throw new Error('서버 내부 오류 또는 존재하지 않는 데이터');
+    }
+};
+
+export const deleteMemoFolder = async (userId:bigint, folderId: bigint) :Promise<ResponseMessage|null> => {
+    try {
+        const folder = await prisma.memoFolder.findFirst({
+            where: {
+                id: folderId,
+                userId
+            }
+        });
+        if (folder == null) {
+            return null;
+        }
+        const imageUrlToDelete = await prisma.memoImage.findMany({
+            where: {
+                folderId,
+                memoFolder: {
+                    userId
+                }
+            }
+        });
+        for (const imageUrl of imageUrlToDelete) {
+            imageDeleter(imageUrl.url);
+        }
+        await prisma.memoImage.deleteMany({
+            where: {
+                folderId
+            }
+        });
+        await prisma.memoFolder.delete({
+            where: {
+                id: folderId,
+                userId
+            }
+        });
+        return { message: '성공적으로 삭제하였습니다.' };
+    }
+    catch (err) {
+        throw new Error('서버 내부 오류 또는 존재하지 않는 데이터');
+    }
+};
+
+export const updateMemoText = async (userId: bigint, folderId: bigint, data: BodyToMemoTextToUpdate):Promise<MemoTextImageList> => {
+    try {
+        const memoText = await prisma.memoFolder.update({
+            where: {
+                id: folderId,
+                userId
+            },
+            data: {
+                imageText: data.memoText,
+                updatedAt: new Date()
+            },
+            select: {
+                id: true,                
+                userId: true,
+                name: true,
+                imageText: true,
+                createdAt: true,
+                updatedAt: true,
+                status: true,
+                memoImages: true,
+            }
+        });
+
+        const formattedMemoText = {
+            ...memoText,
+            id: memoText.id.toString(),
+            memoImages: await Promise.all(memoText.memoImages.map(async(memoImage) => {
+                const presignedUrl = await getPresignedUrl(memoImage.url);
+                return {
+                    ...memoImage,
+                    id: memoImage.id.toString(),
+                    folderId: memoImage.folderId.toString(),
+                    url: presignedUrl,
+                };
+            }))
+        };
+
+        return formattedMemoText;
     }
     catch (err) {
         throw new Error('서버 내부 오류 또는 존재하지 않는 데이터');

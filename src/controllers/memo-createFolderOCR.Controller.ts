@@ -51,7 +51,7 @@ export const createFolderOCR = async (
                             properties: {
                                 folder_id: { type: "string", example: "1" },
                                 image_text: { type: "string", example: "이번 수업 시간은 사회 과학 시간이다." },
-                               
+                            }   
                         }
                     }
                 }
