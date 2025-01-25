@@ -66,7 +66,6 @@ jobs:
           ssh sweepic-ec2 'sudo mkdir -p /opt/app'
           ssh sweepic-ec2 'sudo chown ubuntu:ubuntu /opt/app'
           scp -r ./dist sweepic-ec2:/opt/app
-          scp -r ./swagger sweepic-ec2:/opt/app
 
       # 원격 서버에서 애플리케이션을 Systemd 서비스로 등록하는 과정
       - name: Copy systemd service file
