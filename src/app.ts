@@ -10,6 +10,7 @@ import passport from 'passport';
 import session from 'express-session';
 import {PrismaSessionStore} from '@quixo3/prisma-session-store';
 import {prisma} from './db.config.js';
+import swaggerDocument from '../swagger/openapi.json' assert {type: 'json'};
 
 dotenv.config();
 
@@ -21,46 +22,10 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false})); //true
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Sweepic');
-});
-
 app.use(
   '/docs',
   swaggerUiExpress.serve,
-  swaggerUiExpress.setup(
-    {},
-    {
-      swaggerOptions: {
-        url: '/openapi.json',
-      },
-    },
-  ),
-);
-
-app.get(
-  '/openapi.json',
-  async (req: Request, res: Response, next: NextFunction) => {
-    // #swagger.ignore = true
-    const options = {
-      openapi: '3.0.0',
-      disableLogs: true,
-      writeOutputFile: false,
-    };
-    const outputFile = '/dev/null'; // 파일 출력은 사용하지 않습니다.
-    const routes = ['./src/app.ts']; // swagger-autogen이 분석할 파일 경로입니다.
-    const doc = {
-      openapi: '3.0.0',
-      info: {
-        title: 'Sweepic API',
-        description: 'Sweepic 프로젝트입니다.',
-        version: '1.0.0',
-      },
-      host: 'localhost:3000',
-    };
-    const result = await swaggerAutogen(options)(outputFile, routes, doc);
-    res.json(result ? result.data : null);
-  },
+  swaggerUiExpress.setup(swaggerDocument),
 );
 
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -78,10 +43,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
   next();
 });
-
-app.use('/memo', memoFolderRouter);
-
-app.use('/challenge', challengeRouter);
 
 app.use(
   session({
@@ -117,6 +78,14 @@ app.use(passport.session());
 
 app.use('/oauth2', authRouter);
 
+app.get('/', (req: Request, res: Response) => {
+  console.log(req.user);
+  res.send('Sweepic');
+});
+
+app.use('/memo', memoFolderRouter);
+
+app.use('/challenge', challengeRouter);
 // 응답 통일 (임시)
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   if (res.headersSent) {
