@@ -5,7 +5,7 @@
   ],
   "compilerOptions": {
     "moduleResolution": "Nodenext",
-    "module": "NodeNext",
+    "module": "Nodenext",
     "noEmit": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,

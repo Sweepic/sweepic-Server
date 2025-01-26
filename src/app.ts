@@ -11,7 +11,11 @@ import passport from 'passport';
 import session from 'express-session';
 import {PrismaSessionStore} from '@quixo3/prisma-session-store';
 import {prisma} from './db.config.js';
+<<<<<<< HEAD
 import swaggerDocument from '../swagger/swagger.json' assert {type: 'json'};
+=======
+import swaggerDocument from '../swagger/openapi.json' assert {type: 'json'};
+>>>>>>> eeab1d843083f8f8a72b737b197b8e4b21bbcf77
 
 dotenv.config();
 
@@ -36,39 +40,7 @@ app.get('/', (req: Request, res: Response) => {
 app.use(
   '/docs',
   swaggerUiExpress.serve,
-  swaggerUiExpress.setup(
-    {},
-    {
-      swaggerOptions: {
-        url: '/openapi.json',
-      },
-    },
-  ),
-);
-
-app.get(
-  '/openapi.json',
-  async (req: Request, res: Response, next: NextFunction) => {
-    // #swagger.ignore = true
-    const options = {
-      openapi: '3.0.0',
-      disableLogs: true,
-      writeOutputFile: false,
-    };
-    const outputFile = '/dev/null'; // 파일 출력은 사용하지 않습니다.
-    const routes = ['./src/app.ts']; // swagger-autogen이 분석할 파일 경로입니다.
-    const doc = {
-      openapi: '3.0.0',
-      info: {
-        title: 'Sweepic API',
-        description: 'Sweepic 프로젝트입니다.',
-        version: '1.0.0',
-      },
-      host: 'http://3.37.137.212:3000/',
-    };
-    const result = await swaggerAutogen(options)(outputFile, routes, doc);
-    res.json(result ? result.data : null);
-  },
+  swaggerUiExpress.setup(swaggerDocument),
 );
 
 app.use((req: Request, res: Response, next: NextFunction) => {
