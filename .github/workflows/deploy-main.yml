@@ -32,6 +32,10 @@ jobs:
           npm install -g yarn
           yarn install
 
+      - name: Generate Swagger document
+        run: |
+          yarn tsx ./swagger/swagger.js
+
       - name: Run build
         run: |
           yarn prisma generate
