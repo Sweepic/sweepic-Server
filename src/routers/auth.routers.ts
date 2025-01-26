@@ -18,18 +18,18 @@ passport.use(kakaoStrategy);
 // serialize 설정
 passport.serializeUser((user, done) => done(null, user));
 // deserializeUser 설정
-passport.deserializeUser(async (id: bigint, done) => {
+passport.deserializeUser<UserModel>(async (user: UserModel, done) => {
   try {
     // 사용자 조회
-    const user = await prisma.user.findUnique({ where: { id } });
+    const checkUser = await prisma.user.findUnique({ where: { id: user.id } });
 
     // 사용자 존재 여부 확인
-    if (!user) {
+    if (!checkUser) {
       return done(new Error('User not found'), null);
     }
 
     // 성공적으로 사용자 반환
-    done(null, user as UserModel);
+    done(null, checkUser as UserModel);
   } catch (error) {
     // 에러 처리
     done(error, null);

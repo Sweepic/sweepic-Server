@@ -64,7 +64,7 @@ app.get(
         description: 'Sweepic 프로젝트입니다.',
         version: '1.0.0',
       },
-      host: 'localhost:3000',
+      host: 'http://3.37.137.212:3000/',
     };
     const result = await swaggerAutogen(options)(outputFile, routes, doc);
     res.json(result ? result.data : null);
@@ -86,10 +86,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
   next();
 });
-
-app.use('/memo', memoFolderRouter);
-RegisterRoutes(app);
-app.use('/challenge', challengeRouter);
 
 app.use(
   session({
@@ -125,6 +121,14 @@ app.use(passport.session());
 
 app.use('/oauth2', authRouter);
 
+app.get('/', (req: Request, res: Response) => {
+  console.log(req.user);
+  res.send('Sweepic');
+});
+
+app.use('/memo', memoFolderRouter);
+RegisterRoutes(app);
+app.use('/challenge', challengeRouter);
 // 응답 통일 (임시)
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   if (res.headersSent) {

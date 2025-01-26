@@ -22,6 +22,21 @@ jobs:
       #     filters: |
       #         prisma: ["prisma/**"]
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: |
+          npm install -g yarn
+          yarn install
+
+      - name: Run build
+        run: |
+          yarn prisma generate
+          yarn build
+
       # SSH 설정
       - name: Configure SSH
         run: |
@@ -50,32 +65,7 @@ jobs:
         run: |
           ssh sweepic-ec2 'sudo mkdir -p /opt/app'
           ssh sweepic-ec2 'sudo chown ubuntu:ubuntu /opt/app'
-          scp -r ./[!.]* sweepic-ec2:/opt/app
-
-      # 글로벌로 yarn 설치
-      - name: Install yarn
-        run: |
-          ssh sweepic-ec2 '
-              sudo npm install -g yarn
-          '
-
-      # yarn 버전 확인
-      - name: Check yarn version
-        run: |
-          ssh sweepic-ec2 'yarn --version'
-
-      # 의존성 설치 및 빌드
-      - name: Install dependencies
-        run: |
-          ssh sweepic-ec2 'cd /opt/app; yarn install'
-          ssh sweepic-ec2 'cd /opt/app; yarn prisma generate'
-          ssh sweepic-ec2 'cd /opt/app; yarn build'
-
-      # prisma 폴더의 파일의 변경 사항이 있다면 EC2 서버에 추가적으로 DB Migrate 실행
-      # - name: Apply prisma migrations
-      #   if: steps.paths-filter.outputs.prisma == 'true'
-      #   run: |
-      #     ssh sweepic-ec2 'cd /opt/app; yarn prisma migrate deploy'
+          scp -r ./dist sweepic-ec2:/opt/app
 
       # 원격 서버에서 애플리케이션을 Systemd 서비스로 등록하는 과정
       - name: Copy systemd service file
@@ -88,7 +78,7 @@ jobs:
               [Service]
               User=${USER}
               WorkingDirectory=/opt/app
-              ExecStart=/usr/bin/yarn start
+              ExecStart=/usr/bin/node dist/app.cjs
               Restart=always
               
               [Install]
