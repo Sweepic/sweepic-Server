@@ -5,8 +5,6 @@ import { getIdNumber } from '../utils/challenge.utils.js';
 import { Challenge } from '@prisma/client';
 import { ResponseFromGetByUserIdReform } from '../models/challenge.entities.js';
 
-
-
 export const handleUpdateChallenge = async (
     req: Request,
     res: Response,

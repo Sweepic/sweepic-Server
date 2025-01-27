@@ -1,4 +1,5 @@
 import { prisma } from '../db.config.js';
+import { ChallengeAcceptError, ChallengeCompleteError, ChallengeNotFoundError } from '../errors.js';
 import { ChallengeModify, LocationChallengeCreation, ResponseFromGetByUserId } from '../models/challenge.entities.js';
 import { Challenge, DateChallenge, LocationChallenge } from '@prisma/client';
 
@@ -74,28 +75,54 @@ export const getLocation = async (data: bigint): Promise<LocationChallenge | nul
     return challengeLocation;
 };
 
-export const updateStatus = async (data: bigint, status: number): Promise<Challenge | null> => {
-    if(status === 3){
-        const isAccepted: {status: number} | null = await prisma.challenge.findFirst({
-            where: {
-                id: data
-            },
-            select: {
-                status: true
-            }
-        });
-
-        if(!isAccepted || isAccepted.status != 2){
-            throw new Error('This challenge is not accepted');
+export const acceptChallenge = async (data: bigint): Promise<Challenge | null> => {
+    const state: {status: number} | null = await prisma.challenge.findFirst({
+        where: {id: data},
+        select: {
+            status: true
         }
+    });
+
+    if(!state){
+        throw new ChallengeAcceptError({challengeId: data, reason: '챌린지가 존재하지 않습니다.'});
     }
+
+    if(state.status === 2 || state.status === 3){
+        throw new ChallengeAcceptError({challengeId: data, reason: '챌린지가 이미 수락되거나 완료되었습니다.'});
+    } 
 
     const updatedChallenge = await prisma.challenge.update({
         where: {id: data},
         data: {
-            status: status,
-            acceptedAt: status === 2 ? new Date() : null,
-            completedAt: status === 3 ? new Date() : null
+            status: 2,
+            acceptedAt: new Date()
+        }  //status: 1 = created, 2 = accepted, 3 = completed
+    });
+
+    return updatedChallenge;
+};
+
+export const completeChallenge = async (data: bigint): Promise<Challenge | null> => {
+    const state: {status: number} | null = await prisma.challenge.findFirst({
+        where: {id: data},
+        select: {
+            status: true
+        }
+    });
+
+    if(!state){
+        throw new ChallengeCompleteError({challengeId: data, reason: '챌린지가 존재하지 않습니다.'});
+    }
+
+    if(state.status !== 2){
+        throw new ChallengeCompleteError({challengeId: data, reason: '챌린지가 수락되지 않았습니다.'});
+    } 
+
+    const updatedChallenge = await prisma.challenge.update({
+        where: {id: data},
+        data: {
+            status: 3,
+            completedAt: new Date()
         }  //status: 1 = created, 2 = accepted, 3 = completed
     });
 

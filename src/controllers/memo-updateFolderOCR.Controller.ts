@@ -1,5 +1,7 @@
 import {Request, Response} from 'express';
 import {processOCRAndSave} from '../services/memo-ocrService.js';
+import {StatusCodes} from 'http-status-codes';
+import {BaseError, DataValidationError} from '../errors.js';
 
 export const updateFolderOCR = async (
   req: Request,
@@ -96,44 +98,50 @@ export const updateFolderOCR = async (
         }
     }
   */
-
-  const {folderId} = req.params; // URL 매개변수에서 folderId 가져오기
-  const {base64_image, user_id} = req.body;
-
-  //유효성 검사
-  if (!base64_image) {
-    res.status(400).json({error: 'image is required'});
-    return;
-  }
-
-  if (!user_id) {
-    res.status(400).json({error: 'user_id is required'});
-    return;
-  }
-
-  if (!folderId) {
-    res.status(400).json({error: 'folderId is required for updating a folder'});
-    return;
-  }
-
   try {
+    const {folderId} = req.params; // URL 매개변수에서 folderId 가져오기
+    const {base64_image, user_id} = req.body;
+
+    // 유효성 검사
+    if (!folderId) {
+      throw new DataValidationError({
+        reason: 'folderId is required for updating a folder.',
+      });
+    }
+
+    if (!base64_image) {
+      throw new DataValidationError({
+        reason: 'base64_image is required for OCR processing.',
+      });
+    }
+
+    if (!user_id) {
+      throw new DataValidationError({reason: 'user_id is required.'});
+    }
+
     const result = await processOCRAndSave({
       folder_id: Number(folderId),
       base64_image,
       user_id,
     });
 
-    res.status(200).json({
-      message: 'Folder updated with new text successfully',
-      data: result,
-    });
-  } catch (error) {
-    console.error('Error in updateFolderOCR controller:', error);
+    res.status(StatusCodes.OK).success(result);
+  } catch (error: unknown) {
+    console.error('Error occurred:', error);
 
-    if (error instanceof Error) {
-      res.status(500).json({error: error.message});
+    if (error instanceof BaseError) {
+      res.status(error.statusCode).error({
+        errorCode: error.code,
+        reason: error.message,
+        data: error.details,
+      });
     } else {
-      res.status(500).json({error: 'An unknown error occurred.'});
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).error({
+        errorCode: 'unknown',
+        reason:
+          error instanceof Error ? error.message : 'Unexpected server error.',
+        data: null,
+      });
     }
   }
 };

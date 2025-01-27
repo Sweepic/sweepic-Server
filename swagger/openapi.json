@@ -532,13 +532,70 @@
         "description": "새로운 폴더를 생성하고, 이미지에서 OCR 텍스트를 추출하여 이미지와 텍스트를 저장하는 API입니다.",
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "폴더 생성 및 텍스트 변환",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "resultType": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "error": {
+                      "type": "object",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "success": {
+                      "type": "object",
+                      "properties": {
+                        "folder_id": {
+                          "type": "string",
+                          "example": "1"
+                        },
+                        "image_text": {
+                          "type": "string",
+                          "example": "이번 수업 시간은 사회 과학 시간이다."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "잘못된 요청 데이터",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "폴더의 이름을 입력해주세요."
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "서버 내부 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "서버에러발생."
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "requestBody": {

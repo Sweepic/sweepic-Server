@@ -1,10 +1,25 @@
-import { Response, Request, NextFunction } from 'express';
-import { StatusCodes } from 'http-status-codes';
-import { bodyToMemoFolder } from '../dtos/memo-folder.dto.js';
-import { listMemoFolder, listMemoTextImage, memoFolderCreate, memoFolderImageCreate, memoSearch } from '../services/memo-folder.service.js';
+import {Response, Request, NextFunction} from 'express';
+import {StatusCodes} from 'http-status-codes';
+import {bodyToMemoFolder} from '../dtos/memo-folder.dto.js';
+import {
+  listMemoFolder,
+  listMemoTextImage,
+  memoFolderCreate,
+  memoFolderImageCreate,
+  memoSearch,
+} from '../services/memo-folder.service.js';
+import {
+  DataValidationError,
+  FolderNotFoundError,
+  BaseError,
+} from '../errors.js';
 
-export const handlerMemoFolderImageCreate = async (req: Request, res: Response, next: NextFunction): Promise<void> =>{
-    /*
+export const handlerMemoFolderImageCreate = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  /*
     #swagger.tags = ['memo-folder-controller']
     #swagger.summary = '폴더 생성 및 사진 저장 API';
     #swagger.description = '폴더 생성과 동시에 파일을 저장하는 API입니다.'
@@ -51,24 +66,30 @@ export const handlerMemoFolderImageCreate = async (req: Request, res: Response, 
         }
     };
     */
-    console.log('폴더 생성 및 사진 추가');
-    console.log('body: ', req.body);
-    console.log('image: ', req.file);
-    // if (!req.user) {
-    //     throw new Error('로그인을 하지 않았습니다.');
-    // }
+  console.log('폴더 생성 및 사진 추가');
+  console.log('body: ', req.body);
+  console.log('image: ', req.file);
+  // if (!req.user) {
+  //     throw new Error('로그인을 하지 않았습니다.');
+  // }
+  try {
     if (!req.file) {
-        throw new Error('저장할 사진이 없습니다.');
+      throw new DataValidationError({reason: '저장할 사진이 없습니다.'});
     }
     const imageUrl = (req.file as Express.MulterS3File).key;
     const folderId = req.uploadDirectory;
-    console.log('imageUrl', imageUrl);
     const memoFolderImage = await memoFolderImageCreate(folderId, imageUrl);
     res.status(StatusCodes.OK).success(memoFolderImage);
+  } catch (error) {
+    next(error);
+  }
 };
-
-export const handlerMemoFolderAdd = async (req: Request, res: Response, next: NextFunction): Promise<void> =>{
-    /*
+export const handlerMemoFolderAdd = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  /*
     #swagger.tags = ['memo-folder-controller']
     #swagger.summary = '폴더 생성 API';
     #swagger.description = '폴더를 생성하는 API입니다.'
@@ -108,18 +129,22 @@ export const handlerMemoFolderAdd = async (req: Request, res: Response, next: Ne
         }
     };
     */
-    console.log('폴더 생성');
-    console.log('body: ', req.body);
-    // if (!req.user) {
-    //     throw new Error('로그인을 하지 않았습니다.');
-    // }
-    const userId = BigInt(1); //BigInt(req.user!.id);
-    const memoFolder = await memoFolderCreate(userId, bodyToMemoFolder(req.body));
-    res.status(StatusCodes.OK).success(memoFolder);
+  console.log('폴더 생성');
+  console.log('body: ', req.body);
+  // if (!req.user) {
+  //     throw new Error('로그인을 하지 않았습니다.');
+  // }
+  const userId = BigInt(1); //BigInt(req.user!.id);
+  const memoFolder = await memoFolderCreate(userId, bodyToMemoFolder(req.body));
+  res.status(StatusCodes.OK).success(memoFolder);
 };
 
-export const handlerMemoFolderList = async (req: Request, res: Response, next: NextFunction): Promise<void> =>{
-    /*
+export const handlerMemoFolderList = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  /*
     #swagger.tags = ['memo-folder-controller']
     #swagger.summary = '모든 메모 조회 API';
     #swagger.description = '모든 메모를 조회하는 API입니다.'
@@ -158,17 +183,21 @@ export const handlerMemoFolderList = async (req: Request, res: Response, next: N
         }
     };
     */
-    console.log('메모 폴더 리스트 조회');
-    // if (!req.user) {
-    //     throw new Error('로그인을 하지 않았습니다.');
-    // }
-    const userId = BigInt(1); //BigInt(req.user!.id);
-    const memoList = await listMemoFolder(userId);
-    res.status(StatusCodes.OK).success(memoList);
+  console.log('메모 폴더 리스트 조회');
+  // if (!req.user) {
+  //     throw new Error('로그인을 하지 않았습니다.');
+  // }
+  const userId = BigInt(1); //BigInt(req.user!.id);
+  const memoList = await listMemoFolder(userId);
+  res.status(StatusCodes.OK).success(memoList);
 };
 
-export const handlerMemoSearch = async (req: Request, res: Response, next: NextFunction): Promise<void> =>{
-    /*
+export const handlerMemoSearch = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  /*
     #swagger.tags = ['memo-folder-controller']
     #swagger.summary = '메모 검색 API';
     #swagger.description = '메모를 검색 및 조회하는 API입니다.'
@@ -215,21 +244,30 @@ export const handlerMemoSearch = async (req: Request, res: Response, next: NextF
         }
     };
     */
-    console.log('메모 검색');
-    // if (!req.user) {
-    //     throw new Error('로그인을 하지 않았습니다.');
-    // }
-    const userId = BigInt(1); //BigInt(req.user!.id);
+  console.log('메모 검색');
+  // if (!req.user) {
+  //     throw new Error('로그인을 하지 않았습니다.');
+  // }
+  try {
+    const userId = BigInt(1); // Example userId, replace with actual logic
     const searchKeyword = req.query.keyword?.toString();
-    if (searchKeyword == null) {
-        throw new Error('검색어를 1자 이상 입력하세요.');
+
+    if (!searchKeyword) {
+      throw new DataValidationError({reason: '검색어를 1자 이상 입력하세요.'});
     }
+
     const searchMemoList = await memoSearch(userId, searchKeyword);
     res.status(StatusCodes.OK).success(searchMemoList);
+  } catch (error) {
+    next(error);
+  }
 };
-
-export const handlerMemoTextImageList = async (req: Request, res: Response, next: NextFunction): Promise<void> =>{
-    /*
+export const handlerMemoTextImageList = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  /*
     #swagger.tags = ['memo-folder-controller']
     #swagger.summary = '특정 폴더의 메모 조회 API';
     #swagger.description = '특정 폴더의 모든 메모(텍스트 및 사진)을 조회하는 API입니다.'
@@ -276,12 +314,12 @@ export const handlerMemoTextImageList = async (req: Request, res: Response, next
         }
     };
     */
-    console.log('특정 폴더의 사진&텍스트 리스트 조회');
-    // if (!req.user) {
-    //     throw new Error('로그인을 하지 않았습니다.');
-    // }
-    const userId = BigInt(1);//BigInt(req.user!.id);
-    const folderId = BigInt(req.params.folderId);
-    const memoTextImageList = await listMemoTextImage(userId, folderId);
-    res.status(StatusCodes.OK).success(memoTextImageList);
+  console.log('특정 폴더의 사진&텍스트 리스트 조회');
+  // if (!req.user) {
+  //     throw new Error('로그인을 하지 않았습니다.');
+  // }
+  const userId = BigInt(1); //BigInt(req.user!.id);
+  const folderId = BigInt(req.params.folderId);
+  const memoTextImageList = await listMemoTextImage(userId, folderId);
+  res.status(StatusCodes.OK).success(memoTextImageList);
 };
