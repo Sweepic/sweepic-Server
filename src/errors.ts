@@ -118,14 +118,14 @@ export class LocationChallengeNotFoundError extends BaseError {
 
 // 챌린지 수락 관련 에러 (CHL)
 export class ChallengeAcceptError extends BaseError {
-  constructor(details: {challengeId: bigint, reason: string}) {
+  constructor(details: {challengeId: bigint; reason: string}) {
     super(400, 'CHL-400', '해당 챌린지를 수락할 수 없습니다.', details);
   }
 }
 
 // 챌린지 완료 관련 에러 (CHL)
 export class ChallengeCompleteError extends BaseError {
-  constructor(details: {reason: string}){
+  constructor(details: {challengeId: bigint; reason: string}){
     super(400, 'CHL-400', '챌린지 완료 실패', details);
   }
 }
