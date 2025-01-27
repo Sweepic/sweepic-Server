@@ -1,12 +1,12 @@
 /* tslint:disable */
-/* eslint-disable */
+
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import type {TsoaRoute} from '@tsoa/runtime';
 import {fetchMiddlewares, ExpressTemplateService} from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import {TagsController} from './../controllers/tsoaTag.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import {ImagesController} from './../controllers/image.controller.js';
+import {ImagesController} from '../controllers/tsoaImage.controller.js';
 import type {
   Request as ExRequest,
   Response as ExResponse,
