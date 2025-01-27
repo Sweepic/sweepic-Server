@@ -38,7 +38,7 @@ export const newLocationChallenge = async (data: LocationChallengeCreation): Pro
     return newChal;
 };
 
-export const updateLocationChallenge = async (data: ChallengeModify): Promise<Challenge> => {
+export const updateChallenge = async (data: ChallengeModify): Promise<Challenge> => {
     const updated = await prisma.challenge.update({
         where: { id: data.id },
         data: {
@@ -50,7 +50,7 @@ export const updateLocationChallenge = async (data: ChallengeModify): Promise<Ch
     return updated;
 };
 
-export const deleteLocationChallenge = async (data: bigint): Promise<bigint> => {
+export const deleteChallenge = async (data: bigint): Promise<bigint> => {
     const deleted = await prisma.challenge.delete({
         where: {id: data}
     });
