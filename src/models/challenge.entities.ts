@@ -6,11 +6,27 @@ export interface BodyToLocationCreation {
     required: number;
 }
 
+export interface BodyToWeeklyCreation {
+    userId: string;
+    title: string;
+    context: string;
+    challengeDate: Date;
+    required: number;
+}
+
 export interface LocationChallengeCreation {
     userId: bigint;
     title: string;
     context: string;
     location: string;
+    required: number;
+}
+
+export interface WeeklyChallengeCreation {
+    userId: bigint;
+    title: string;
+    context: string;
+    challengeDate: Date;
     required: number;
 }
 
@@ -31,7 +47,7 @@ export interface ResponseFromChallenge {
     updatedAt: Date | null;
     acceptedAt: Date | null;
     completedAt: Date | null;
-    status: number;
+    status: number; //status 1 = created, 2 = accepted, 3 = completed
 }
 
 export interface ResponseFromLocationChallenge {
@@ -40,6 +56,21 @@ export interface ResponseFromLocationChallenge {
     title: string;
     context: string;
     location: string;
+    requiredCount: number;
+    remainingCount: number;
+    createdAt: Date;
+    updatedAt: Date | null;
+    acceptedAt: Date | null;
+    completedAt: Date | null;
+    status: number;
+}
+
+export interface ResponseFromWeeklyChallenge {
+    id: string;
+    userId: string;
+    title: string;
+    context: string;
+    challengeDate: string;
     requiredCount: number;
     remainingCount: number;
     createdAt: Date;
