@@ -1,6 +1,5 @@
 import {ImageAnnotatorClient} from '@google-cloud/vision';
-import path from 'path';
-import {fileURLToPath} from 'url';
+
 import {folderRepository} from '../repositories/memo-OCR.repositoy.js';
 import {OCRRequest} from '../models/memo-OCR.model.js';
 import {
@@ -8,15 +7,11 @@ import {
   FolderDuplicateError,
   PhotoDataNotFoundError,
 } from '../errors.js';
-// ES Module 환경에서 __dirname 대체
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+
+import path from 'path';
 
 // Google Cloud Vision 클라이언트 초기화
-const keyFilename = path.resolve(
-  __dirname,
-  '../../sweepicai-00d515e813ea.json',
-);
+const keyFilename = path.resolve('../sweepicai-00d515e813ea.json');
 
 const visionClient = new ImageAnnotatorClient({keyFilename});
 

@@ -1,3 +1,4 @@
+import {UserModel} from '../src/models/user.model.ts';
 import 'express';
 
 declare global {

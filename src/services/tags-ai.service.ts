@@ -1,16 +1,10 @@
 import {ImageAnnotatorClient} from '@google-cloud/vision';
-import path from 'path';
-import {fileURLToPath} from 'url';
 import {LabelDetectionError, LabelNotFoundError} from '../errors.js';
-// ES Module 환경에서 __dirname 대체
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
-// Google Cloud Vision 클라이언트 초기화
-const keyFilename = path.resolve(
-  __dirname,
-  '../../sweepicai-00d515e813ea.json',
-);
+import path from 'path';
+
+const keyFilename = path.resolve('../sweepicai-00d515e813ea.json');
+
 const visionClient = new ImageAnnotatorClient({keyFilename});
 export const detectLabels = async (
   base64Image: string,
