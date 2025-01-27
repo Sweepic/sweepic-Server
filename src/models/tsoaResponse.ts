@@ -1,4 +1,4 @@
-export class response {
+export class Response {
   resultType: string = 'SUCCESS';
   error = null;
   success: {data: any};

@@ -7,7 +7,7 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"response": {
+			"Response": {
 				"properties": {
 					"resultType": {
 						"type": "string",
@@ -54,7 +54,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/response"
+									"$ref": "#/components/schemas/Response"
 								}
 							}
 						}
@@ -112,22 +112,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"items": {
-										"properties": {
-											"mediaId": {
-												"type": "string"
-											},
-											"id": {
-												"type": "string"
-											}
-										},
-										"required": [
-											"mediaId",
-											"id"
-										],
-										"type": "object"
-									},
-									"type": "array"
+									"$ref": "#/components/schemas/Response"
 								}
 							}
 						}

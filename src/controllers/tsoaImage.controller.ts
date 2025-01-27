@@ -13,7 +13,8 @@ import {
 } from 'tsoa';
 import {RequestTagSearch} from '../dtos/tsoaImage.dto.js';
 import {findImagesFromTag} from '../services/tsoaImage.service.js';
-import {StatusCodes} from 'http-status-codes';
+import {BaseError, ServerError} from '../errors.js';
+import {Response} from '../models/tsoaResponse.js';
 
 @Route('images')
 export class ImagesController extends Controller {
@@ -23,14 +24,16 @@ export class ImagesController extends Controller {
   public async getImageListFromTag(
     @Path() userId: string,
     @Query() tag: string,
-  ): Promise<{id: string; mediaId: string}[]> {
+  ): Promise<Response> {
     const dto = new RequestTagSearch(tag, userId);
-    console.log(dto);
     const images = await findImagesFromTag(dto).catch(err => {
-      err.statusCode = StatusCodes.NOT_FOUND;
-      throw err;
+      if (err instanceof BaseError) {
+        throw err;
+      } else {
+        throw new ServerError();
+      }
     });
 
-    return images;
+    return new Response(images);
   }
 }

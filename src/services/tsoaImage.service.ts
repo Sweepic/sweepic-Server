@@ -1,6 +1,6 @@
-import {StatusCodes} from 'http-status-codes';
 import {RequestTagSearch} from '../dtos/tsoaImage.dto.js';
 import {selectImagesFromTag} from '../repositories/tsoaImage.repository.js';
+import {PhotoDataNotFoundError} from '../errors.js';
 
 export const findImagesFromTag = async (
   dto: RequestTagSearch,
@@ -16,11 +16,12 @@ export const findImagesFromTag = async (
       return resultBigintToString;
     })
     .catch(err => {
-      err.statusCode = StatusCodes.BAD_REQUEST;
       throw err;
     });
   if (images.length === 0) {
-    throw new Error('아무것도 없어요');
+    throw new PhotoDataNotFoundError({
+      reason: '<' + dto.tag + '> 태그에 해당하는 사진이 존재하지 않습니다.',
+    });
   }
   return images;
 };
