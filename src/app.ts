@@ -17,6 +17,7 @@ import session from 'express-session';
 import {PrismaSessionStore} from '@quixo3/prisma-session-store';
 import {prisma} from './db.config.js';
 import {BaseError} from './errors.js';
+import swaggerDocument from '../swagger/openapi.json' assert {type: 'json'};
 
 dotenv.config();
 
@@ -33,31 +34,7 @@ app.use(express.urlencoded({extended: false}));
 app.use(
   '/docs',
   swaggerUiExpress.serve,
-  swaggerUiExpress.setup({}, {swaggerOptions: {url: '/openapi.json'}}),
-);
-
-app.get(
-  '/openapi.json',
-  async (req: Request, res: Response, next: NextFunction) => {
-    const options = {
-      openapi: '3.0.0',
-      disableLogs: true,
-      writeOutputFile: false,
-    };
-    const outputFile = '/dev/null'; // No file output
-    const routes = ['./src/app.ts']; // Files to be analyzed by swagger-autogen
-    const doc = {
-      openapi: '3.0.0',
-      info: {
-        title: 'Sweepic API',
-        description: 'Sweepic 프로젝트입니다.',
-        version: '1.0.0',
-      },
-      host: 'localhost:3000',
-    };
-    const result = await swaggerAutogen(options)(outputFile, routes, doc);
-    res.json(result ? result.data : null);
-  },
+  swaggerUiExpress.setup(swaggerDocument),
 );
 
 // Response customization middleware
@@ -106,16 +83,13 @@ app.use(
   }),
 );
 
-// Passport setup
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Routers
 app.use('/oauth2', authRouter);
 app.use('/memo', memoFolderRouter);
 app.use('/challenge', challengeRouter);
 
-// Default route
 app.get('/', (req: Request, res: Response) => {
   res.send('Sweepic');
 });
