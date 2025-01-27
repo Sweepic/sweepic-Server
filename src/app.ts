@@ -6,6 +6,7 @@ import swaggerUiExpress from 'swagger-ui-express';
 import {memoFolderRouter} from './routers/memo.router.js';
 import {challengeRouter} from './routers/challenge.router.js';
 import {authRouter} from './routers/auth.routers.js';
+import {userRouter} from './routers/user.router.js';
 import passport from 'passport';
 import session from 'express-session';
 import {PrismaSessionStore} from '@quixo3/prisma-session-store';
@@ -78,8 +79,9 @@ app.use(passport.session());
 
 app.use('/oauth2', authRouter);
 
+app.use('/onboarding', userRouter);
+
 app.get('/', (req: Request, res: Response) => {
-  console.log(req.user);
   res.send('Sweepic');
 });
 
