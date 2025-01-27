@@ -9,7 +9,8 @@
     "noEmit": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "skipLibCheck": true
   },
   "include": ["src/**/*.ts", "scripts/**/*.ts", "./@types/**/*.d.ts"],
   "exclude": ["node_modules", "dist", "build"]
