@@ -26,7 +26,7 @@ export class TagsController extends Controller {
     @Query() year: number,
     @Query() month: number,
     @Query() date?: number,
-  ): Promise<Response> {
+  ): Promise<Response<{tags: string[]}>> {
     const dto = new DateToTags(userId, year, month, date);
     const tags = await findTagsByDate(dto)
       .then(result => {

@@ -24,7 +24,7 @@ export class ImagesController extends Controller {
   public async getImageListFromTag(
     @Path() userId: string,
     @Query() tag: string,
-  ): Promise<Response> {
+  ): Promise<Response<{id: string; mediaId: string}[]>> {
     const dto = new RequestTagSearch(tag, userId);
     const images = await findImagesFromTag(dto).catch(err => {
       if (err instanceof BaseError) {

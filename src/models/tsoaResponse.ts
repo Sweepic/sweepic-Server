@@ -1,9 +1,9 @@
-export class Response {
+export class Response<T> {
   resultType: string = 'SUCCESS';
   error = null;
-  success: {data: any};
+  success: {data: T};
 
-  constructor(data: any) {
+  constructor(data: T) {
     this.success = {data};
   }
 }
