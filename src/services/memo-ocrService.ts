@@ -3,12 +3,15 @@ import path from 'path';
 import {fileURLToPath} from 'url';
 import {folderRepository} from '../repositories/memo-OCR.repositoy.js';
 import {OCRRequest} from '../models/memo-OCR.model.js';
-
-const __filename = path.resolve();
-const __dirname = path.dirname(__filename);
+import {
+  FolderNotFoundError,
+  FolderDuplicateError,
+  PhotoDataNotFoundError,
+} from '../errors.js';
 
 // Google Cloud Vision 클라이언트 초기화
-const keyFilename = path.join(__dirname, '../../sweepicai-00d515e813ea.json');
+const keyFilename = path.resolve('../sweepicai-00d515e813ea.json');
+
 const visionClient = new ImageAnnotatorClient({keyFilename});
 
 export const processOCRAndSave = async ({
@@ -25,7 +28,7 @@ export const processOCRAndSave = async ({
   if (!folder_id) {
     // POST 요청 - folder_name으로 폴더 생성 또는 조회
     if (!folder_name) {
-      throw new Error('폴더를 생성하려면 folder_name이 필요합니다');
+      throw new FolderNotFoundError({folderId: BigInt(folder_id || 0)});
     }
 
     // 폴더 이름으로 folder 조회
@@ -36,7 +39,10 @@ export const processOCRAndSave = async ({
 
     // 폴더가 이미 존재하면 중복 에러 반환
     if (folder) {
-      throw new Error('해당 이름의 폴더가 이미 존재합니다');
+      console.log('폴더 중복 에러 발생:', folder_name); // 로그 추가
+      const error = new FolderDuplicateError({folderName: folder_name});
+      console.log('생성된 에러 객체:', error); // 에러 객체 확인
+      throw error;
     }
 
     // 폴더 생성 (folder_name을 사용)
@@ -50,7 +56,7 @@ export const processOCRAndSave = async ({
     );
 
     if (!folder) {
-      throw new Error('해당 폴더를 찾을 수 없습니다');
+      throw new FolderNotFoundError({folderId: BigInt(folder_id)});
     }
   }
 
@@ -92,7 +98,7 @@ export const performOCR = async (base64_image: string): Promise<string> => {
     const annotations = result.textAnnotations;
 
     if (!annotations || annotations.length === 0) {
-      throw new Error('이미지에서 텍스트를 찾을 수 없습니다');
+      throw new PhotoDataNotFoundError();
     }
 
     return annotations[0].description || '텍스트를 찾을 수 없습니다';
