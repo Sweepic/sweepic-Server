@@ -1,11 +1,13 @@
 import {Tag} from '@prisma/client';
 import {DateToTags} from '../dtos/tsoaTag.dto.js';
 import {prisma} from '../db.config.js';
+import {DBError} from '../errors.js';
 
 export const selectTagsByDate = async (
   dto: DateToTags,
   endDate: Date,
 ): Promise<Pick<Tag, 'content'>[]> => {
+  console.log(dto.createdAt);
   const tags = await prisma.tag
     .findMany({
       where: {
@@ -36,11 +38,10 @@ export const selectTagsByDate = async (
         content: 'asc',
       },
     })
-    .catch(() => {
-      throw new Error('DB 에러');
+    .catch(err => {
+      console.log(err);
+      throw new DBError();
     });
 
-  console.log(dto.createdAt);
-  console.log(endDate);
   return tags;
 };

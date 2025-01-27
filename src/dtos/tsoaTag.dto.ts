@@ -8,8 +8,7 @@ export class DateToTags {
       date = 1;
       this.dateExisted = false;
     }
-    this.createdAt = new Date(year, month - 1, date);
-    this.createdAt.setHours(this.createdAt.getHours() + 9);
+    this.createdAt = new Date(Date.UTC(year, month - 1, date));
     this.userId = BigInt(userId);
   }
 }

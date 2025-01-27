@@ -13,7 +13,8 @@ import {
 } from 'tsoa';
 import {findTagsByDate} from '../services/tsoaTag.service.js';
 import {DateToTags} from '../dtos/tsoaTag.dto.js';
-import {StatusCodes} from 'http-status-codes';
+import {BaseError, ServerError, TagBadRequest} from '../errors.js';
+import {response} from '../models/tsoaResponse.js';
 
 @Route('tags')
 export class TagsController extends Controller {
@@ -25,16 +26,20 @@ export class TagsController extends Controller {
     @Query() year: number,
     @Query() month: number,
     @Query() date?: number,
-  ): Promise<{tags: string[]}> {
+  ): Promise<response> {
     const dto = new DateToTags(userId, year, month, date);
     const tags = await findTagsByDate(dto)
       .then(result => {
         return {tags: result};
       })
       .catch(err => {
-        err.statusCode = StatusCodes.NOT_FOUND;
-        throw err;
+        if (!(err instanceof BaseError)) {
+          throw new ServerError();
+        } else {
+          throw err;
+        }
       });
-    return tags;
+
+    return new response(tags);
   }
 }

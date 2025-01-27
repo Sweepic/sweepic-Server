@@ -19,6 +19,7 @@ import {prisma} from './db.config.js';
 import swaggerDocumentOne from '../swagger/openapi.json' assert {type: 'json'};
 import swaggerDocumentTwo from '../swagger/swagger.json' assert {type: 'json'};
 import {BaseError} from './errors.js';
+import {ValidateError} from 'tsoa';
 
 dotenv.config();
 
@@ -92,8 +93,8 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-
 app.use('/oauth2', authRouter);
+
 app.use('/memo', memoFolderRouter);
 app.use('/challenge', challengeRouter);
 RegisterRoutes(app);
@@ -121,6 +122,17 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
     return;
   }
 
+  if (err instanceof ValidateError) {
+    res.status(err.status).json({
+      resultType: 'FAIL',
+      error: {
+        errorCode: 'VAL-001',
+        reason: 'Validation Error',
+        data: err.fields,
+      },
+      success: null,
+    });
+  }
   console.error('Unexpected error:', err);
   res.status(500).json({
     resultType: 'FAIL',

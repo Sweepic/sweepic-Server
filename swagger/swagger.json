@@ -6,7 +6,33 @@
 		"parameters": {},
 		"requestBodies": {},
 		"responses": {},
-		"schemas": {},
+		"schemas": {
+			"response": {
+				"properties": {
+					"resultType": {
+						"type": "string",
+						"default": "SUCCESS"
+					},
+					"error": {
+						"default": null
+					},
+					"success": {
+						"properties": {
+							"data": {}
+						},
+						"required": [
+							"data"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"success"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
 		"securitySchemes": {}
 	},
 	"info": {
@@ -28,18 +54,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"properties": {
-										"tags": {
-											"items": {
-												"type": "string"
-											},
-											"type": "array"
-										}
-									},
-									"required": [
-										"tags"
-									],
-									"type": "object"
+									"$ref": "#/components/schemas/response"
 								}
 							}
 						}
@@ -145,7 +160,7 @@
 	},
 	"servers": [
 		{
-			"url": "http://3.37.137.212:3000",
+			"url": "http://localhost:3000",
 			"description": "Sweepic server"
 		}
 	]
