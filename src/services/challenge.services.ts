@@ -1,85 +1,148 @@
-import { Challenge, LocationChallenge } from '@prisma/client';
-import { locationChallengeToClient, responseFromChallenge } from '../dtos/challenge.dtos.js';
-import { ChallengeModify, ResponseFromLocationChallenge, ResponseFromChallenge, LocationChallengeCreation, PhotoInfo, ResponseFromUpdateChallenge } from '../models/challenge.entities.js';
-import { updateLocationChallenge, newLocationChallenge, deleteLocationChallenge, getChallenge, getLocation } from '../repositories/challenge.repositories.js';
-import { getHashedLocation } from '../utils/challenge.utils.js';
+import {Challenge, LocationChallenge} from '@prisma/client';
+import {
+  locationChallengeToClient,
+  responseFromChallenge,
+} from '../dtos/challenge.dtos.js';
+import {
+  ChallengeModify,
+  ResponseFromLocationChallenge,
+  ResponseFromChallenge,
+  LocationChallengeCreation,
+  PhotoInfo,
+  ResponseFromUpdateChallenge,
+} from '../models/challenge.entities.js';
+import {
+  updateLocationChallenge,
+  newLocationChallenge,
+  deleteLocationChallenge,
+  getChallenge,
+  getLocation,
+} from '../repositories/challenge.repositories.js';
+import {getHashedLocation} from '../utils/challenge.utils.js';
+import {
+  LocationChallengeCreationError,
+  LocationChallengeDeletionError,
+  LocationChallengeNotFoundError,
+  LocationChallengeUpdateError,
+  PhotoDataNotFoundError,
+} from '../errors.js';
+export const serviceCreateNewLocationChallenge = async (
+  data: LocationChallengeCreation,
+): Promise<ResponseFromChallenge> => {
+  const newChallenge: Challenge | null = await newLocationChallenge(data);
+  if (newChallenge === null) {
+    throw new Error('Invalid creation error.');
+  }
 
-export const serviceCreateNewLocationChallenge = async (data: LocationChallengeCreation): Promise<ResponseFromChallenge> => {
-    const newChallenge: Challenge | null = await newLocationChallenge(data);
-    if(newChallenge === null){
-        throw new Error('Invalid creation error.');
-    }
-
-    return responseFromChallenge(newChallenge);
+  return responseFromChallenge(newChallenge);
 };
 
-export const serviceUpdateLocationChallenge = async (data: ChallengeModify): Promise<ResponseFromUpdateChallenge> => {
-    const update: Challenge = await updateLocationChallenge(data);
+export const serviceUpdateLocationChallenge = async (
+  data: ChallengeModify,
+): Promise<ResponseFromUpdateChallenge> => {
+  try {
+    const updatedChallenge: Challenge | null =
+      await updateLocationChallenge(data);
 
-    if(update === null){
-        throw new Error(`Update Error: No challenge ${data.id}`);
+    if (updatedChallenge === null) {
+      throw new LocationChallengeUpdateError({challengeId: data.id});
     }
 
-    console.log(`Updated ${update.id} challenge ${update.requiredCount}, ${update.remainingCount}`);
+    console.log(
+      `Updated challenge ${updatedChallenge.id}: requiredCount=${updatedChallenge.requiredCount}, remainingCount=${updatedChallenge.remainingCount}`,
+    );
 
-    return responseFromChallenge(update);
+    return responseFromChallenge(updatedChallenge);
+  } catch (error) {
+    console.error('Error updating location challenge:', error);
+    throw error;
+  }
 };
 
-export const serviceDeleteLocationChallenge = async (data: bigint): Promise<void> => {
-    const deleted: bigint = await deleteLocationChallenge(data);
+export const serviceDeleteLocationChallenge = async (
+  data: bigint,
+): Promise<void> => {
+  try {
+    const deletedChallengeId: bigint | null =
+      await deleteLocationChallenge(data);
 
-    if(deleted === null){
-        throw new Error(`Delete Error: No challenge ${data}`);
+    if (deletedChallengeId === null) {
+      throw new LocationChallengeDeletionError({challengeId: data});
     }
 
-    console.log('Deleted Challenge: ' + deleted);
+    console.log('Deleted challenge with ID:', deletedChallengeId);
+  } catch (error) {
+    console.error('Error deleting location challenge:', error);
+    throw error;
+  }
 };
+export const serviceGetLocationChallenge = async (
+  data: bigint,
+): Promise<ResponseFromLocationChallenge> => {
+  try {
+    const challenge: Challenge | null = await getChallenge(data);
+    const location: LocationChallenge | null = await getLocation(data);
 
-export const serviceGetLocationChallenge = async (data: bigint): Promise<ResponseFromLocationChallenge> => {
-    const challenge = await getChallenge(data);
-    const location = await getLocation(data);
-
-    if(challenge === null || location === null){
-        throw new Error('No challenge found.');
+    if (challenge === null || location === null) {
+      throw new LocationChallengeNotFoundError({challengeId: data});
     }
 
-    console.log(challenge);
-    console.log(location);
+    console.log('Retrieved challenge:', challenge);
+    console.log('Retrieved location:', location);
 
     return locationChallengeToClient({location, challenge});
+  } catch (error) {
+    console.error('Error retrieving location challenge:', error);
+    throw error;
+  }
 };
 
-export const serviceLocationLogic = async (data: PhotoInfo[]): Promise<PhotoInfo[]> => {
-    if(!data){
-        throw new Error('No photos data found.');
+export const serviceLocationLogic = async (
+  data: PhotoInfo[],
+): Promise<PhotoInfo[]> => {
+  try {
+    // 데이터 유효성 검사
+    if (!data || data.length === 0) {
+      throw new PhotoDataNotFoundError({
+        reason: '사진 데이터가 존재하지 않습니다.',
+      });
     }
 
-    let isCreateChallenge: boolean = false;
-    let challengePics: PhotoInfo[] = [];
-    const iterator: ArrayIterator<[number, PhotoInfo]> = data.entries();
-    let hashPosition: Map<string, number> = new Map<string, number>();    //hash된 위치의 map 각 key를 위치로, value를 개수로 설정함
+    // 위치별 사진 개수 맵 생성
+    const hashPosition: Map<string, number> = new Map();
+    const challengePics: PhotoInfo[] = [];
 
-    for(const [index, photo] of iterator){
-        if(photo.latitude === null || photo.longitude === null){
-            continue;
-        }
+    // 각 사진의 위치 해싱 및 맵 업데이트
+    for (const photo of data) {
+      if (photo.latitude === null || photo.longitude === null) {
+        console.warn('Photo with missing latitude or longitude skipped.');
+        continue;
+      }
 
-        photo.location = getHashedLocation(photo.latitude + ' ' + photo.longitude);
+      const locationHash = getHashedLocation(
+        `${photo.latitude} ${photo.longitude}`,
+      );
+      const currentValue = hashPosition.get(locationHash) || 0;
+      hashPosition.set(locationHash, currentValue + 1);
 
-        const currentValue: number = hashPosition.get(photo.location) || 0;
-        hashPosition.set(photo.location, currentValue + 1);
-        console.log(photo.location + ' ' + hashPosition.get(photo.location));
+      // 사진의 해시 위치 저장
+      photo.location = locationHash;
+      console.log(
+        `Photo location: ${locationHash}, count: ${hashPosition.get(locationHash)}`,
+      );
     }
 
-    hashPosition.forEach((value: number, key: string, map: Map<string, number>) => {
-        if(value > 0 && value < 5){
-            isCreateChallenge = true;
-            challengePics = data.filter((photo: PhotoInfo) => photo.location === key);
-        }
+    hashPosition.forEach((value, key) => {
+      if (value > 0 && value < 5) {
+        challengePics.push(...data.filter(photo => photo.location === key));
+      }
     });
 
-    console.log('created: ' + isCreateChallenge);
-    console.log(challengePics);
-
+    console.log('Filtered challenge photos:', challengePics);
     return challengePics;
+  } catch (error) {
+    console.error('Error processing location logic:', error);
+
+    throw error;
+  }
 };

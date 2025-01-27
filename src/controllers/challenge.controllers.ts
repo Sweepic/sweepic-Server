@@ -1,17 +1,23 @@
-import { NextFunction } from 'express';
-import { Response, Request } from 'express';
-import { serviceCreateNewLocationChallenge, serviceUpdateLocationChallenge, serviceDeleteLocationChallenge, serviceGetLocationChallenge, serviceLocationLogic } from '../services/challenge.services.js';
-import { StatusCodes } from 'http-status-codes';
-import { getIdNumber } from '../utils/challenge.utils.js';
-import { LocationChallengeCreation } from '../models/challenge.entities.js';
-import { bodyToLocationCreation } from '../dtos/challenge.dtos.js';
+import {NextFunction} from 'express';
+import {Response, Request} from 'express';
+import {
+  serviceCreateNewLocationChallenge,
+  serviceUpdateLocationChallenge,
+  serviceDeleteLocationChallenge,
+  serviceGetLocationChallenge,
+  serviceLocationLogic,
+} from '../services/challenge.services.js';
+import {StatusCodes} from 'http-status-codes';
+import {getIdNumber} from '../utils/challenge.utils.js';
+import {LocationChallengeCreation} from '../models/challenge.entities.js';
+import {bodyToLocationCreation} from '../dtos/challenge.dtos.js';
 
 export const handleNewLocationChallenge = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ): Promise<void> => {
-    /*
+  /*
     #swagger.tags = ['challenge-location-controller']
     #swagger.summary = '위치 기반 챌린지 생성 API';
     #swagger.description = '위치 기반 챌린지를 생성하는 API입니다.'
@@ -63,18 +69,18 @@ export const handleNewLocationChallenge = async (
         }
     };
     */
-    const data: LocationChallengeCreation = bodyToLocationCreation(req.body);
-    const result = await serviceCreateNewLocationChallenge(req.body);
-    res.status(StatusCodes.OK).success(result);
-    console.log(req.body);
+  const data: LocationChallengeCreation = bodyToLocationCreation(req.body);
+  const result = await serviceCreateNewLocationChallenge(req.body);
+  res.status(StatusCodes.OK).success(result);
+  console.log(req.body);
 };
 
 export const handleUpdateLocationChallenge = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ): Promise<void> => {
-    /*
+  /*
     #swagger.tags = ['challenge-location-controller']
     #swagger.summary = '위치 기반 챌린지 수정 API';
     #swagger.description = '위치 기반 챌린지를 수정하는 API입니다. 수정되는 내용은 정리 장수, 남은 장수 입니다.'
@@ -116,17 +122,17 @@ export const handleUpdateLocationChallenge = async (
         }
     };
     */
-    serviceUpdateLocationChallenge(req.body);
-    res.status(StatusCodes.OK).success(req.body);
-    console.log(req.body);
+  serviceUpdateLocationChallenge(req.body);
+  res.status(StatusCodes.OK).success(req.body);
+  console.log(req.body);
 };
 
 export const handleRemoveLocationChallenge = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ): Promise<void> => {
-    /*
+  /*
     #swagger.tags = ['challenge-location-controller']
     #swagger.summary = '위치 기반 챌린지 삭제 API';
     #swagger.description = '위치 기반 챌린지를 삭제하는 API입니다.'
@@ -164,17 +170,17 @@ export const handleRemoveLocationChallenge = async (
         }
     };
     */
-    serviceDeleteLocationChallenge(getIdNumber(req.body));
-    res.status(StatusCodes.OK).success(req.body);
-    console.log(req.body);
+  serviceDeleteLocationChallenge(getIdNumber(req.body));
+  res.status(StatusCodes.OK).success(req.body);
+  console.log(req.body);
 };
 
 export const handleGetLocationChallenge = async (
-    req: Request<{id: string}>,
-    res: Response,
-    next: NextFunction
+  req: Request<{id: string}>,
+  res: Response,
+  next: NextFunction,
 ): Promise<void> => {
-    /*
+  /*
     #swagger.tags = ['challenge-location-controller']
     #swagger.summary = '위치 기반 챌린지 불러오기 API';
     #swagger.description = '위치 기반 챌린지를 불러오는 API입니다.'
@@ -213,17 +219,17 @@ export const handleGetLocationChallenge = async (
         }
     };
     */
-    const result = await serviceGetLocationChallenge(BigInt(req.params.id));
-    res.status(StatusCodes.OK).success(result);
-    console.log(req.params.id);
+  const result = await serviceGetLocationChallenge(BigInt(req.params.id));
+  res.status(StatusCodes.OK).success(result);
+  console.log(req.params.id);
 };
 
 export const handleLocationLogic = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ): Promise<void> => {
-    /*
+  /*
     #swagger.tags = ['challenge-location-controller']
     #swagger.summary = '위치 기반 챌린지 사진 판별 API';
     #swagger.description = '위치 기반 챌린지를 위한 사진을 골라내는 API입니다.'
@@ -276,6 +282,6 @@ export const handleLocationLogic = async (
         }
     };
     */
-    const result = await serviceLocationLogic(req.body);
-    res.status(StatusCodes.OK).success(result);
+  const result = await serviceLocationLogic(req.body);
+  res.status(StatusCodes.OK).success(result);
 };
