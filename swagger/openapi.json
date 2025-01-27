@@ -1,1 +1,1062 @@
-{}
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Sweepic API",
+    "description": "Sweepic 프로젝트입니다.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/oauth2/login/naver": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/oauth2/callback/naver": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/oauth2/login/google": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/oauth2/callback/google": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/oauth2/login/kakao": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/oauth2/callback/kakao": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/memo/folders": {
+      "post": {
+        "tags": [
+          "memo-folder-controller"
+        ],
+        "summary": "폴더 생성 API",
+        "description": "폴더를 생성하는 API입니다.",
+        "responses": {
+          "200": {
+            "description": "폴더 생성 성공 응답",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "resultType": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "error": {
+                      "type": "object",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "success": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "1"
+                        },
+                        "folderName": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "folderName"
+                ],
+                "properties": {
+                  "folderName": {
+                    "type": "string",
+                    "description": "폴더 이름"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memo/image-format/folders": {
+      "post": {
+        "tags": [
+          "memo-folder-controller"
+        ],
+        "summary": "폴더 생성 및 사진 저장 API",
+        "description": "폴더 생성과 동시에 파일을 저장하는 API입니다.",
+        "responses": {
+          "200": {
+            "description": "폴더 생성 및 사진 저장 성공 응답",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "resultType": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "error": {
+                      "type": "object",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "success": {
+                      "type": "object",
+                      "properties": {
+                        "folderId": {
+                          "type": "string",
+                          "example": "1"
+                        },
+                        "folderName": {
+                          "type": "string"
+                        },
+                        "imageId": {
+                          "type": "string",
+                          "example": "1"
+                        },
+                        "imageUrl": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "folderName"
+                ],
+                "properties": {
+                  "folderName": {
+                    "type": "string",
+                    "description": "폴더 이름"
+                  },
+                  "image": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "파일 업로드"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memo/image-format/folders/{folderId}": {
+      "post": {
+        "tags": [
+          "memo-image-controller"
+        ],
+        "summary": "사진 저장 API",
+        "description": "특정 폴더에 사진을 저장하는 API입니다.",
+        "parameters": [
+          {
+            "name": "folderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "폴더 ID 입력"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "사진 저장 성공 응답",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "resultType": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "error": {
+                      "type": "object",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "success": {
+                      "type": "object",
+                      "properties": {
+                        "folderId": {
+                          "type": "string",
+                          "example": "1"
+                        },
+                        "folderName": {
+                          "type": "string"
+                        },
+                        "imageId": {
+                          "type": "string",
+                          "example": "1"
+                        },
+                        "imageUrl": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "파일 업로드"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memo/list": {
+      "get": {
+        "tags": [
+          "memo-folder-controller"
+        ],
+        "summary": "모든 메모 조회 API",
+        "description": "모든 메모를 조회하는 API입니다.",
+        "responses": {
+          "200": {
+            "description": "메모 조회 성공 응답",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "resultType": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "error": {
+                      "type": "object",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "success": {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "folderId": {
+                                "type": "string",
+                                "example": "1"
+                              },
+                              "folderName": {
+                                "type": "string"
+                              },
+                              "imageText": {
+                                "type": "string"
+                              },
+                              "imageCount": {
+                                "type": "integer",
+                                "example": 0
+                              },
+                              "firstImageId": {
+                                "type": "string",
+                                "example": "1"
+                              },
+                              "firstImageUrl": {
+                                "type": "string"
+                              },
+                              "createdAt": {
+                                "type": "string",
+                                "example": "2025-01-17T03:50:25.923Z"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memo/search": {
+      "get": {
+        "tags": [
+          "memo-folder-controller"
+        ],
+        "summary": "메모 검색 API",
+        "description": "메모를 검색 및 조회하는 API입니다.",
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": true,
+            "description": "검색 키워드",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "메모 검색 성공 응답",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "resultType": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "error": {
+                      "type": "object",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "success": {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "folderId": {
+                                "type": "string",
+                                "example": "1"
+                              },
+                              "folderName": {
+                                "type": "string"
+                              },
+                              "imageCount": {
+                                "type": "integer",
+                                "example": 0
+                              },
+                              "imageText": {
+                                "type": "string"
+                              },
+                              "firstImageId": {
+                                "type": "string",
+                                "example": "1"
+                              },
+                              "firstImageUrl": {
+                                "type": "string"
+                              },
+                              "createdAt": {
+                                "type": "string",
+                                "example": "2025-01-17T03:50:25.923Z"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memo/folders/{folderId}": {
+      "get": {
+        "tags": [
+          "memo-folder-controller"
+        ],
+        "summary": "특정 폴더의 메모 조회 API",
+        "description": "특정 폴더의 모든 메모(텍스트 및 사진)을 조회하는 API입니다.",
+        "parameters": [
+          {
+            "name": "folderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "폴더 ID 입력"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "메모 조회 성공 응답",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "resultType": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "error": {
+                      "type": "object",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "success": {
+                      "type": "object",
+                      "properties": {
+                        "folderId": {
+                          "type": "string",
+                          "example": "1"
+                        },
+                        "folderName": {
+                          "type": "string"
+                        },
+                        "imageText": {
+                          "type": "string"
+                        },
+                        "images": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "imageId": {
+                                "type": "string",
+                                "example": "1"
+                              },
+                              "imageUrl": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "example": "2025-01-17T03:50:25.923Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memo/text-format/folders": {
+      "post": {
+        "tags": [
+          "memo-ai"
+        ],
+        "summary": "폴더 생성 및 OCR 수행",
+        "description": "새로운 폴더를 생성하고, 이미지에서 OCR 텍스트를 추출하여 이미지와 텍스트를 저장하는 API입니다.",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "image_url",
+                  "user_id",
+                  "folder_name"
+                ],
+                "properties": {
+                  "base64_image": {
+                    "type": "string",
+                    "description": "OCR 처리를 위한 이미지 URL",
+                    "example": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA..."
+                  },
+                  "user_id": {
+                    "type": "number",
+                    "description": "사용자 ID",
+                    "example": 1
+                  },
+                  "folder_name": {
+                    "type": "string",
+                    "description": "생성할 폴더의 이름",
+                    "example": "공부"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memo/text-format/folders/{folderId}": {
+      "patch": {
+        "tags": [
+          "memo-ai"
+        ],
+        "summary": "폴더 업데이트 및 OCR 수행",
+        "description": "기존 폴더에 이미지를 추가하고, OCR 텍스트를 업데이트하는 API입니다.",
+        "parameters": [
+          {
+            "name": "folderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "example": 1
+            },
+            "description": "업데이트할 폴더의 ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "폴더 업데이트 및 텍스트 변환",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "resultType": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "error": {
+                      "type": "object",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "success": {
+                      "type": "object",
+                      "properties": {
+                        "folder_id": {
+                          "type": "string",
+                          "example": "1"
+                        },
+                        "image_text": {
+                          "type": "string",
+                          "example": "이번 수업 시간은 사회 과학 시간이다."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청 데이터",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "image_url이 존재하지 않습니다."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "서버 내부 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "서버 에러 발생."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "base64_image",
+                  "user_id"
+                ],
+                "properties": {
+                  "base64_image": {
+                    "type": "string",
+                    "description": "OCR 처리를 위한 이미지 URL",
+                    "example": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA..."
+                  },
+                  "user_id": {
+                    "type": "number",
+                    "description": "사용자 ID",
+                    "example": 1
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/challenge/location_challenge/create": {
+      "post": {
+        "tags": [
+          "challenge-location-controller"
+        ],
+        "summary": "위치 기반 챌린지 생성 API",
+        "description": "위치 기반 챌린지를 생성하는 API입니다.",
+        "responses": {
+          "200": {
+            "description": "위치 챌린지 생성 성공 응답",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "resultType": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "error": {
+                      "type": "object",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "success": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "1"
+                        },
+                        "title": {
+                          "type": "string",
+                          "example": "challenge-title"
+                        },
+                        "context": {
+                          "type": "string",
+                          "example": "challenge-context"
+                        },
+                        "requiredCount": {
+                          "type": "number",
+                          "example": 10
+                        },
+                        "remainingCount": {
+                          "type": "number",
+                          "example": 10
+                        },
+                        "userId": {
+                          "type": "string",
+                          "example": "1"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-01-20T18:19:47.415Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-01-20T18:19:47.415Z"
+                        },
+                        "acceptedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-01-20T18:19:47.415Z"
+                        },
+                        "completedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-01-20T18:19:47.415Z"
+                        },
+                        "status": {
+                          "type": "number",
+                          "example": 1
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "string",
+                    "description": "유저 Id"
+                  },
+                  "title": {
+                    "type": "string",
+                    "description": "챌린지 제목"
+                  },
+                  "context": {
+                    "type": "string",
+                    "description": "챌린지 내용"
+                  },
+                  "location": {
+                    "type": "string",
+                    "description": "챌린지 위치"
+                  },
+                  "required": {
+                    "type": "number",
+                    "description": "챌린지 장수"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/challenge/location_challenge/get/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/challenge/location_challenge/update": {
+      "patch": {
+        "tags": [
+          "challenge-location-controller"
+        ],
+        "summary": "위치 기반 챌린지 수정 API",
+        "description": "위치 기반 챌린지를 수정하는 API입니다. 수정되는 내용은 정리 장수, 남은 장수 입니다.",
+        "responses": {
+          "200": {
+            "description": "위치 챌린지 수정 성공 응답",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "resultType": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "error": {
+                      "type": "object",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "success": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "1"
+                        },
+                        "required": {
+                          "type": "string",
+                          "example": 10
+                        },
+                        "remaining": {
+                          "type": "string",
+                          "example": 10
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "챌린지 ID"
+                  },
+                  "required": {
+                    "type": "number",
+                    "description": "챌린지 장 수"
+                  },
+                  "remaining": {
+                    "type": "number",
+                    "description": "챌린지 남은 수"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/challenge/location_logic/test": {
+      "post": {
+        "tags": [
+          "challenge-location-controller"
+        ],
+        "summary": "위치 기반 챌린지 사진 판별 API",
+        "description": "위치 기반 챌린지를 위한 사진을 골라내는 API입니다.",
+        "responses": {
+          "200": {
+            "description": "사진 위치 판별 응답",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "resultType": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "error": {
+                      "type": "object",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "success": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": "100000001"
+                          },
+                          "displayName": {
+                            "type": "string",
+                            "example": "20250116_123456.jpg"
+                          },
+                          "latitude": {
+                            "type": "number",
+                            "example": 37.123456
+                          },
+                          "longitude": {
+                            "type": "number",
+                            "example": 127.123456
+                          },
+                          "timestamp": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2025-01-16T12:34:56Z"
+                          },
+                          "location": {
+                            "type": "string",
+                            "example": "wydg0y"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "사진 ID"
+                    },
+                    "displayName": {
+                      "type": "string",
+                      "description": "사진 이름"
+                    },
+                    "latitude": {
+                      "type": "number",
+                      "description": "사진 위도"
+                    },
+                    "longitude": {
+                      "type": "number",
+                      "description": "사진 경도"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "사진 날짜"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/challenge/location_challenge/delete": {
+      "delete": {
+        "tags": [
+          "challenge-location-controller"
+        ],
+        "summary": "위치 기반 챌린지 삭제 API",
+        "description": "위치 기반 챌린지를 삭제하는 API입니다.",
+        "responses": {
+          "200": {
+            "description": "위치 챌린지 삭제 성공 응답",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "resultType": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "error": {
+                      "type": "object",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "success": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "1"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "챌린지 ID"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

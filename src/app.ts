@@ -1,7 +1,6 @@
 import dotenv from 'dotenv';
 import cors from 'cors';
 import express, {Request, Response, Express, NextFunction} from 'express';
-import swaggerAutogen from 'swagger-autogen';
 import swaggerUiExpress from 'swagger-ui-express';
 import {memoFolderRouter} from './routers/memo.router.js';
 import {RegisterRoutes} from './routers/tsoaRoutes.js';
@@ -11,11 +10,8 @@ import passport from 'passport';
 import session from 'express-session';
 import {PrismaSessionStore} from '@quixo3/prisma-session-store';
 import {prisma} from './db.config.js';
-<<<<<<< HEAD
-import swaggerDocument from '../swagger/swagger.json' assert {type: 'json'};
-=======
-import swaggerDocument from '../swagger/openapi.json' assert {type: 'json'};
->>>>>>> eeab1d843083f8f8a72b737b197b8e4b21bbcf77
+import swaggerDocumentOne from '../swagger/openapi.json' assert {type: 'json'};
+import swaggerDocumentTwo from '../swagger/swagger.json' assert {type: 'json'};
 
 dotenv.config();
 
@@ -31,16 +27,16 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Sweepic');
 });
 
-// app.use(
-//   '/docs',
-//   swaggerUiExpress.serve,
-//   swaggerUiExpress.setup(swaggerDocument),
-// );
+app.use(
+  '/docs/v1',
+  swaggerUiExpress.serveFiles(swaggerDocumentOne),
+  swaggerUiExpress.setup(swaggerDocumentOne),
+);
 
 app.use(
-  '/docs',
-  swaggerUiExpress.serve,
-  swaggerUiExpress.setup(swaggerDocument),
+  '/docs/v2',
+  swaggerUiExpress.serveFiles(swaggerDocumentTwo),
+  swaggerUiExpress.setup(swaggerDocumentTwo),
 );
 
 app.use((req: Request, res: Response, next: NextFunction) => {
