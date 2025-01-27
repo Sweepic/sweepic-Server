@@ -12,6 +12,8 @@ import session from 'express-session';
 import {PrismaSessionStore} from '@quixo3/prisma-session-store';
 import {prisma} from './db.config.js';
 import swaggerDocument from '../swagger/openapi.json' assert {type: 'json'};
+import { sessionAuthMiddleware } from './auth.config.js';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
@@ -21,7 +23,8 @@ const port = process.env.PORT;
 app.use(cors());
 app.use(express.static('public'));
 app.use(express.json());
-app.use(express.urlencoded({extended: false})); //true
+app.use(express.urlencoded({extended: false})); 
+app.use(cookieParser());
 
 app.use(
   '/docs',
@@ -78,6 +81,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/oauth2', authRouter);
+
+app.use(sessionAuthMiddleware);
 
 app.use('/onboarding', userRouter);
 
