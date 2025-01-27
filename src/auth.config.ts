@@ -5,6 +5,7 @@ import { Strategy as GoogleStrategy, Profile as GoogleProfile } from 'passport-g
 import { prisma } from './db.config.js';
 import { UserModel } from './models/user.model.js';
 import { SocialProfile } from './models/auth.entities.js';
+import { Request, Response, NextFunction } from 'express';
 
 dotenv.config();
 
@@ -81,7 +82,7 @@ export const kakaoStrategy = new KakaoStrategy(
   {
     clientID: process.env.PASSPORT_KAKAO_CLIENT_ID!,
     clientSecret: process.env.PASSPORT_KAKAO_CLIENT_SECRET!, // Optional in Kakao
-    callbackURL: 'http://localhost:3000/oauth2/callback/kakao',
+    callbackURL: 'http://3.37.137.212:3000/oauth2/callback/kakao',
   },
   async (accessToken, refreshToken, profile, cb) => {
     try {
@@ -146,4 +147,59 @@ const verifyUser = async (
   await updateOrCreateSocialAccount(id, profile, provider);
 
   return { id, email, name };
+};
+
+
+//인증 미들웨어
+export const sessionAuthMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const cookies = req.cookies || {};
+    let sessionId = cookies['connect.sid'];
+    if (!sessionId) {
+      console.error('Session ID missing in cookies.');
+      res.status(401).json({ message: 'Unauthorized: No session ID provided.' });
+      return;
+    }
+
+    // 's:' 및 서명 제거
+    sessionId = sessionId.split('.')[0].replace(/^s:/, '');
+
+    const sessionExpiresAt = sessionId.expiresAt
+      ? new Date(sessionId.expiresAt)
+      : req.session?.cookie?.expires
+      ? new Date(req.session.cookie.expires)
+      : null;
+
+    if (!sessionExpiresAt || new Date() > sessionExpiresAt ) {
+      console.warn('Session expired. Extending expiration:', sessionId);
+      await extendSessionExpiration(sessionId); // 만료일 연장
+      return;
+    }
+
+    console.log('Session expiration date:', sessionExpiresAt);
+
+    // 세션 인증 완료 시시
+    next();
+  } catch (error) {
+    console.error('Error in sessionAuthMiddleware:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+// 세션 만료일 연장 함수
+const extendSessionExpiration = async (sid: string): Promise<void> => {
+  try {
+    const newExpirationDate = new Date();
+    newExpirationDate.setDate(newExpirationDate.getDate() + 7); 
+
+    await prisma.session.update({
+      where: { sid },
+      data: { expiresAt: newExpirationDate },
+    });
+
+    console.log(`Session expiration extended for SID: ${sid}`);
+  } catch (error) {
+    console.error(`Failed to extend session expiration for SID: ${sid}`, error);
+    throw new Error('Failed to extend session expiration');
+  }
 };
