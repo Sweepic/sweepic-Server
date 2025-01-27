@@ -78,9 +78,7 @@
     },
     "/memo/folders": {
       "post": {
-        "tags": [
-          "memo-folder-controller"
-        ],
+        "tags": ["memo-folder-controller"],
         "summary": "폴더 생성 API",
         "description": "폴더를 생성하는 API입니다.",
         "responses": {
@@ -124,9 +122,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "folderName"
-                ],
+                "required": ["folderName"],
                 "properties": {
                   "folderName": {
                     "type": "string",
@@ -141,9 +137,7 @@
     },
     "/memo/image-format/folders": {
       "post": {
-        "tags": [
-          "memo-folder-controller"
-        ],
+        "tags": ["memo-folder-controller"],
         "summary": "폴더 생성 및 사진 저장 API",
         "description": "폴더 생성과 동시에 파일을 저장하는 API입니다.",
         "responses": {
@@ -194,9 +188,7 @@
             "multipart/form-data": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "folderName"
-                ],
+                "required": ["folderName"],
                 "properties": {
                   "folderName": {
                     "type": "string",
@@ -216,9 +208,7 @@
     },
     "/memo/image-format/folders/{folderId}": {
       "post": {
-        "tags": [
-          "memo-image-controller"
-        ],
+        "tags": ["memo-image-controller"],
         "summary": "사진 저장 API",
         "description": "특정 폴더에 사진을 저장하는 API입니다.",
         "parameters": [
@@ -296,9 +286,7 @@
     },
     "/memo/list": {
       "get": {
-        "tags": [
-          "memo-folder-controller"
-        ],
+        "tags": ["memo-folder-controller"],
         "summary": "모든 메모 조회 API",
         "description": "모든 메모를 조회하는 API입니다.",
         "responses": {
@@ -366,9 +354,7 @@
     },
     "/memo/search": {
       "get": {
-        "tags": [
-          "memo-folder-controller"
-        ],
+        "tags": ["memo-folder-controller"],
         "summary": "메모 검색 API",
         "description": "메모를 검색 및 조회하는 API입니다.",
         "parameters": [
@@ -447,9 +433,7 @@
     },
     "/memo/folders/{folderId}": {
       "get": {
-        "tags": [
-          "memo-folder-controller"
-        ],
+        "tags": ["memo-folder-controller"],
         "summary": "특정 폴더의 메모 조회 API",
         "description": "특정 폴더의 모든 메모(텍스트 및 사진)을 조회하는 API입니다.",
         "parameters": [
@@ -525,9 +509,7 @@
     },
     "/memo/text-format/folders": {
       "post": {
-        "tags": [
-          "memo-ai"
-        ],
+        "tags": ["memo-ai"],
         "summary": "폴더 생성 및 OCR 수행",
         "description": "새로운 폴더를 생성하고, 이미지에서 OCR 텍스트를 추출하여 이미지와 텍스트를 저장하는 API입니다.",
         "responses": {
@@ -547,11 +529,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "image_url",
-                  "user_id",
-                  "folder_name"
-                ],
+                "required": ["image_url", "user_id", "folder_name"],
                 "properties": {
                   "base64_image": {
                     "type": "string",
@@ -577,9 +555,7 @@
     },
     "/memo/text-format/folders/{folderId}": {
       "patch": {
-        "tags": [
-          "memo-ai"
-        ],
+        "tags": ["memo-ai"],
         "summary": "폴더 업데이트 및 OCR 수행",
         "description": "기존 폴더에 이미지를 추가하고, OCR 텍스트를 업데이트하는 API입니다.",
         "parameters": [
@@ -668,10 +644,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "base64_image",
-                  "user_id"
-                ],
+                "required": ["base64_image", "user_id"],
                 "properties": {
                   "base64_image": {
                     "type": "string",
@@ -690,11 +663,209 @@
         }
       }
     },
+    "/challenge/update": {
+      "patch": {
+        "tags": ["challenge-controller"],
+        "summary": "챌린지 수정 API",
+        "description": "챌린지를 수정하는 API입니다. 수정되는 내용은 정리 장수, 남은 장수 입니다.",
+        "responses": {
+          "200": {
+            "description": "챌린지 수정 성공 응답",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "resultType": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "error": {
+                      "type": "object",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "success": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "1"
+                        },
+                        "required": {
+                          "type": "string",
+                          "example": 10
+                        },
+                        "remaining": {
+                          "type": "string",
+                          "example": 10
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "챌린지 ID"
+                  },
+                  "required": {
+                    "type": "number",
+                    "description": "챌린지 장 수"
+                  },
+                  "remaining": {
+                    "type": "number",
+                    "description": "챌린지 남은 수"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/challenge/delete": {
+      "delete": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/challenge/location_challenge/get/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/challenge/location_logic/test": {
+      "post": {
+        "tags": ["challenge-location-controller"],
+        "summary": "위치 기반 챌린지 사진 판별 API",
+        "description": "위치 기반 챌린지를 위한 사진을 골라내는 API입니다.",
+        "responses": {
+          "200": {
+            "description": "사진 위치 판별 응답",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "resultType": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "error": {
+                      "type": "object",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "success": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": "100000001"
+                          },
+                          "displayName": {
+                            "type": "string",
+                            "example": "20250116_123456.jpg"
+                          },
+                          "latitude": {
+                            "type": "number",
+                            "example": 37.123456
+                          },
+                          "longitude": {
+                            "type": "number",
+                            "example": 127.123456
+                          },
+                          "timestamp": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2025-01-16T12:34:56Z"
+                          },
+                          "location": {
+                            "type": "string",
+                            "example": "wydg0y"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "사진 ID"
+                    },
+                    "displayName": {
+                      "type": "string",
+                      "description": "사진 이름"
+                    },
+                    "latitude": {
+                      "type": "number",
+                      "description": "사진 위도"
+                    },
+                    "longitude": {
+                      "type": "number",
+                      "description": "사진 경도"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "사진 날짜"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/challenge/location_challenge/create": {
       "post": {
-        "tags": [
-          "challenge-location-controller"
-        ],
+        "tags": ["challenge-location-controller"],
         "summary": "위치 기반 챌린지 생성 API",
         "description": "위치 기반 챌린지를 생성하는 API입니다.",
         "responses": {
@@ -807,7 +978,7 @@
         }
       }
     },
-    "/challenge/location_challenge/get/{id}": {
+    "/challenge/weekly_challenge/get/{id}": {
       "get": {
         "description": "",
         "parameters": [
@@ -827,16 +998,14 @@
         }
       }
     },
-    "/challenge/location_challenge/update": {
-      "patch": {
-        "tags": [
-          "challenge-location-controller"
-        ],
-        "summary": "위치 기반 챌린지 수정 API",
-        "description": "위치 기반 챌린지를 수정하는 API입니다. 수정되는 내용은 정리 장수, 남은 장수 입니다.",
+    "/challenge/weekly_challenge/create": {
+      "post": {
+        "tags": ["challenge-weekly-controller"],
+        "summary": "날짜 기반 챌린지 생성 API",
+        "description": "날짜 기반 챌린지를 생성하는 API입니다.",
         "responses": {
           "200": {
-            "description": "위치 챌린지 수정 성공 응답",
+            "description": "날짜 챌린지 생성 성공 응답",
             "content": {
               "application/json": {
                 "schema": {
@@ -858,13 +1027,49 @@
                           "type": "string",
                           "example": "1"
                         },
-                        "required": {
+                        "title": {
                           "type": "string",
+                          "example": "challenge-title"
+                        },
+                        "context": {
+                          "type": "string",
+                          "example": "challenge-context"
+                        },
+                        "requiredCount": {
+                          "type": "number",
                           "example": 10
                         },
-                        "remaining": {
-                          "type": "string",
+                        "remainingCount": {
+                          "type": "number",
                           "example": 10
+                        },
+                        "userId": {
+                          "type": "string",
+                          "example": "1"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-01-20T18:19:47.415Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-01-20T18:19:47.415Z"
+                        },
+                        "acceptedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-01-20T18:19:47.415Z"
+                        },
+                        "completedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-01-20T18:19:47.415Z"
+                        },
+                        "status": {
+                          "type": "number",
+                          "example": 1
                         }
                       }
                     }
@@ -881,175 +1086,26 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "id": {
+                  "userId": {
                     "type": "string",
-                    "description": "챌린지 ID"
+                    "description": "유저 Id"
+                  },
+                  "title": {
+                    "type": "string",
+                    "description": "챌린지 제목"
+                  },
+                  "context": {
+                    "type": "string",
+                    "description": "챌린지 내용"
+                  },
+                  "challengeDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "챌린지 날짜"
                   },
                   "required": {
                     "type": "number",
-                    "description": "챌린지 장 수"
-                  },
-                  "remaining": {
-                    "type": "number",
-                    "description": "챌린지 남은 수"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/challenge/location_logic/test": {
-      "post": {
-        "tags": [
-          "challenge-location-controller"
-        ],
-        "summary": "위치 기반 챌린지 사진 판별 API",
-        "description": "위치 기반 챌린지를 위한 사진을 골라내는 API입니다.",
-        "responses": {
-          "200": {
-            "description": "사진 위치 판별 응답",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "resultType": {
-                      "type": "string",
-                      "example": "SUCCESS"
-                    },
-                    "error": {
-                      "type": "object",
-                      "nullable": true,
-                      "example": null
-                    },
-                    "success": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "example": "100000001"
-                          },
-                          "displayName": {
-                            "type": "string",
-                            "example": "20250116_123456.jpg"
-                          },
-                          "latitude": {
-                            "type": "number",
-                            "example": 37.123456
-                          },
-                          "longitude": {
-                            "type": "number",
-                            "example": 127.123456
-                          },
-                          "timestamp": {
-                            "type": "string",
-                            "format": "date-time",
-                            "example": "2025-01-16T12:34:56Z"
-                          },
-                          "location": {
-                            "type": "string",
-                            "example": "wydg0y"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "description": "사진 ID"
-                    },
-                    "displayName": {
-                      "type": "string",
-                      "description": "사진 이름"
-                    },
-                    "latitude": {
-                      "type": "number",
-                      "description": "사진 위도"
-                    },
-                    "longitude": {
-                      "type": "number",
-                      "description": "사진 경도"
-                    },
-                    "timestamp": {
-                      "type": "string",
-                      "format": "date-time",
-                      "description": "사진 날짜"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/challenge/location_challenge/delete": {
-      "delete": {
-        "tags": [
-          "challenge-location-controller"
-        ],
-        "summary": "위치 기반 챌린지 삭제 API",
-        "description": "위치 기반 챌린지를 삭제하는 API입니다.",
-        "responses": {
-          "200": {
-            "description": "위치 챌린지 삭제 성공 응답",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "resultType": {
-                      "type": "string",
-                      "example": "SUCCESS"
-                    },
-                    "error": {
-                      "type": "object",
-                      "nullable": true,
-                      "example": null
-                    },
-                    "success": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string",
-                          "description": "1"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "string",
-                    "description": "챌린지 ID"
+                    "description": "챌린지 장수"
                   }
                 }
               }
