@@ -2,8 +2,10 @@ import { Challenge } from '@prisma/client';
 import { responseFromChallenge } from '../dtos/challenge.dtos.js';
 import { ChallengeModify, ResponseFromUpdateChallenge } from '../models/challenge.entities.js';
 import { updateChallenge, deleteChallenge } from '../repositories/challenge.repositories.js';
+import { LocationChallengeUpdateError, LocationChallengeDeletionError } from '../errors.js';
 
 export const serviceUpdateChallenge = async (data: ChallengeModify): Promise<ResponseFromUpdateChallenge> => {
+  try{
     const updatedChallenge: Challenge | null = await updateChallenge(data);
 
     if (updatedChallenge === null) {
@@ -26,7 +28,7 @@ export const serviceDeleteChallenge = async (
 ): Promise<void> => {
   try {
     const deletedChallengeId: bigint | null =
-      await deleteLocationChallenge(data);
+      await deleteChallenge(data);
 
     if (deletedChallengeId === null) {
       throw new LocationChallengeDeletionError({challengeId: data});
