@@ -78,7 +78,9 @@
     },
     "/memo/folders": {
       "post": {
-        "tags": ["memo-folder-controller"],
+        "tags": [
+          "memo-folder-controller"
+        ],
         "summary": "폴더 생성 API",
         "description": "폴더를 생성하는 API입니다.",
         "responses": {
@@ -122,7 +124,9 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["folderName"],
+                "required": [
+                  "folderName"
+                ],
                 "properties": {
                   "folderName": {
                     "type": "string",
@@ -137,7 +141,9 @@
     },
     "/memo/image-format/folders": {
       "post": {
-        "tags": ["memo-folder-controller"],
+        "tags": [
+          "memo-folder-controller"
+        ],
         "summary": "폴더 생성 및 사진 저장 API",
         "description": "폴더 생성과 동시에 파일을 저장하는 API입니다.",
         "responses": {
@@ -188,7 +194,9 @@
             "multipart/form-data": {
               "schema": {
                 "type": "object",
-                "required": ["folderName"],
+                "required": [
+                  "folderName"
+                ],
                 "properties": {
                   "folderName": {
                     "type": "string",
@@ -208,7 +216,9 @@
     },
     "/memo/image-format/folders/{folderId}": {
       "post": {
-        "tags": ["memo-image-controller"],
+        "tags": [
+          "memo-image-controller"
+        ],
         "summary": "사진 저장 API",
         "description": "특정 폴더에 사진을 저장하는 API입니다.",
         "parameters": [
@@ -286,7 +296,9 @@
     },
     "/memo/list": {
       "get": {
-        "tags": ["memo-folder-controller"],
+        "tags": [
+          "memo-folder-controller"
+        ],
         "summary": "모든 메모 조회 API",
         "description": "모든 메모를 조회하는 API입니다.",
         "responses": {
@@ -354,7 +366,9 @@
     },
     "/memo/search": {
       "get": {
-        "tags": ["memo-folder-controller"],
+        "tags": [
+          "memo-folder-controller"
+        ],
         "summary": "메모 검색 API",
         "description": "메모를 검색 및 조회하는 API입니다.",
         "parameters": [
@@ -433,7 +447,9 @@
     },
     "/memo/folders/{folderId}": {
       "get": {
-        "tags": ["memo-folder-controller"],
+        "tags": [
+          "memo-folder-controller"
+        ],
         "summary": "특정 폴더의 메모 조회 API",
         "description": "특정 폴더의 모든 메모(텍스트 및 사진)을 조회하는 API입니다.",
         "parameters": [
@@ -509,53 +525,24 @@
     },
     "/memo/text-format/folders": {
       "post": {
-        "tags": ["memo-ai"],
+        "tags": [
+          "memo-ai"
+        ],
         "summary": "폴더 생성 및 OCR 수행",
         "description": "새로운 폴더를 생성하고, 이미지에서 OCR 텍스트를 추출하여 이미지와 텍스트를 저장하는 API입니다.",
         "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "500": {
-            "description": "Internal Server Error"
+          "default": {
+            "description": ""
           }
         },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": ["image_url", "user_id", "folder_name"],
-                "properties": {
-                  "base64_image": {
-                    "type": "string",
-                    "description": "OCR 처리를 위한 이미지 URL",
-                    "example": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA..."
-                  },
-                  "user_id": {
-                    "type": "number",
-                    "description": "사용자 ID",
-                    "example": 1
-                  },
-                  "folder_name": {
-                    "type": "string",
-                    "description": "생성할 폴더의 이름",
-                    "example": "공부"
-                  }
-                }
-              }
-            }
-          }
-        }
+        "requestBody": {}
       }
     },
     "/memo/text-format/folders/{folderId}": {
       "patch": {
-        "tags": ["memo-ai"],
+        "tags": [
+          "memo-ai"
+        ],
         "summary": "폴더 업데이트 및 OCR 수행",
         "description": "기존 폴더에 이미지를 추가하고, OCR 텍스트를 업데이트하는 API입니다.",
         "parameters": [
@@ -644,7 +631,10 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["base64_image", "user_id"],
+                "required": [
+                  "base64_image",
+                  "user_id"
+                ],
                 "properties": {
                   "base64_image": {
                     "type": "string",
@@ -665,7 +655,9 @@
     },
     "/challenge/update": {
       "patch": {
-        "tags": ["challenge-controller"],
+        "tags": [
+          "challenge-controller"
+        ],
         "summary": "챌린지 수정 API",
         "description": "챌린지를 수정하는 API입니다. 수정되는 내용은 정리 장수, 남은 장수 입니다.",
         "responses": {
@@ -766,7 +758,9 @@
     },
     "/challenge/location_logic/test": {
       "post": {
-        "tags": ["challenge-location-controller"],
+        "tags": [
+          "challenge-location-controller"
+        ],
         "summary": "위치 기반 챌린지 사진 판별 API",
         "description": "위치 기반 챌린지를 위한 사진을 골라내는 API입니다.",
         "responses": {
@@ -865,7 +859,9 @@
     },
     "/challenge/location_challenge/create": {
       "post": {
-        "tags": ["challenge-location-controller"],
+        "tags": [
+          "challenge-location-controller"
+        ],
         "summary": "위치 기반 챌린지 생성 API",
         "description": "위치 기반 챌린지를 생성하는 API입니다.",
         "responses": {
@@ -1000,7 +996,9 @@
     },
     "/challenge/weekly_challenge/create": {
       "post": {
-        "tags": ["challenge-weekly-controller"],
+        "tags": [
+          "challenge-weekly-controller"
+        ],
         "summary": "날짜 기반 챌린지 생성 API",
         "description": "날짜 기반 챌린지를 생성하는 API입니다.",
         "responses": {

@@ -133,6 +133,7 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
       success: null,
     });
   }
+  
   console.error('Unexpected error:', err);
   res.status(500).json({
     resultType: 'FAIL',

@@ -4,12 +4,12 @@
   "controllerPathGlobs": ["src/controllers/*.controller.ts"],
   "spec": {
     "outputDirectory": "./swagger",
-    "host": "localhost:3000",
+    "host": "3.37.137.212:3000",
     "specVersion": 3,
     "spec": {
       "servers": [
         {
-          "url": "http://localhost:3000",
+          "url": "http://3.37.137.212:3000",
           "description": "Sweepic server"
         }
       ]
