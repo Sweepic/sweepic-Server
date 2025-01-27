@@ -1,7 +1,7 @@
 import { Challenge } from '@prisma/client';
-import { responseFromChallenge } from '../dtos/challenge.dtos.js';
-import { ChallengeModify, ResponseFromUpdateChallenge } from '../models/challenge.entities.js';
-import { updateChallenge, deleteChallenge } from '../repositories/challenge.repositories.js';
+import { responseFromChallenge, responseFromGetByUserId } from '../dtos/challenge.dtos.js';
+import { ChallengeModify, ResponseFromGetByUserId, ResponseFromGetByUserIdReform, ResponseFromUpdateChallenge } from '../models/challenge.entities.js';
+import { updateChallenge, deleteChallenge, updateStatus, getChallengeByUserId } from '../repositories/challenge.repositories.js';
 
 export const serviceUpdateChallenge = async (data: ChallengeModify): Promise<ResponseFromUpdateChallenge> => {
     const update: Challenge = await updateChallenge(data);
@@ -25,3 +25,32 @@ export const serviceDeleteChallenge = async (data: bigint): Promise<void> => {
     console.log('Deleted Challenge: ' + deleted);
 };
 
+export const serviceAcceptChallenge = async (data: bigint): Promise<Challenge> => {
+    const accepted: Challenge | null = await updateStatus(data, 2);
+
+    if(!accepted){
+        throw new Error(`Could not accept challenge. Wrong ID number: ${data}.`);
+    }
+
+    return accepted;
+};
+
+export const serviceCompleteChallenge = async (data: bigint): Promise<Challenge> => {
+    const completed: Challenge | null = await updateStatus(data, 3);
+
+    if(!completed){
+        throw new Error(`Could not complete challenge. Wrong ID number: ${data}.`);
+    }
+
+    return completed;
+};
+
+export const serviceGetByUserId = async (data: bigint): Promise<ResponseFromGetByUserIdReform[]> => {
+    const challenges: ResponseFromGetByUserId[] = await getChallengeByUserId(data);
+
+    if(challenges.length === 0){
+        throw new Error(`Could not find challenges of user ${data}`);
+    }
+
+    return responseFromGetByUserId(challenges);
+};

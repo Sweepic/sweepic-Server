@@ -1,5 +1,5 @@
 import { Challenge, LocationChallenge, DateChallenge } from '@prisma/client';
-import { BodyToLocationCreation, BodyToWeeklyCreation, PhotoInfo } from '../models/challenge.entities.js';
+import { BodyToLocationCreation, BodyToWeeklyCreation, PhotoInfo, ResponseFromChallenge, ResponseFromGetByUserId, ResponseFromGetByUserIdReform, ResponseFromLocationChallenge, ResponseFromWeeklyChallenge } from '../models/challenge.entities.js';
 
 export const responseFromLocationChallenge = ({
     location,
@@ -7,7 +7,7 @@ export const responseFromLocationChallenge = ({
 }: {
     location: LocationChallenge;
     challenge: Challenge;
-}) => {
+}): ResponseFromLocationChallenge => {
     const {id, title, context, requiredCount, remainingCount,
         userId, createdAt, updatedAt, acceptedAt, completedAt, status
     } = challenge;
@@ -35,7 +35,7 @@ export const responseFromWeeklyChallenge = ({
 }: {
     weekly: DateChallenge;
     challenge: Challenge
-}) => {
+}): ResponseFromWeeklyChallenge => {
     const {id, title, context, requiredCount, remainingCount,
         userId, createdAt, updatedAt, acceptedAt, completedAt, status
     } = challenge;
@@ -58,7 +58,7 @@ export const responseFromWeeklyChallenge = ({
     };
 };
 
-export const responseFromChallenge = (challenge: Challenge) => {
+export const responseFromChallenge = (challenge: Challenge): ResponseFromChallenge => {
     const {id, title, context, requiredCount, remainingCount, userId,
         createdAt, updatedAt, acceptedAt, completedAt, status
     } = challenge;
@@ -78,7 +78,33 @@ export const responseFromChallenge = (challenge: Challenge) => {
     };
 };
 
-export const bodyToLocationLogic = (photo: PhotoInfo[]) => {
+export const responseFromGetByUserId = (
+    challenges: ResponseFromGetByUserId[]
+): ResponseFromGetByUserIdReform[] => {
+    return challenges.map((value: ResponseFromGetByUserId) => {
+        const {id, title, context, requiredCount, remainingCount, userId,
+            createdAt, updatedAt, acceptedAt, completedAt, status, locationChallenge, dateChallenge
+        } = value;
+
+        return {
+            id: id.toString(),
+            title,
+            context,
+            challengeLocation: locationChallenge?.challengeLocation,
+            challengeDate: dateChallenge?.challengeDate,
+            requiredCount,
+            remainingCount,
+            userId: userId.toString(),
+            createdAt,
+            updatedAt,
+            acceptedAt,
+            completedAt,
+            status
+        };
+    });
+};
+
+export const bodyToLocationLogic = (photo: PhotoInfo[]): PhotoInfo[] => {
     return photo;
 };
 
