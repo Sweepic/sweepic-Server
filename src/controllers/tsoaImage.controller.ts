@@ -11,8 +11,8 @@ import {
   Tags,
   TsoaResponse,
 } from 'tsoa';
-import {RequestTagSearch} from '../dtos/image.dto.js';
-import {findImagesFromTag} from '../services/image.service.js';
+import {RequestTagSearch} from '../dtos/tsoaImage.dto.js';
+import {findImagesFromTag} from '../services/tsoaImage.service.js';
 import {StatusCodes} from 'http-status-codes';
 
 @Route('images')

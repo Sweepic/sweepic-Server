@@ -1,6 +1,6 @@
 import {StatusCodes} from 'http-status-codes';
-import {RequestTagSearch} from '../dtos/image.dto.js';
-import {selectImagesFromTag} from '../repositories/image.repository.js';
+import {RequestTagSearch} from '../dtos/tsoaImage.dto.js';
+import {selectImagesFromTag} from '../repositories/tsoaImage.repository.js';
 
 export const findImagesFromTag = async (
   dto: RequestTagSearch,
