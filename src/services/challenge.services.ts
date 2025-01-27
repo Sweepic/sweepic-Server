@@ -2,26 +2,41 @@ import { Challenge } from '@prisma/client';
 import { responseFromChallenge } from '../dtos/challenge.dtos.js';
 import { ChallengeModify, ResponseFromUpdateChallenge } from '../models/challenge.entities.js';
 import { updateChallenge, deleteChallenge } from '../repositories/challenge.repositories.js';
+import { LocationChallengeUpdateError, LocationChallengeDeletionError } from '../errors.js';
 
 export const serviceUpdateChallenge = async (data: ChallengeModify): Promise<ResponseFromUpdateChallenge> => {
-    const update: Challenge = await updateChallenge(data);
+  try{
+    const updatedChallenge: Challenge | null = await updateChallenge(data);
 
-    if(update === null){
-        throw new Error(`Update Error: No challenge ${data.id}`);
+    if (updatedChallenge === null) {
+      throw new LocationChallengeUpdateError({challengeId: data.id});
     }
 
-    console.log(`Updated ${update.id} challenge ${update.requiredCount}, ${update.remainingCount}`);
+    console.log(
+      `Updated challenge ${updatedChallenge.id}: requiredCount=${updatedChallenge.requiredCount}, remainingCount=${updatedChallenge.remainingCount}`,
+    );
 
-    return responseFromChallenge(update);
+    return responseFromChallenge(updatedChallenge);
+  } catch (error) {
+    console.error('Error updating location challenge:', error);
+    throw error;
+  }
 };
 
-export const serviceDeleteChallenge = async (data: bigint): Promise<void> => {
-    const deleted: bigint = await deleteChallenge(data);
+export const serviceDeleteChallenge = async (
+  data: bigint,
+): Promise<void> => {
+  try {
+    const deletedChallengeId: bigint | null =
+      await deleteChallenge(data);
 
-    if(deleted === null){
-        throw new Error(`Delete Error: No challenge ${data}`);
+    if (deletedChallengeId === null) {
+      throw new LocationChallengeDeletionError({challengeId: data});
     }
 
-    console.log('Deleted Challenge: ' + deleted);
+    console.log('Deleted challenge with ID:', deletedChallengeId);
+  } catch (error) {
+    console.error('Error deleting location challenge:', error);
+    throw error;
+  }
 };
-
