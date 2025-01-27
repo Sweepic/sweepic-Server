@@ -122,3 +122,16 @@ export class PhotoDataNotFoundError extends BaseError {
     super(404, 'PHO-404', '사진 데이터가 없습니다.', details);
   }
 }
+
+// 라벨링 관련 에러 (LBL-Labeling)
+export class LabelDetectionError extends BaseError {
+  constructor(details?: ErrorDetails) {
+    super(500, 'LBL-500', '라벨링 처리 중 오류가 발생했습니다.', details);
+  }
+}
+
+export class LabelNotFoundError extends BaseError {
+  constructor(details?: ErrorDetails) {
+    super(404, 'LBL-404', '이미지에서 라벨을 감지하지 못했습니다.', details);
+  }
+}

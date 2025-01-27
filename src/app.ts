@@ -18,7 +18,7 @@ import {PrismaSessionStore} from '@quixo3/prisma-session-store';
 import {prisma} from './db.config.js';
 import {BaseError} from './errors.js';
 import swaggerDocument from '../swagger/openapi.json' assert {type: 'json'};
-
+import {labelDetectionController} from './controllers/tags-ai.controller.js';
 dotenv.config();
 
 const app = express();
@@ -89,10 +89,12 @@ app.use(passport.session());
 app.use('/oauth2', authRouter);
 app.use('/memo', memoFolderRouter);
 app.use('/challenge', challengeRouter);
+app.post('/image/ai', labelDetectionController);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Sweepic');
 });
+
 // Error handling middleware (수정된 부분)
 const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   if (res.headersSent) {
