@@ -1,15 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { updateUserName, updateUserGoalCount } from '../services/user.service.js';
+import { DataValidationError } from '../errors.js';
 import { StatusCodes } from 'http-status-codes';
-import { UserModel } from '../models/user.model.js';
 
-declare global {
-  namespace Express {
-    export interface Request {
-      user?: UserModel;
-    }
-  }
-}
 
 // 사용자 이름 변경
 export const updateUserNameController = async (
@@ -56,23 +49,13 @@ export const updateUserNameController = async (
   */
   const userId = req.user?.id;
   if (!userId) {
-    res.status(StatusCodes.UNAUTHORIZED).json({
-      resultType: "ERROR",
-      error: { message: 'Unauthorized access' },
-      success: null,
-    });
-    return;
+    throw new DataValidationError({reason: 'user_id is required.'});
   }
 
   const { name } = req.body;
 
   if (!name) {
-    res.status(StatusCodes.BAD_REQUEST).json({
-      resultType: "ERROR",
-      error: { message: 'Name is required.' },
-      success: null,
-    });
-    return;
+    throw new DataValidationError({reason: 'Name is required.'});
   }
 
   try {
@@ -132,32 +115,19 @@ export const updateUserGoalCountController = async (
   */
   const userId = req.user?.id;
   if (!userId) {
-    res.status(StatusCodes.UNAUTHORIZED).json({
-      resultType: "ERROR",
-      error: { message: 'Unauthorized access' },
-      success: null,
-    });
-    return;
+    throw new DataValidationError({reason: 'user_id is required.'});
   }
 
   const { goalCount } = req.body;
 
   if (goalCount === undefined || goalCount < 0) {
-    res.status(StatusCodes.BAD_REQUEST).json({
-      resultType: "ERROR",
-      error: { message: 'Valid goalCount is required.' },
-      success: null,
-    });
-    return;
+    throw new DataValidationError({reason: 'goal_count is required.'});
+
   }
 
   try {
     const updatedUser = await updateUserGoalCount(Number(userId), goalCount);
-    res.status(StatusCodes.OK).json({
-      resultType: "SUCCESS",
-      error: null,
-      success: updatedUser,
-    });
+    res.status(StatusCodes.OK).success(updatedUser);
   } catch (error) {
     next(error);
   }
