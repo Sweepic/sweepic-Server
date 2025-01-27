@@ -1,6 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import { updateUserName, updateUserGoalCount } from '../services/user.service.js';
 import { StatusCodes } from 'http-status-codes';
+import { UserModel } from '../models/user.model.js';
+
+declare global {
+  namespace Express {
+    export interface Request {
+      user?: UserModel;
+    }
+  }
+}
 
 // 사용자 이름 변경
 export const updateUserNameController = async (
