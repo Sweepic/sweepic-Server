@@ -94,7 +94,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 app.use('/oauth2', authRouter);
-
 app.use('/memo', memoFolderRouter);
 app.use('/challenge', challengeRouter);
 RegisterRoutes(app);
