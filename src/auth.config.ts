@@ -6,7 +6,7 @@ import { prisma } from './db.config.js';
 import { UserModel } from './models/user.model.js';
 import { SocialProfile } from './models/auth.entities.js';
 import { Request, Response, NextFunction } from 'express';
-import { BaseError } from './errors.js';
+import { ServerError, DBError } from './errors.js';
 import { StatusCodes } from 'http-status-codes';
 dotenv.config();
 
@@ -158,8 +158,7 @@ export const sessionAuthMiddleware = async (req: Request, res: Response, next: N
     let sessionId = cookies['connect.sid'];
     if (!sessionId) {
       console.error('Session ID missing in cookies.');
-      res.status(401).json({ message: 'Unauthorized: No session ID provided.' });
-      return;
+      throw new DBError ({reason: 'No session ID provided'});
     }
 
     // 's:' 및 서명 제거
@@ -197,9 +196,6 @@ const extendSessionExpiration = async (sid: string): Promise<void> => {
 
     console.log(`Session expiration extended for SID: ${sid}`);
   } catch (error) {
-    console.error(`Failed to extend session expiration for SID: ${sid}`, error);
-    throw new BaseError(500, 'SES-500', 'Failed to extend session expiration.', {
-      reason: 'Database update failed.',
-    });
+    throw new ServerError({reason: 'Failed to extend session expiration for SID'});
   }
 };
