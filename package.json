@@ -15,7 +15,10 @@
     "fix": "gts fix",
     "prepare": "yarn run compile",
     "pretest": "yarn run compile",
-    "posttest": "yarn run lint"
+    "posttest": "yarn run lint",
+    "swagger": "tsx swagger/swagger.ts",
+    "tsoa-swagger": "tsoa spec -c ./config/tsoa.json",
+    "tsoa-routes": "tsoa routes -c ./config/tsoa.json"
   },
   "author": "",
   "license": "ISC",
@@ -27,6 +30,7 @@
     "@quixo3/prisma-session-store": "^3.1.13",
     "@types/cookie-parser": "^1.4.8",
     "cookie-parser": "^1.4.7",
+    "@tsoa/runtime": "^6.6.0",
     "coordinate-parser": "^1.0.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
