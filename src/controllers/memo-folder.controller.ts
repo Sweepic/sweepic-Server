@@ -8,11 +8,7 @@ import {
   memoFolderImageCreate,
   memoSearch,
 } from '../services/memo-folder.service.js';
-import {
-  DataValidationError,
-  FolderNotFoundError,
-  BaseError,
-} from '../errors.js';
+import {DataValidationError, FolderNotFoundError} from '../errors.js';
 
 export const handlerMemoFolderImageCreate = async (
   req: Request,
@@ -81,6 +77,7 @@ export const handlerMemoFolderImageCreate = async (
     const memoFolderImage = await memoFolderImageCreate(folderId, imageUrl);
     res.status(StatusCodes.OK).success(memoFolderImage);
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -129,14 +126,23 @@ export const handlerMemoFolderAdd = async (
         }
     };
     */
-  console.log('폴더 생성');
-  console.log('body: ', req.body);
-  // if (!req.user) {
-  //     throw new Error('로그인을 하지 않았습니다.');
-  // }
-  const userId = BigInt(1); //BigInt(req.user!.id);
-  const memoFolder = await memoFolderCreate(userId, bodyToMemoFolder(req.body));
-  res.status(StatusCodes.OK).success(memoFolder);
+  try {
+    console.log('폴더 생성');
+    console.log('body: ', req.body);
+    // if (!req.user) {
+    //     throw new Error('로그인을 하지 않았습니다.');
+    // }
+
+    const userId = BigInt(1); //BigInt(req.user!.id);
+    const memoFolder = await memoFolderCreate(
+      userId,
+      bodyToMemoFolder(req.body),
+    );
+    res.status(StatusCodes.OK).success(memoFolder);
+  } catch (error) {
+    console.error('Error in handlerMemoFolderAdd:', error);
+    next(error); // 에러를 글로벌 핸들러로 전달
+  }
 };
 
 export const handlerMemoFolderList = async (
@@ -314,12 +320,17 @@ export const handlerMemoTextImageList = async (
         }
     };
     */
-  console.log('특정 폴더의 사진&텍스트 리스트 조회');
-  // if (!req.user) {
-  //     throw new Error('로그인을 하지 않았습니다.');
-  // }
-  const userId = BigInt(1); //BigInt(req.user!.id);
-  const folderId = BigInt(req.params.folderId);
-  const memoTextImageList = await listMemoTextImage(userId, folderId);
-  res.status(StatusCodes.OK).success(memoTextImageList);
+  try {
+    console.log('특정 폴더의 사진&텍스트 리스트 조회');
+    // if (!req.user) {
+    //     throw new Error('로그인을 하지 않았습니다.');
+    // }
+    const userId = BigInt(1); //BigInt(req.user!.id);
+    const folderId = BigInt(req.params.folderId);
+    const memoTextImageList = await listMemoTextImage(userId, folderId);
+    res.status(StatusCodes.OK).success(memoTextImageList);
+  } catch (error) {
+    console.error('Error in handlerMemoFolderList:', error);
+    next(error);
+  }
 };

@@ -3,6 +3,7 @@ import { ResponseFromChallenge, WeeklyChallengeCreation } from '../models/challe
 import { bodyToWeeklyCreation } from '../dtos/challenge.dtos.js';
 import { StatusCodes } from 'http-status-codes';
 import { serviceCreateNewWeeklyChallenge, serviceGetWeeklyChallenge } from '../services/challenge.weekly.services.js';
+import { DataValidationError } from '../errors.js';
 
 export const handleNewWeeklyChallenge = async(
     req: Request,
@@ -61,10 +62,18 @@ export const handleNewWeeklyChallenge = async(
         }
     };
     */
-    const data: WeeklyChallengeCreation = bodyToWeeklyCreation(req.body);
-    const result: ResponseFromChallenge = await serviceCreateNewWeeklyChallenge(data);
-    res.status(StatusCodes.OK).success(result);
-    console.log(req.headers);
+    try{
+        if(!req.body){
+            throw new DataValidationError({reason: '날짜 챌린지를 생성할 데이터가 없습니다.'});
+        }
+
+        const data: WeeklyChallengeCreation = bodyToWeeklyCreation(req.body);
+        const result: ResponseFromChallenge = await serviceCreateNewWeeklyChallenge(data);
+        res.status(StatusCodes.OK).success(result);
+        console.log(req.headers);
+    } catch(error){
+        next(error);
+    }
 };
 
 export const handleGetWeeklyChallenge = async(
@@ -119,6 +128,14 @@ export const handleGetWeeklyChallenge = async(
         }
     };
     */
-    const result = await serviceGetWeeklyChallenge(BigInt(req.params.id));
-    res.status(StatusCodes.OK).success(result);
+    try{
+        if(!req.params.id){
+            throw new DataValidationError({reason: '올바른 parameter값이 필요합니다.'});
+        }
+        
+        const result = await serviceGetWeeklyChallenge(BigInt(req.params.id));
+        res.status(StatusCodes.OK).success(result);
+    } catch(error){
+        next(error);
+    }
 };
