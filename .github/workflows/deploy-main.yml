@@ -25,16 +25,21 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "20"
+          node-version: '20'
 
       - name: Install dependencies
         run: |
           npm install -g yarn
           yarn install
 
+      - name: Generate Tsoa Routes
+        run: |
+          yarn tsoa routes -c ./config/tsoa.json
+      
       - name: Generate Swagger document
         run: |
           yarn tsx ./swagger/swagger.js
+          yarn tsoa spec -c ./config/tsoa.json
 
       - name: Run build
         run: |
@@ -82,6 +87,7 @@ jobs:
               [Service]
               User=${USER}
               WorkingDirectory=/opt/app
+              ExecStart=/usr/bin/node dist/app.cjs
               ExecStart=/usr/bin/node dist/app.cjs
               Restart=always
               

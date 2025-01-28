@@ -10,7 +10,7 @@ async function build() {
     outExtension: {'.js': '.cjs'},
     platform: 'node',
     target: 'node20',
-    minify: true,
+    minify: false,
     keepNames: true,
     plugins: [
       copy({

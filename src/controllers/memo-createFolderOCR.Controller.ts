@@ -1,9 +1,13 @@
-import {Request, Response} from 'express';
+import {NextFunction, Request, Response} from 'express';
 import {processOCRAndSave} from '../services/memo-ocrService.js';
+import {StatusCodes} from 'http-status-codes';
+import {BaseError} from '../errors.js';
+import {DataValidationError} from '../errors.js';
 
 export const createFolderOCR = async (
   req: Request,
   res: Response,
+  next: NextFunction,
 ): Promise<void> => {
   /*
     #swagger.tags = ['memo-ai']
@@ -51,7 +55,7 @@ export const createFolderOCR = async (
                             properties: {
                                 folder_id: { type: "string", example: "1" },
                                 image_text: { type: "string", example: "이번 수업 시간은 사회 과학 시간이다." },
-                               
+                            }
                         }
                     }
                 }
@@ -94,42 +98,25 @@ export const createFolderOCR = async (
 
   const {base64_image, user_id, folder_name} = req.body;
 
-  //유효성 검사
-  if (!base64_image) {
-    res.status(400).json({error: 'image is required'});
-    return;
-  }
-
-  if (!user_id) {
-    res.status(400).json({error: 'user_id is required'});
-    return;
-  }
-
-  if (!folder_name) {
-    res
-      .status(400)
-      .json({error: 'folder_name is required to create a new folder'});
-    return;
-  }
-
   try {
+    // 유효성 검사
+    if (!base64_image || !user_id || !folder_name) {
+      throw new DataValidationError({
+        reason: 'base64_image, user_id, folder_name이 필요합니다.',
+      });
+    }
+
+    // 서비스 호출
     const result = await processOCRAndSave({
       base64_image,
       user_id,
       folder_name,
     });
 
-    res.status(201).json({
-      message: 'Folder created and text saved successfully',
-      data: result,
-    });
+    // 성공 응답
+    res.status(StatusCodes.CREATED).success(result);
   } catch (error) {
-    console.error('Error in createFolderOCR controller:', error);
-
-    if (error instanceof Error) {
-      res.status(500).json({error: error.message});
-    } else {
-      res.status(500).json({error: 'An unknown error occurred.'});
-    }
+    console.error('에러 발생:', error);
+    next(error);
   }
 };
