@@ -5,7 +5,9 @@ import { Strategy as GoogleStrategy, Profile as GoogleProfile } from 'passport-g
 import { prisma } from './db.config.js';
 import { UserModel } from './models/user.model.js';
 import { SocialProfile } from './models/auth.entities.js';
-
+import { Request, Response, NextFunction } from 'express';
+import { ServerError, AuthError, SessionError } from './errors.js';
+import { StatusCodes } from 'http-status-codes';
 dotenv.config();
 
 const updateOrCreateSocialAccount = async (
@@ -47,7 +49,7 @@ export const naverStrategy = new NaverStrategy(
   {
     clientID: process.env.PASSPORT_NAVER_CLIENT_ID!,
     clientSecret: process.env.PASSPORT_NAVER_CLIENT_SECRET!,
-    callbackURL: 'http://localhost:3000/oauth2/callback/naver',
+    callbackURL: 'http://3.37.137.212:3000/oauth2/callback/naver',
   },
   async (accessToken, refreshToken, profile, cb) => {
     try {
@@ -64,7 +66,7 @@ export const googleStrategy = new GoogleStrategy(
   {
     clientID: process.env.PASSPORT_GOOGLE_CLIENT_ID!,
     clientSecret: process.env.PASSPORT_GOOGLE_CLIENT_SECRET!,
-    callbackURL: 'http://localhost:3000/oauth2/callback/google',
+    callbackURL: 'http://3.37.137.212:3000/oauth2/callback/google',
   },
   async (accessToken, refreshToken, profile, cb) => {
     try {
@@ -81,7 +83,7 @@ export const kakaoStrategy = new KakaoStrategy(
   {
     clientID: process.env.PASSPORT_KAKAO_CLIENT_ID!,
     clientSecret: process.env.PASSPORT_KAKAO_CLIENT_SECRET!, // Optional in Kakao
-    callbackURL: 'http://localhost:3000/oauth2/callback/kakao',
+    callbackURL: 'http://3.37.137.212:3000/oauth2/callback/kakao',
   },
   async (accessToken, refreshToken, profile, cb) => {
     try {
@@ -107,7 +109,7 @@ const verifyUser = async (
       : (profile as GoogleProfile).emails?.[0]?.value;
 
   if (!email) {
-    throw new Error(`profile.email was not found: ${JSON.stringify(profile)}`);
+  throw new AuthError({reason: `profile.email was not found: ${JSON.stringify(profile)}`});
   }
 
   // 기존 사용자 조회
@@ -146,4 +148,62 @@ const verifyUser = async (
   await updateOrCreateSocialAccount(id, profile, provider);
 
   return { id, email, name };
+};
+
+
+//인증 미들웨어
+export const sessionAuthMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const cookies = req.cookies || {};
+    let sessionId = cookies['connect.sid'];
+
+    //세션 아이디가 없는 경우
+    if (!sessionId) {
+      throw new SessionError ({reason: 'No session ID provided'});
+    }
+
+    // 's:' 및 서명 제거
+    sessionId = sessionId.split('.')[0].replace(/^s:/, '');
+
+    // 세션 ID가 DB에 존재하는지 확인
+    const session = await prisma.session.findUnique({
+      where: { sid: sessionId },
+    });
+
+    if (!session) {
+      console.error(`Session ID ${sessionId} not found in database.`);
+      throw new SessionError({ reason: 'Invalid session ID' });
+    }
+
+      // 만료 시간 확인
+      const sessionExpiresAt = session.expiresAt;
+
+    if (!sessionExpiresAt || new Date() > sessionExpiresAt ) {
+      console.warn('Session expired. Extending expiration:', sessionId);
+      await extendSessionExpiration(sessionId); // 만료일 연장
+      return;
+    }
+
+    // 세션 인증 완료 시
+    next();
+  } catch (error) {
+    next(error);
+    }
+};
+
+// 세션 만료일 연장 함수
+const extendSessionExpiration = async (sid: string): Promise<void> => {
+  try {
+    const newExpirationDate = new Date();
+    newExpirationDate.setDate(newExpirationDate.getDate() + 7); 
+
+    await prisma.session.update({
+      where: { sid },
+      data: { expiresAt: newExpirationDate },
+    });
+
+    console.log(`Session expiration extended for SID: ${sid}`);
+  } catch (error) {
+    throw new ServerError({reason: 'Failed to extend session expiration for SID'});
+  }
 };

@@ -166,6 +166,40 @@ export class TagBadRequest extends BaseError {
   }
 }
 
+// 사용자 관련 에러 (USR-User)
+export class UserNotFoundError extends BaseError {
+  constructor() {
+    super(404, 'USR-404', '사용자를 찾을 수 없습니다.');
+  }
+}
+
+export class UserCreationError extends BaseError {
+  constructor() {
+    super(400, 'USR-400', '사용자 생성 중 오류가 발생했습니다.');
+  }
+}
+
+export class UserUpdateError extends BaseError {
+  constructor() {
+    super(400, 'USR-400', '사용자 정보 업데이트 실패.');
+  }
+}
+
+
+// 인증 관련 에러 (AUT-Auth)
+
+export class AuthError extends BaseError {
+  constructor(details: {reason: string}) {
+    super(401, 'AUT-401', '인증 실패.', details);
+  }
+}
+
+export class SessionError extends BaseError {
+  constructor(details: {reason: string}) {
+    super(401, 'AUT-401', '세션 오류.', details);
+  }
+}
+
 // 공용 에러
 export class DBError extends BaseError {
   constructor(details?: ErrorDetails) {
