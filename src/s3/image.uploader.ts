@@ -17,6 +17,12 @@ export const imageUploader = multer({ // 파일 업로드 미들웨어 설정
         key: async (req: Request, file, callback) => { // S3 버킷에 저장될 경로와 이름 정의
             const userId = req.user!.id; // 사용자 ID
 
+            const uuid = uuidv4(); // UUID 생성
+            const extension = path.extname(file.originalname); // 파일 이름(확장자) 추출
+            if (!allowedExtensions.includes(extension)) { // 업로드 파일의 확장자가 허용 목록에 없을 경우
+                return callback(new DataValidationError({reason: '이미지 확장자가 유효하지 않습니다.'}));
+            }
+            
             // 디렉토리 path 설정 과정
             let uploadDirectory = null;
             if (req.body.folderName) {
@@ -32,11 +38,6 @@ export const imageUploader = multer({ // 파일 업로드 미들웨어 설정
                 uploadDirectory = folderId;
             }
 
-            const uuid = uuidv4(); // UUID 생성
-            const extension = path.extname(file.originalname); // 파일 이름(확장자) 추출
-            if (!allowedExtensions.includes(extension)) { // 업로드 파일의 확장자가 허용 목록에 없을 경우
-                return callback(new DataValidationError({reason: '이미지 확장자가 유효하지 않습니다.'}));
-            }
             callback(null, `${userId}/${uploadDirectory}/${uuid}_${file.originalname}`); // S3 버킷에서 파일이 저장될 key
         },
         acl: 'private', // 비공개 설정 (업로드 파일을 버킷 소유자만 접근 가능)
