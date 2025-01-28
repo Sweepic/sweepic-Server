@@ -115,7 +115,7 @@ export class DataValidationError extends BaseError {
 
 // 생성 관련 에러 (CHL)
 export class LocationChallengeCreationError extends BaseError {
-  constructor(details: {latitude: number; longitude: number}) {
+  constructor(details: {reason: string}) {
     super(
       400,
       'CHL-400',
@@ -126,14 +126,14 @@ export class LocationChallengeCreationError extends BaseError {
 }
 
 // 업데이트 관련 에러 (CHL-Challenge)
-export class LocationChallengeUpdateError extends BaseError {
+export class ChallengeUpdateError extends BaseError {
   constructor(details: {challengeId: bigint; userId?: bigint}) {
-    super(400, 'CHL-400', '위치 기반 챌린지 업데이트 실패.', details);
+    super(400, 'CHL-400', '챌린지 업데이트 실패.', details);
   }
 }
 
 // 삭제 관련 에러 (CHL)
-export class LocationChallengeDeletionError extends BaseError {
+export class ChallengeDeletionError extends BaseError {
   constructor(details: {challengeId: bigint}) {
     super(400, 'CHL-400', '위치 기반 챌린지 삭제 실패.', details);
   }
@@ -143,6 +143,46 @@ export class LocationChallengeDeletionError extends BaseError {
 export class LocationChallengeNotFoundError extends BaseError {
   constructor(details: {challengeId: bigint}) {
     super(404, 'CHL-404', '해당 위치 기반 챌린지를 찾을 수 없습니다.', details);
+  }
+}
+
+// 챌린지 수락 관련 에러 (CHL)
+export class ChallengeAcceptError extends BaseError {
+  constructor(details: {challengeId: bigint; reason: string}) {
+    super(400, 'CHL-400', '해당 챌린지를 수락할 수 없습니다.', details);
+  }
+}
+
+// 챌린지 완료 관련 에러 (CHL)
+export class ChallengeCompleteError extends BaseError {
+  constructor(details: {challengeId: bigint; reason: string}){
+    super(400, 'CHL-400', '챌린지 완료 실패', details);
+  }
+}
+
+// 챌린지 조회 관련 에러 (CHL)
+export class ChallengeNotFoundError extends BaseError {
+  constructor(details: {userId: bigint}){
+    super(404, 'CHL-404', '해당 유저의 챌린지를 찾을 수 없습니다.', details);
+  }
+}
+
+// 날짜 챌린지 생성 관련 에러 (CHL)
+export class DateChallengeCreationError extends BaseError {
+  constructor(details: {reason: string}) {
+    super(
+      400,
+      'CHL-400',
+      '날짜 기반 챌린지 생성 중 오류가 발생했습니다.',
+      details,
+    );
+  }
+}
+
+// 조회 관련 에러 (CHL)
+export class DateChallengeNotFoundError extends BaseError {
+  constructor(details: {challengeId: bigint}) {
+    super(404, 'CHL-404', '해당 날짜 기반 챌린지를 찾을 수 없습니다.', details);
   }
 }
 
@@ -163,6 +203,40 @@ export class TagNotFound extends BaseError {
 export class TagBadRequest extends BaseError {
   constructor() {
     super(400, 'TAG-002', '잘못된 요청입니다.');
+  }
+}
+
+// 사용자 관련 에러 (USR-User)
+export class UserNotFoundError extends BaseError {
+  constructor() {
+    super(404, 'USR-404', '사용자를 찾을 수 없습니다.');
+  }
+}
+
+export class UserCreationError extends BaseError {
+  constructor() {
+    super(400, 'USR-400', '사용자 생성 중 오류가 발생했습니다.');
+  }
+}
+
+export class UserUpdateError extends BaseError {
+  constructor() {
+    super(400, 'USR-400', '사용자 정보 업데이트 실패.');
+  }
+}
+
+
+// 인증 관련 에러 (AUT-Auth)
+
+export class AuthError extends BaseError {
+  constructor(details: {reason: string}) {
+    super(401, 'AUT-401', '인증 실패.', details);
+  }
+}
+
+export class SessionError extends BaseError {
+  constructor(details: {reason: string}) {
+    super(401, 'AUT-401', '세션 오류.', details);
   }
 }
 

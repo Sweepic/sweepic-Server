@@ -531,11 +531,105 @@
         "summary": "폴더 생성 및 OCR 수행",
         "description": "새로운 폴더를 생성하고, 이미지에서 OCR 텍스트를 추출하여 이미지와 텍스트를 저장하는 API입니다.",
         "responses": {
-          "default": {
-            "description": ""
+          "201": {
+            "description": "폴더 생성 및 텍스트 변환",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "resultType": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "error": {
+                      "type": "object",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "success": {
+                      "type": "object",
+                      "properties": {
+                        "folder_id": {
+                          "type": "string",
+                          "example": "1"
+                        },
+                        "image_text": {
+                          "type": "string",
+                          "example": "이번 수업 시간은 사회 과학 시간이다."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청 데이터",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "폴더의 이름을 입력해주세요."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "서버 내부 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "서버에러발생."
+                    }
+                  }
+                }
+              }
+            }
           }
         },
-        "requestBody": {}
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "image_url",
+                  "user_id",
+                  "folder_name"
+                ],
+                "properties": {
+                  "base64_image": {
+                    "type": "string",
+                    "description": "OCR 처리를 위한 이미지 URL",
+                    "example": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA..."
+                  },
+                  "user_id": {
+                    "type": "number",
+                    "description": "사용자 ID",
+                    "example": 1
+                  },
+                  "folder_name": {
+                    "type": "string",
+                    "description": "생성할 폴더의 이름",
+                    "example": "공부"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/memo/text-format/folders/{folderId}": {
@@ -728,7 +822,117 @@
     },
     "/challenge/delete": {
       "delete": {
+        "tags": [
+          "challenge-controller"
+        ],
+        "summary": "챌린지 삭제 API",
+        "description": "챌린지를 삭제하는 API입니다.",
+        "responses": {
+          "200": {
+            "description": "챌린지 삭제 성공 응답",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "resultType": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "error": {
+                      "type": "object",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "success": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "1"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "챌린지 ID"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/challenge/accept/{id}": {
+      "patch": {
         "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/challenge/complete/{id}": {
+      "patch": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/challenge/get/{userId}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "default": {
             "description": ""
@@ -976,7 +1180,11 @@
     },
     "/challenge/weekly_challenge/get/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "challenge-weekly-controller"
+        ],
+        "summary": "날짜 기반 챌린지 불러오기 API",
+        "description": "날짜 기반 챌린지를 불러오는 API입니다.",
         "parameters": [
           {
             "name": "id",
@@ -984,13 +1192,93 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "챌린지 ID 입력"
           }
         ],
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "날짜 챌린지 불러오기 성공 응답",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "resultType": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "error": {
+                      "type": "object",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "success": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "1"
+                        },
+                        "title": {
+                          "type": "string",
+                          "example": "challenge-title"
+                        },
+                        "context": {
+                          "type": "string",
+                          "example": "challenge-context"
+                        },
+                        "challengeDate": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "challenge-location"
+                        },
+                        "requiredCount": {
+                          "type": "number",
+                          "example": 10
+                        },
+                        "remainingCount": {
+                          "type": "number",
+                          "example": 10
+                        },
+                        "userId": {
+                          "type": "string",
+                          "example": "1"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-01-20T18:19:47.415Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-01-20T18:19:47.415Z"
+                        },
+                        "acceptedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-01-20T18:19:47.415Z"
+                        },
+                        "completedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-01-20T18:19:47.415Z"
+                        },
+                        "status": {
+                          "type": "number",
+                          "example": 1
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
+        },
+        "requestBody": {
+          "required": false
         }
       }
     },

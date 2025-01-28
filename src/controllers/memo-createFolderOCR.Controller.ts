@@ -13,7 +13,7 @@ export const createFolderOCR = async (
     #swagger.tags = ['memo-ai']
     #swagger.summary = '폴더 생성 및 OCR 수행'
     #swagger.description = '새로운 폴더를 생성하고, 이미지에서 OCR 텍스트를 추출하여 이미지와 텍스트를 저장하는 API입니다.'
-    #swagger.requestBody = {W
+    #swagger.requestBody = {
         required: true,
         content: {
             "application/json": {
@@ -55,7 +55,7 @@ export const createFolderOCR = async (
                             properties: {
                                 folder_id: { type: "string", example: "1" },
                                 image_text: { type: "string", example: "이번 수업 시간은 사회 과학 시간이다." },
-                               
+                            }
                         }
                     }
                 }

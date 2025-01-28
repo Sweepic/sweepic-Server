@@ -70,7 +70,7 @@ export interface ResponseFromWeeklyChallenge {
     userId: string;
     title: string;
     context: string;
-    challengeDate: string;
+    challengeDate: Date;
     requiredCount: number;
     remainingCount: number;
     createdAt: Date;
@@ -86,6 +86,43 @@ export interface ResponseFromUpdateChallenge {
     requiredCount: number;
     remainingCount: number;
     updatedAt: Date | null;
+    status: number;
+}
+
+export interface ResponseFromGetByUserId {
+    locationChallenge: {
+        challengeLocation: string;
+    } | null;
+    dateChallenge: {
+        challengeDate: Date;
+    } | null;
+
+    id: bigint;
+    userId: bigint;
+    title: string;
+    context: string;
+    requiredCount: number;
+    remainingCount: number;
+    createdAt: Date;
+    updatedAt: Date | null;
+    acceptedAt: Date | null;
+    completedAt: Date | null;
+    status: number;
+}
+
+export interface ResponseFromGetByUserIdReform {
+    id: string;
+    userId: string;
+    title: string;
+    context: string;
+    challengeLocation: string | undefined;
+    challengeDate: Date | undefined;
+    requiredCount: number;
+    remainingCount: number;
+    createdAt: Date;
+    updatedAt: Date | null;
+    acceptedAt: Date | null;
+    completedAt: Date | null;
     status: number;
 }
 
