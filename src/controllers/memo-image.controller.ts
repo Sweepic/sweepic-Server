@@ -68,11 +68,14 @@ export const handlerMemoImageAdd = async (
   //     throw new Error('로그인을 하지 않았습니다.');
   // }
   const folderId = BigInt(req.params.folderId);
-
-  if (!req.file) {
-    throw new DataValidationError({reason: '저장할 사진이 없습니다.'});
+  try {
+    if (!req.file) {
+      throw new DataValidationError({reason: '저장할 사진이 없습니다.'});
+    }
+    const imageUrl = (req.file as Express.MulterS3File).key;
+    const memoImage = await memoImageAdd(folderId, imageUrl);
+    res.status(StatusCodes.OK).success(memoImage);
+  } catch (error) {
+    next(error); // 에러를 글로벌 핸들러로 전달
   }
-  const imageUrl = (req.file as Express.MulterS3File).key;
-  const memoImage = await memoImageAdd(folderId, imageUrl);
-  res.status(StatusCodes.OK).success(memoImage);
 };

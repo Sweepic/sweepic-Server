@@ -1,4 +1,4 @@
-import {Request, Response} from 'express';
+import {NextFunction, Request, Response} from 'express';
 import {processOCRAndSave} from '../services/memo-ocrService.js';
 import {StatusCodes} from 'http-status-codes';
 import {BaseError} from '../errors.js';
@@ -7,6 +7,7 @@ import {DataValidationError} from '../errors.js';
 export const createFolderOCR = async (
   req: Request,
   res: Response,
+  next: NextFunction,
 ): Promise<void> => {
   /*
     #swagger.tags = ['memo-ai']
@@ -101,7 +102,7 @@ export const createFolderOCR = async (
     // 유효성 검사
     if (!base64_image || !user_id || !folder_name) {
       throw new DataValidationError({
-        reason: 'base64_image, user_id, and folder_name are required fields.',
+        reason: 'base64_image, user_id, folder_name이 필요합니다.',
       });
     }
 
@@ -114,24 +115,8 @@ export const createFolderOCR = async (
 
     // 성공 응답
     res.status(StatusCodes.CREATED).success(result);
-  } catch (error: unknown) {
+  } catch (error) {
     console.error('에러 발생:', error);
-
-    // BaseError 처리
-    if (error instanceof BaseError) {
-      res.status(error.statusCode).error({
-        errorCode: error.code,
-        reason: error.message,
-        data: error.details,
-      });
-    } else {
-      // 알 수 없는 에러 처리
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).error({
-        errorCode: 'unknown',
-        reason:
-          error instanceof Error ? error.message : 'Unexpected server error.',
-        data: null,
-      });
-    }
+    next(error);
   }
 };
