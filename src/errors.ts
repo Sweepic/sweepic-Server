@@ -150,3 +150,16 @@ export class ServerError extends BaseError {
     super(500, 'SER-001', '내부 서버 오류입니다.', details);
   }
 }
+
+// 라벨링 관련 에러 (LBL-Labeling)
+export class LabelDetectionError extends BaseError {
+  constructor(details?: ErrorDetails) {
+    super(500, 'LBL-500', '라벨링 처리 중 오류가 발생했습니다.', details);
+  }
+}
+
+export class LabelInsufficientError extends BaseError {
+  constructor(details?: ErrorDetails) {
+    super(404, 'LBL-405', '이미지에서 라벨을 감지하지 못했습니다.', details);
+  }
+}
