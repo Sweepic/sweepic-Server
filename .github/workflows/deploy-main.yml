@@ -32,6 +32,10 @@ jobs:
           npm install -g yarn
           yarn install
 
+      - name: Generate Tsoa Routes
+        run: |
+          yarn tsoa routes -c ./config/tsoa.json
+      
       - name: Generate Swagger document
         run: |
           yarn tsx ./swagger/swagger.js
@@ -71,9 +75,6 @@ jobs:
           ssh sweepic-ec2 'sudo mkdir -p /opt/app'
           ssh sweepic-ec2 'sudo chown ubuntu:ubuntu /opt/app'
           scp -r ./dist sweepic-ec2:/opt/app
-          ssh sweepic-ec2 'sudo echo "$SWEEPIC_AI" > /opt/app/sweepicai-00d515e813ea.json'
-        env:
-          SWEEPIC_AI: ${{secrets.SWEEPIC_AI}}
 
       # 원격 서버에서 애플리케이션을 Systemd 서비스로 등록하는 과정
       - name: Copy systemd service file
