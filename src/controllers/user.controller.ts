@@ -10,7 +10,7 @@ export const updateUserNameController = async (
   res: Response,
   next: NextFunction
 ): Promise<void> => {
-  /* 
+/*
     #swagger.tags = ['User']
     #swagger.summary = '사용자 이름 변경 API'
     #swagger.description = '로그인한 사용자의 이름을 변경하는 API입니다.'
@@ -46,6 +46,22 @@ export const updateUserNameController = async (
         }
       }
     }
+    #swagger.responses[400] = {
+      description: "잘못된 요청",
+      schema: {
+        type: "object",
+        properties: {
+          resultType: { type: "string", example: "FAILURE" },
+          error: {
+            type: "object",
+            properties: {
+              reason: { type: "string", example: "Name is required." }
+            }
+          },
+          success: { type: "object", nullable: true, example: null }
+        }
+      }
+    }
   */
   const userId = req.user?.id;
   if (!userId) {
@@ -72,7 +88,7 @@ export const updateUserGoalCountController = async (
   res: Response,
   next: NextFunction
 ): Promise<void> => {
-  /* 
+  /*
     #swagger.tags = ['User']
     #swagger.summary = '사용자 목표 장수 변경 API'
     #swagger.description = '로그인한 사용자의 목표 장수를 변경하는 API입니다.'
@@ -105,6 +121,22 @@ export const updateUserGoalCountController = async (
               updatedAt: { type: "string", format: "date-time" }
             }
           }
+        }
+      }
+    }
+    #swagger.responses[400] = {
+      description: "잘못된 요청",
+      schema: {
+        type: "object",
+        properties: {
+          resultType: { type: "string", example: "FAILURE" },
+          error: {
+            type: "object",
+            properties: {
+              reason: { type: "string", example: "goal_count is required." }
+            }
+          },
+          success: { type: "object", nullable: true, example: null }
         }
       }
     }
