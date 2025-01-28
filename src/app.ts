@@ -6,9 +6,9 @@ import express, {
   NextFunction,
   ErrorRequestHandler,
 } from 'express';
-import swaggerAutogen from 'swagger-autogen';
 import swaggerUiExpress from 'swagger-ui-express';
 import {memoFolderRouter} from './routers/memo.router.js';
+import {RegisterRoutes} from './routers/tsoaRoutes.js';
 import {challengeRouter} from './routers/challenge.router.js';
 import {authRouter} from './routers/auth.routers.js';
 import {userRouter} from './routers/user.router.js';
@@ -16,10 +16,13 @@ import passport from 'passport';
 import session from 'express-session';
 import {PrismaSessionStore} from '@quixo3/prisma-session-store';
 import {prisma} from './db.config.js';
+import swaggerDocumentOne from '../swagger/openapi.json' assert {type: 'json'};
+import swaggerDocumentTwo from '../swagger/swagger.json' assert {type: 'json'};
 import {BaseError} from './errors.js';
 import swaggerDocument from '../swagger/openapi.json' assert {type: 'json'};
 import { sessionAuthMiddleware } from './auth.config.js';
 import cookieParser from 'cookie-parser';
+import {ValidateError} from 'tsoa';
 
 dotenv.config();
 
@@ -35,9 +38,15 @@ app.use(cookieParser());
 
 // Swagger Docs
 app.use(
-  '/docs',
-  swaggerUiExpress.serve,
-  swaggerUiExpress.setup(swaggerDocument),
+  '/docs/v1',
+  swaggerUiExpress.serveFiles(swaggerDocumentOne),
+  swaggerUiExpress.setup(swaggerDocumentOne),
+);
+
+app.use(
+  '/docs/v2',
+  swaggerUiExpress.serveFiles(swaggerDocumentTwo),
+  swaggerUiExpress.setup(swaggerDocumentTwo),
 );
 
 // Response customization middleware
@@ -88,14 +97,15 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-
 app.use('/oauth2', authRouter);
 
 app.use(sessionAuthMiddleware);
 
 app.use('/onboarding', userRouter);
+
 app.use('/memo', memoFolderRouter);
 app.use('/challenge', challengeRouter);
+RegisterRoutes(app);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Sweepic');
@@ -120,6 +130,18 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
     return;
   }
 
+  if (err instanceof ValidateError) {
+    res.status(err.status).json({
+      resultType: 'FAIL',
+      error: {
+        errorCode: 'VAL-001',
+        reason: 'Validation Error',
+        data: err.fields,
+      },
+      success: null,
+    });
+  }
+  
   console.error('Unexpected error:', err);
   res.status(500).json({
     resultType: 'FAIL',

@@ -1,3 +1,5 @@
+import {extname} from 'path';
+
 export type ErrorDetails =
   | {folderId?: bigint; userId?: bigint; folderName?: string}
   | {imageId?: bigint; imageUrl?: string}
@@ -120,5 +122,31 @@ export class LocationChallengeNotFoundError extends BaseError {
 export class PhotoDataNotFoundError extends BaseError {
   constructor(details?: ErrorDetails) {
     super(404, 'PHO-404', '사진 데이터가 없습니다.', details);
+  }
+}
+
+// 태그 데이터 관련 에러(TAG)
+export class TagNotFound extends BaseError {
+  constructor() {
+    super(404, 'TAG-001', '태그가 없습니다.');
+  }
+}
+
+export class TagBadRequest extends BaseError {
+  constructor() {
+    super(400, 'TAG-002', '잘못된 요청입니다.');
+  }
+}
+
+// 공용 에러
+export class DBError extends BaseError {
+  constructor(details?: ErrorDetails) {
+    super(500, 'DB-001', 'DB 에러입니다.', details);
+  }
+}
+
+export class ServerError extends BaseError {
+  constructor(details?: ErrorDetails) {
+    super(500, 'SER-001', '내부 서버 오류입니다.', details);
   }
 }
