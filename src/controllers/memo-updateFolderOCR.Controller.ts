@@ -1,11 +1,12 @@
-import {Request, Response} from 'express';
+import {NextFunction, Request, Response} from 'express';
 import {processOCRAndSave} from '../services/memo-ocrService.js';
 import {StatusCodes} from 'http-status-codes';
-import {BaseError, DataValidationError} from '../errors.js';
+import {DataValidationError} from '../errors.js';
 
 export const updateFolderOCR = async (
   req: Request,
   res: Response,
+  next: NextFunction,
 ): Promise<void> => {
   /*
     #swagger.tags = ['memo-ai']
@@ -105,18 +106,18 @@ export const updateFolderOCR = async (
     // 유효성 검사
     if (!folderId) {
       throw new DataValidationError({
-        reason: 'folderId is required for updating a folder.',
+        reason: 'folder_ID가 필요합니다.',
       });
     }
 
     if (!base64_image) {
       throw new DataValidationError({
-        reason: 'base64_image is required for OCR processing.',
+        reason: 'base64_image가 필요합니다.',
       });
     }
 
     if (!user_id) {
-      throw new DataValidationError({reason: 'user_id is required.'});
+      throw new DataValidationError({reason: 'user_id가 필요합니다.'});
     }
 
     const result = await processOCRAndSave({
@@ -126,22 +127,8 @@ export const updateFolderOCR = async (
     });
 
     res.status(StatusCodes.OK).success(result);
-  } catch (error: unknown) {
+  } catch (error) {
     console.error('Error occurred:', error);
-
-    if (error instanceof BaseError) {
-      res.status(error.statusCode).error({
-        errorCode: error.code,
-        reason: error.message,
-        data: error.details,
-      });
-    } else {
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).error({
-        errorCode: 'unknown',
-        reason:
-          error instanceof Error ? error.message : 'Unexpected server error.',
-        data: null,
-      });
-    }
+    next(error);
   }
 };
