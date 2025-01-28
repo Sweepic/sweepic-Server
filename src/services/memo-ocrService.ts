@@ -1,18 +1,27 @@
 import {ImageAnnotatorClient} from '@google-cloud/vision';
 import path from 'path';
-import {fileURLToPath} from 'url';
 import {folderRepository} from '../repositories/memo-OCR.repositoy.js';
 import {OCRRequest} from '../models/memo-OCR.model.js';
 import {
   FolderNotFoundError,
   FolderDuplicateError,
   PhotoDataNotFoundError,
+  OCRProcessError,
 } from '../errors.js';
 
-// Google Cloud Vision 클라이언트 초기화
-const keyFilename = path.resolve('../sweepicai-00d515e813ea.json');
+// 환경변수에서 Base64로 인코딩된 JSON 키 가져오기
+const keyFileBase64 = process.env.GOOGLE_CLOUD_KEY_FILE;
 
-const visionClient = new ImageAnnotatorClient({keyFilename});
+if (!keyFileBase64) {
+  throw new Error('GOOGLE_CLOUD_KEY_FILE 환경변수가 설정되지 않았습니다.');
+}
+
+// Base64로 인코딩된 JSON 키 디코딩
+const keyFileBuffer = Buffer.from(keyFileBase64, 'base64');
+const keyFileJson = JSON.parse(keyFileBuffer.toString());
+
+// Google Cloud Vision 클라이언트 초기화
+const visionClient = new ImageAnnotatorClient({credentials: keyFileJson});
 
 export const processOCRAndSave = async ({
   folder_id,
@@ -88,22 +97,25 @@ export const performOCR = async (base64_image: string): Promise<string> => {
     // Base64 데이터에서 MIME 타입 제거 (data:image/jpeg;base64, 등)
     const base64Data = base64_image.replace(/^data:image\/\w+;base64,/, '');
 
-    // Vision API 요청 형식에 맞게 데이터 설정
     const [result] = await visionClient.textDetection({
-      image: {
-        content: base64Data, // MIME 제거된 Base64 데이터 전달
-      },
+      image: {content: base64Data},
     });
+
+    console.log('Google Vision API response received:', result);
 
     const annotations = result.textAnnotations;
 
     if (!annotations || annotations.length === 0) {
-      throw new PhotoDataNotFoundError();
+      console.log('No text annotations found.');
+      throw new PhotoDataNotFoundError({
+        reason: '이미지에서 텍스트를 찾지 못하였습니다.',
+      });
     }
 
+    console.log('OCR result:', annotations[0].description);
     return annotations[0].description || '텍스트를 찾을 수 없습니다';
   } catch (error) {
-    console.error('OCR 처리 중 오류 발생:', error);
-    throw error;
+    console.error(error);
+    throw new OCRProcessError();
   }
 };
