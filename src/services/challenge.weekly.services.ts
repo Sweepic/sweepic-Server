@@ -3,23 +3,34 @@ import { ResponseFromChallenge, WeeklyChallengeCreation } from '../models/challe
 import { getWeekly, newWeeklyChallenge } from '../repositories/weekly.repositories.js';
 import { responseFromChallenge, responseFromWeeklyChallenge } from '../dtos/challenge.dtos.js';
 import { getChallenge } from '../repositories/challenge.repositories.js';
+import { DateChallengeCreationError, DateChallengeNotFoundError } from '../errors.js';
 
 export const serviceCreateNewWeeklyChallenge = async(data: WeeklyChallengeCreation): Promise<ResponseFromChallenge> => {
-    const newChallenge: Challenge | null = await newWeeklyChallenge(data);
-    if(newChallenge === null){
-        throw new Error('Existing challenge.');
-    }
+    try{
+        const newChallenge: Challenge | null = await newWeeklyChallenge(data);
+        if(newChallenge === null){
+            throw new DateChallengeCreationError({reason: '이미 존재하는 챌린지입니다.'});
+        }
 
-    return responseFromChallenge(newChallenge);
+        return responseFromChallenge(newChallenge);
+    } catch(error){
+        console.error('Error creating date challenge:', error);
+        throw error;
+    }
 };
 
 export const serviceGetWeeklyChallenge = async(data: bigint) => {
-    const challenge: Challenge | null = await getChallenge(data);
-    const weekly: DateChallenge | null = await getWeekly(data);
+    try{
+        const challenge: Challenge | null = await getChallenge(data);
+        const weekly: DateChallenge | null = await getWeekly(data);
 
-    if(challenge === null || weekly === null){
-        throw new Error(`Could not get Challenge ID ${data}.`);
+        if(challenge === null || weekly === null){
+            throw new DateChallengeNotFoundError({challengeId: data});
+        }
+
+        return responseFromWeeklyChallenge({weekly, challenge});
+    } catch(error){
+        console.error('Error getting date challenge:', error);
+        throw error;
     }
-
-    return responseFromWeeklyChallenge({weekly, challenge});
 };

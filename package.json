@@ -28,6 +28,7 @@
     "@google-cloud/vision": "^4.3.2",
     "@prisma/client": "^6.1.0",
     "@quixo3/prisma-session-store": "^3.1.13",
+    "@types/navermaps": "^3.7.8",
     "@types/cookie-parser": "^1.4.8",
     "cookie-parser": "^1.4.7",
     "@tsoa/runtime": "^6.6.0",

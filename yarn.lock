@@ -2081,6 +2081,11 @@
     "@types/qs" "*"
     "@types/serve-static" "*"
 
+"@types/geojson@*":
+  version "7946.0.16"
+  resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-7946.0.16.tgz#8ebe53d69efada7044454e3305c19017d97ced2a"
+  integrity sha512-6C8nqWur3j98U6+lXDfTUWIfgvZU+EumvpHKcYjujKH7woYyLj2sUmff0tRhrqM7BohUw7Pz3ZB1jj2gW9Fvmg==
+
 "@types/http-assert@*":
   version "1.5.6"
   resolved "https://registry.yarnpkg.com/@types/http-assert/-/http-assert-1.5.6.tgz#b6b657c38a2350d21ce213139f33b03b2b5fa431"
@@ -2152,6 +2157,13 @@
   integrity sha512-pQ2hoqvXiJt2FP9WQVLPRO+AmiIm/ZYkavPlIQnx282u4ZrVdztx0pkh3jjpQt0Kz+YI0YhSG264y08UJKoUQg==
   dependencies:
     "@types/express" "*"
+
+"@types/navermaps@^3.7.8":
+  version "3.7.8"
+  resolved "https://registry.yarnpkg.com/@types/navermaps/-/navermaps-3.7.8.tgz#e4a3a4f351537dfc7dd66c29f48db88a489d2fe1"
+  integrity sha512-LzQffMWcUfhKzOuPpUONaXmMN6sAkNf92q1nycRplqorIl2oDjgdPftOw0LttTS0/k/YsotizawK+PtcRWbuog==
+  dependencies:
+    "@types/geojson" "*"
 
 "@types/node@*", "@types/node@>=13.7.0", "@types/node@^22.10.3":
   version "22.10.10"
