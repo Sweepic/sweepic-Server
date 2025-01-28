@@ -6,7 +6,8 @@ import { prisma } from './db.config.js';
 import { UserModel } from './models/user.model.js';
 import { SocialProfile } from './models/auth.entities.js';
 import { Request, Response, NextFunction } from 'express';
-
+import { BaseError } from './errors.js';
+import { StatusCodes } from 'http-status-codes';
 dotenv.config();
 
 const updateOrCreateSocialAccount = async (
@@ -176,14 +177,11 @@ export const sessionAuthMiddleware = async (req: Request, res: Response, next: N
       return;
     }
 
-    console.log('Session expiration date:', sessionExpiresAt);
-
-    // 세션 인증 완료 시시
+    // 세션 인증 완료 시
     next();
   } catch (error) {
-    console.error('Error in sessionAuthMiddleware:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
-  }
+    next(error);
+    }
 };
 
 // 세션 만료일 연장 함수
@@ -200,6 +198,8 @@ const extendSessionExpiration = async (sid: string): Promise<void> => {
     console.log(`Session expiration extended for SID: ${sid}`);
   } catch (error) {
     console.error(`Failed to extend session expiration for SID: ${sid}`, error);
-    throw new Error('Failed to extend session expiration');
+    throw new BaseError(500, 'SES-500', 'Failed to extend session expiration.', {
+      reason: 'Database update failed.',
+    });
   }
 };

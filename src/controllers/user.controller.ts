@@ -60,11 +60,7 @@ export const updateUserNameController = async (
 
   try {
     const updatedUser = await updateUserName(Number(userId), name);
-    res.status(StatusCodes.OK).json({
-      resultType: "SUCCESS",
-      error: null,
-      success: updatedUser,
-    });
+    res.status(StatusCodes.OK).success(updatedUser);
   } catch (error) {
     next(error);
   }
