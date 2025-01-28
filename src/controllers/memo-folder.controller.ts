@@ -6,8 +6,12 @@ import { memoFolderDelete, memoImageDelete } from '../services/memo-image.servic
 import { bodyToMemoImagesToDelete } from '../dtos/memo-image.dto.js';
 import { DataValidationError } from '../errors.js';
 
-export const handlerMemoFolderImageCreate = async (req: Request, res: Response, next: NextFunction): Promise<void> =>{
-    /*
+export const handlerMemoFolderImageCreate = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  /*
     #swagger.tags = ['memo-folder-controller']
     #swagger.summary = '폴더 생성 및 사진 저장 API';
     #swagger.description = '폴더 생성과 동시에 파일을 저장하는 API입니다.'
@@ -72,12 +76,16 @@ export const handlerMemoFolderImageCreate = async (req: Request, res: Response, 
         res.status(StatusCodes.OK).success(memoFolderImage);
     }
     catch(error){
+        console.error('Error in handlerMemoFolderImageCreate:', error);
         next(error);
     }
 };
-
-export const handlerMemoFolderAdd = async (req: Request, res: Response, next: NextFunction): Promise<void> =>{
-    /*
+export const handlerMemoFolderAdd = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  /*
     #swagger.tags = ['memo-folder-controller']
     #swagger.summary = '폴더 생성 API';
     #swagger.description = '폴더를 생성하는 API입니다.'
@@ -129,12 +137,17 @@ export const handlerMemoFolderAdd = async (req: Request, res: Response, next: Ne
         res.status(StatusCodes.OK).success(memoFolder);
     }
     catch(error) {
+        console.error('Error in handlerMemoFolderAdd:', error);
         next (error);
     }
 };
 
-export const handlerMemoFolderList = async (req: Request, res: Response, next: NextFunction): Promise<void> =>{
-    /*
+export const handlerMemoFolderList = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  /*
     #swagger.tags = ['memo-folder-controller']
     #swagger.summary = '모든 메모 조회 API';
     #swagger.description = '모든 메모를 조회하는 API입니다.'
@@ -183,12 +196,17 @@ export const handlerMemoFolderList = async (req: Request, res: Response, next: N
         res.status(StatusCodes.OK).success(memoList);
     }
     catch(error) {
+        console.error('Error in handlerMemoFolderList:', error);
         next (error);
     }
 };
 
-export const handlerMemoSearch = async (req: Request, res: Response, next: NextFunction): Promise<void> =>{
-    /*
+export const handlerMemoSearch = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  /*
     #swagger.tags = ['memo-folder-controller']
     #swagger.summary = '메모 검색 API';
     #swagger.description = '메모를 검색 및 조회하는 API입니다.'
@@ -249,6 +267,7 @@ export const handlerMemoSearch = async (req: Request, res: Response, next: NextF
         res.status(StatusCodes.OK).success(searchMemoList);
     }
     catch(error) {
+        console.error('Error in handlerMemoSearch:', error);      
         next (error);
     }
 };
@@ -324,12 +343,16 @@ export const handlerMemoImageDelete = async (req: Request, res: Response, next: 
         res.status(StatusCodes.OK).success(memoImagesToMove);
     }
     catch(error) {
-        next (error);
+      console.error('Error in handlerMemoImageDelete:', error);  
+      next (error);
     }
 };
-
-export const handlerMemoTextImageList = async (req: Request, res: Response, next: NextFunction): Promise<void> =>{
-    /*
+export const handlerMemoTextImageList = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  /*
     #swagger.tags = ['memo-folder-controller']
     #swagger.summary = '특정 폴더의 메모 조회 API';
     #swagger.description = '특정 폴더의 모든 메모(텍스트 및 사진)을 조회하는 API입니다.'
@@ -386,7 +409,8 @@ export const handlerMemoTextImageList = async (req: Request, res: Response, next
         res.status(StatusCodes.OK).success(memoTextImageList);
     }
     catch(error) {
-        next (error);
+      console.error('Error in handlerMemoTextImageList:', error);  
+      next (error);
     }
 };
 
@@ -461,6 +485,7 @@ export const handlerMemoFolderUpdate = async (req: Request, res: Response, next:
         res.status(StatusCodes.OK).success(updatedMemoFolder);
     }
     catch(error) {
+        console.error('Error in handlerMemoFolderUpdate:', error);
         next (error);
     }
 };
@@ -537,6 +562,7 @@ export const handlerMemoTextUpdate = async (req: Request, res: Response, next: N
         res.status(StatusCodes.OK).success(memoTextImageList);
     }
     catch(error) {
+        console.error('Error in handlerMemoTextUpdate:', error);
         next (error);
     }
 };

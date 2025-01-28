@@ -78,6 +78,7 @@ export const handlerMemoImageAdd = async (
         res.status(StatusCodes.OK).success(memoImage);
     }
     catch(error) {
+        console.error('Error in handlerMemoImageAdd:', error);
         next(error);
     }
 };
@@ -145,7 +146,8 @@ export const handlerMemoImageMove = async (req: Request, res: Response, next: Ne
         res.status(StatusCodes.OK).success(memoImagesToMove);
     }
     catch(error) {
-        next(error);
+      console.error('Error in handlerMemoImageMove:', error);  
+      next(error);
     }
 };
 
@@ -194,6 +196,7 @@ export const handlerMemoFolderDelete = async (req: Request, res: Response, next:
         res.status(StatusCodes.OK).success(memoImagesToDelete);
     }
     catch(error) {
+        console.error('Error in handlerMemoFolderDelete:', error);
         next(error);
     }
 };

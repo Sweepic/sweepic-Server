@@ -31,14 +31,19 @@ export const memoFolderImageCreate = async (userId: bigint, folderId: bigint, im
     return responseFromMemoFolderImage({ memoFolder, memoImage });
 };
 
-export const listMemoFolder = async (userId: bigint): Promise<{ data: MemoFolderListResponseDto[] }> => {
-    const memoFolderList = await getMemoFolderList(userId);
-    return responseFromMemoFolderList(memoFolderList);
+export const listMemoFolder = async (
+  userId: bigint,
+): Promise<{data: MemoFolderListResponseDto[]}> => {
+  const memoFolderList = await getMemoFolderList(userId);
+  return responseFromMemoFolderList(memoFolderList);
 };
 
-export const memoSearch = async (userId: bigint, searchKeyword: string): Promise<{ data: MemoFolderListResponseDto[] }> => {
-    const searchMemoList = await getSearchMemoList(userId, searchKeyword);
-    return responseFromMemoFolderList(searchMemoList);
+export const memoSearch = async (
+  userId: bigint,
+  searchKeyword: string,
+): Promise<{data: MemoFolderListResponseDto[]}> => {
+  const searchMemoList = await getSearchMemoList(userId, searchKeyword);
+  return responseFromMemoFolderList(searchMemoList);
 };
 
 export const listMemoTextImage = async (userId: bigint, folderId: bigint): Promise<MemoTextImageListResponseDto> => {
