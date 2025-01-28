@@ -1,5 +1,3 @@
-import {extname} from 'path';
-
 export type ErrorDetails =
   | {folderId?: bigint; userId?: bigint; folderName?: string}
   | {imageId?: bigint; imageUrl?: string}
@@ -36,6 +34,12 @@ export class FolderCreationError extends BaseError {
   }
 }
 
+export class FolderUpdateError extends BaseError {
+  constructor(details: {folderId: bigint}) {
+    super(400, 'FOL-400', '폴더 업데이트 중 오류가 발생했습니다.', details);
+  }
+}
+
 export class FolderNotFoundError extends BaseError {
   constructor(details: {folderId: bigint}) {
     super(404, 'FOL-404', '해당 폴더를 찾을 수 없습니다.', details);
@@ -48,10 +52,34 @@ export class FolderDuplicateError extends BaseError {
   }
 }
 
+export class FolderNotChangeError extends BaseError {
+  constructor(details: {folderId: bigint}) {
+    super(409, 'FOL-409', '이미 위치하고 있는 폴더입니다.', details);
+  }
+}
+
+export class FolderNameNotChangeError extends BaseError {
+  constructor(details: {folderName: string}) {
+    super(409, 'FOL-409', '변경 전의 폴더 이름과 같습니다.', details);
+  }
+}
+
 // 이미지 관련 에러 (IMG-Image)
 export class MemoImageAdditionError extends BaseError {
   constructor(details: {folderId: bigint; imageUrl: string}) {
     super(400, 'MEM-400', '메모 사진 추가 중 오류가 발생했습니다.', details);
+  }
+}
+
+export class MemoImageMoveError extends BaseError {
+  constructor(details: {folderId: bigint; imageId: bigint[]}) {
+    super(400, 'MEM-400', '메모 사진 이동 중 오류가 발생했습니다.', details);
+  }
+}
+
+export class MemoImageDeleteError extends BaseError {
+  constructor(details: null) {
+    super(400, 'MEM-400', '메모 사진 삭제 중 오류가 발생했습니다.', details);
   }
 }
 
@@ -175,6 +203,40 @@ export class TagNotFound extends BaseError {
 export class TagBadRequest extends BaseError {
   constructor() {
     super(400, 'TAG-002', '잘못된 요청입니다.');
+  }
+}
+
+// 사용자 관련 에러 (USR-User)
+export class UserNotFoundError extends BaseError {
+  constructor() {
+    super(404, 'USR-404', '사용자를 찾을 수 없습니다.');
+  }
+}
+
+export class UserCreationError extends BaseError {
+  constructor() {
+    super(400, 'USR-400', '사용자 생성 중 오류가 발생했습니다.');
+  }
+}
+
+export class UserUpdateError extends BaseError {
+  constructor() {
+    super(400, 'USR-400', '사용자 정보 업데이트 실패.');
+  }
+}
+
+
+// 인증 관련 에러 (AUT-Auth)
+
+export class AuthError extends BaseError {
+  constructor(details: {reason: string}) {
+    super(401, 'AUT-401', '인증 실패.', details);
+  }
+}
+
+export class SessionError extends BaseError {
+  constructor(details: {reason: string}) {
+    super(401, 'AUT-401', '세션 오류.', details);
   }
 }
 
