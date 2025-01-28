@@ -6,7 +6,7 @@ import { prisma } from './db.config.js';
 import { UserModel } from './models/user.model.js';
 import { SocialProfile } from './models/auth.entities.js';
 import { Request, Response, NextFunction } from 'express';
-import { ServerError, DBError, AuthError, SessionError } from './errors.js';
+import { ServerError, AuthError, SessionError } from './errors.js';
 import { StatusCodes } from 'http-status-codes';
 dotenv.config();
 
@@ -156,6 +156,8 @@ export const sessionAuthMiddleware = async (req: Request, res: Response, next: N
   try {
     const cookies = req.cookies || {};
     let sessionId = cookies['connect.sid'];
+
+    //세션 아이디가 없는 경우
     if (!sessionId) {
       throw new SessionError ({reason: 'No session ID provided'});
     }
@@ -163,11 +165,18 @@ export const sessionAuthMiddleware = async (req: Request, res: Response, next: N
     // 's:' 및 서명 제거
     sessionId = sessionId.split('.')[0].replace(/^s:/, '');
 
-    const sessionExpiresAt = sessionId.expiresAt
-      ? new Date(sessionId.expiresAt)
-      : req.session?.cookie?.expires
-      ? new Date(req.session.cookie.expires)
-      : null;
+    // 세션 ID가 DB에 존재하는지 확인
+    const session = await prisma.session.findUnique({
+      where: { sid: sessionId },
+    });
+
+    if (!session) {
+      console.error(`Session ID ${sessionId} not found in database.`);
+      throw new SessionError({ reason: 'Invalid session ID' });
+    }
+
+      // 만료 시간 확인
+      const sessionExpiresAt = session.expiresAt;
 
     if (!sessionExpiresAt || new Date() > sessionExpiresAt ) {
       console.warn('Session expired. Extending expiration:', sessionId);
