@@ -6,6 +6,7 @@ import path from 'path'; // 확장자 처리
 import { s3 } from './awsS3Client.js';
 import { createMemoFolder } from '../repositories/memo-folder.repository.js';
 import { bodyToMemoFolder } from '../dtos/memo-folder.dto.js';
+import { FolderDuplicateError } from '../errors.js';
 
 const allowedExtensions = ['.png', '.jpg', '.jpeg', '.bmp', '.PNG', '.JPG', '.webp']; // 확장자 검사 목록
 export const imageUploader = multer({ // 파일 업로드 미들웨어 설정
@@ -21,7 +22,7 @@ export const imageUploader = multer({ // 파일 업로드 미들웨어 설정
             if (req.body.folderName) {
                 const createdMemoFolderId = await createMemoFolder(bodyToMemoFolder(req.body), userId);
                 if (createdMemoFolderId === null) {
-                    return callback(new Error('이미 존재하는 폴더 이름입니다.'));
+                    return callback(new FolderDuplicateError({folderName: req.body.folderName}));
                 }
                 uploadDirectory = createdMemoFolderId;
                 req.uploadDirectory = uploadDirectory; // 디렉토리 정보 저장
