@@ -1,5 +1,8 @@
 import {Request, Response} from 'express';
 import {processOCRAndSave} from '../services/memo-ocrService.js';
+import {StatusCodes} from 'http-status-codes';
+import {BaseError} from '../errors.js';
+import {DataValidationError} from '../errors.js';
 
 export const createFolderOCR = async (
   req: Request,
@@ -9,7 +12,7 @@ export const createFolderOCR = async (
     #swagger.tags = ['memo-ai']
     #swagger.summary = '폴더 생성 및 OCR 수행'
     #swagger.description = '새로운 폴더를 생성하고, 이미지에서 OCR 텍스트를 추출하여 이미지와 텍스트를 저장하는 API입니다.'
-    #swagger.requestBody = {
+    #swagger.requestBody = {W
         required: true,
         content: {
             "application/json": {
@@ -94,42 +97,41 @@ export const createFolderOCR = async (
 
   const {base64_image, user_id, folder_name} = req.body;
 
-  //유효성 검사
-  if (!base64_image) {
-    res.status(400).json({error: 'image is required'});
-    return;
-  }
-
-  if (!user_id) {
-    res.status(400).json({error: 'user_id is required'});
-    return;
-  }
-
-  if (!folder_name) {
-    res
-      .status(400)
-      .json({error: 'folder_name is required to create a new folder'});
-    return;
-  }
-
   try {
+    // 유효성 검사
+    if (!base64_image || !user_id || !folder_name) {
+      throw new DataValidationError({
+        reason: 'base64_image, user_id, and folder_name are required fields.',
+      });
+    }
+
+    // 서비스 호출
     const result = await processOCRAndSave({
       base64_image,
       user_id,
       folder_name,
     });
 
-    res.status(201).json({
-      message: 'Folder created and text saved successfully',
-      data: result,
-    });
-  } catch (error) {
-    console.error('Error in createFolderOCR controller:', error);
+    // 성공 응답
+    res.status(StatusCodes.CREATED).success(result);
+  } catch (error: unknown) {
+    console.error('에러 발생:', error);
 
-    if (error instanceof Error) {
-      res.status(500).json({error: error.message});
+    // BaseError 처리
+    if (error instanceof BaseError) {
+      res.status(error.statusCode).error({
+        errorCode: error.code,
+        reason: error.message,
+        data: error.details,
+      });
     } else {
-      res.status(500).json({error: 'An unknown error occurred.'});
+      // 알 수 없는 에러 처리
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).error({
+        errorCode: 'unknown',
+        reason:
+          error instanceof Error ? error.message : 'Unexpected server error.',
+        data: null,
+      });
     }
   }
 };
