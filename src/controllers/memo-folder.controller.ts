@@ -62,10 +62,7 @@ export const handlerMemoFolderImageCreate = async (
         console.log('폴더 생성 및 사진 추가');
         console.log('body: ', req.body);
         console.log('image: ', req.file);
-        if (!req.user) {
-            throw new Error('로그인을 하지 않았습니다.');
-        }
-        const userId = req.user?.id;
+        const userId = BigInt(req.user!.id);
         if (!req.file) {
             throw new DataValidationError({reason: '저장할 사진이 없습니다.'});
         }
@@ -128,9 +125,6 @@ export const handlerMemoFolderAdd = async (
     try{
         console.log('폴더 생성');
         console.log('body: ', req.body);
-        if (!req.user) {
-            throw new Error('로그인을 하지 않았습니다.');
-        }
         console.log(req.user);
         const userId = BigInt(req.user!.id);
         const memoFolder = await memoFolderCreate(userId, bodyToMemoFolder(req.body));
@@ -188,9 +182,6 @@ export const handlerMemoFolderList = async (
     */
     try{
         console.log('메모 폴더 리스트 조회');
-        if (!req.user) {
-            throw new Error('로그인을 하지 않았습니다.');
-        }
         const userId = BigInt(req.user!.id);
         const memoList = await listMemoFolder(userId);
         res.status(StatusCodes.OK).success(memoList);
@@ -255,9 +246,6 @@ export const handlerMemoSearch = async (
     */
     try{
         console.log('메모 검색');
-        if (!req.user) {
-            throw new Error('로그인을 하지 않았습니다.');
-        }
         const userId = BigInt(req.user!.id);
         const searchKeyword = req.query.keyword?.toString();
         if (searchKeyword == null) {
@@ -334,9 +322,6 @@ export const handlerMemoImageDelete = async (req: Request, res: Response, next: 
     };
     */
     try{
-        if(!req.user) {
-            throw new Error('로그인을 하지 않았습니다.');
-        }
         const userId = BigInt(req.user!.id);
         const folderId = BigInt(req.params.folderId);
         const memoImagesToMove = await memoImageDelete(userId, folderId, bodyToMemoImagesToDelete(req.body));
@@ -400,9 +385,6 @@ export const handlerMemoTextImageList = async (
     */
     try{
         console.log('특정 폴더의 사진&텍스트 리스트 조회');
-        if (!req.user) {
-            throw new Error('로그인을 하지 않았습니다.');
-        }
         const userId = BigInt(req.user!.id);
         const folderId = BigInt(req.params.folderId);
         const memoTextImageList = await listMemoTextImage(userId, folderId);
@@ -476,9 +458,6 @@ export const handlerMemoFolderUpdate = async (req: Request, res: Response, next:
     };
     */
     try{
-        if (!req.user) {
-            throw new Error('로그인을 하지 않았습니다.');
-        }
         const userId = BigInt(req.user!.id);
         const folderId = BigInt(req.params.folderId);
         const updatedMemoFolder = await memoFolderUpdate(userId, folderId, bodyToMemoFolder(req.body));
@@ -553,9 +532,6 @@ export const handlerMemoTextUpdate = async (req: Request, res: Response, next: N
     */
     try{
         console.log('특정 폴더의 메모 텍스트 수정');
-        if (!req.user) {
-            throw new Error('로그인을 하지 않았습니다.');
-        }
         const userId = BigInt(req.user!.id);
         const folderId = BigInt(req.params.folderId);
         const memoTextImageList = await memoTextUpdate(userId, folderId, bodyToMemoTextToUpdate(req.body));

@@ -66,9 +66,6 @@ export const handlerMemoImageAdd = async (
     try{
         console.log('특정 폴더에 사진 추가');
         console.log('body: ', req.body);
-        if (!req.user) {
-            throw new Error('로그인을 하지 않았습니다.');
-        }
         const folderId = BigInt(req.params.folderId);
         if (!req.file) {
             throw new DataValidationError({reason: '저장할 사진이 없습니다.'});
@@ -137,9 +134,6 @@ export const handlerMemoImageMove = async (req: Request, res: Response, next: Ne
     };
     */
     try{
-        if (!req.user){
-            throw new Error('로그인을 하지 않았습니다.');
-        }
         const userId = BigInt(req.user!.id);
         const folderId = BigInt(req.params.folderId);
         const memoImagesToMove = await memoImagesMove(userId, folderId, bodyToMemoImagesToMove(req.body));
@@ -187,10 +181,7 @@ export const handlerMemoFolderDelete = async (req: Request, res: Response, next:
     };
     */
     try{
-        if (!req.user) {
-            throw new Error('로그인을 하지 않았습니다.');
-        }
-        const userId = BigInt(req.user.id);
+        const userId = BigInt(req.user!.id);
         const folderId = BigInt(req.params.folderId);
         const memoImagesToDelete = await memoFolderDelete(userId, folderId);
         res.status(StatusCodes.OK).success(memoImagesToDelete);

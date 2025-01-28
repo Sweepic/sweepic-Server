@@ -36,7 +36,7 @@ export class FolderCreationError extends BaseError {
 
 export class FolderUpdateError extends BaseError {
   constructor(details: {folderId: bigint}) {
-    super(400, 'MEM-400', '폴더 업데이트 중 오류가 발생했습니다.', details);
+    super(400, 'FOL-400', '폴더 업데이트 중 오류가 발생했습니다.', details);
   }
 }
 
