@@ -6,7 +6,7 @@ import { prisma } from './db.config.js';
 import { UserModel } from './models/user.model.js';
 import { SocialProfile } from './models/auth.entities.js';
 import { Request, Response, NextFunction } from 'express';
-import { ServerError, DBError } from './errors.js';
+import { ServerError, DBError, AuthError, SessionError } from './errors.js';
 import { StatusCodes } from 'http-status-codes';
 dotenv.config();
 
@@ -49,7 +49,7 @@ export const naverStrategy = new NaverStrategy(
   {
     clientID: process.env.PASSPORT_NAVER_CLIENT_ID!,
     clientSecret: process.env.PASSPORT_NAVER_CLIENT_SECRET!,
-    callbackURL: 'http://localhost:3000/oauth2/callback/naver',
+    callbackURL: 'http://3.37.137.212:3000/oauth2/callback/naver',
   },
   async (accessToken, refreshToken, profile, cb) => {
     try {
@@ -66,7 +66,7 @@ export const googleStrategy = new GoogleStrategy(
   {
     clientID: process.env.PASSPORT_GOOGLE_CLIENT_ID!,
     clientSecret: process.env.PASSPORT_GOOGLE_CLIENT_SECRET!,
-    callbackURL: 'http://localhost:3000/oauth2/callback/google',
+    callbackURL: 'http://3.37.137.212:3000/oauth2/callback/google',
   },
   async (accessToken, refreshToken, profile, cb) => {
     try {
@@ -109,7 +109,7 @@ const verifyUser = async (
       : (profile as GoogleProfile).emails?.[0]?.value;
 
   if (!email) {
-    throw new Error(`profile.email was not found: ${JSON.stringify(profile)}`);
+  throw new AuthError({reason: `profile.email was not found: ${JSON.stringify(profile)}`});
   }
 
   // 기존 사용자 조회
@@ -157,8 +157,7 @@ export const sessionAuthMiddleware = async (req: Request, res: Response, next: N
     const cookies = req.cookies || {};
     let sessionId = cookies['connect.sid'];
     if (!sessionId) {
-      console.error('Session ID missing in cookies.');
-      throw new DBError ({reason: 'No session ID provided'});
+      throw new SessionError ({reason: 'No session ID provided'});
     }
 
     // 's:' 및 서명 제거
