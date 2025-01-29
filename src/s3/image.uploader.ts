@@ -6,7 +6,7 @@ import path from 'path'; // 확장자 처리
 import { s3 } from './awsS3Client.js';
 import { createMemoFolder } from '../repositories/memo-folder.repository.js';
 import { bodyToMemoFolder } from '../dtos/memo-folder.dto.js';
-import { DataValidationError, FolderDuplicateError } from '../errors.js';
+import { DataValidationError, FolderDuplicateError, PhotoValidationError } from '../errors.js';
 
 const allowedExtensions = ['.png', '.jpg', '.jpeg', '.bmp', '.PNG', '.JPG', '.webp']; // 확장자 검사 목록
 export const imageUploader = multer({ // 파일 업로드 미들웨어 설정
@@ -20,7 +20,7 @@ export const imageUploader = multer({ // 파일 업로드 미들웨어 설정
             const uuid = uuidv4(); // UUID 생성
             const extension = path.extname(file.originalname); // 파일 이름(확장자) 추출
             if (!allowedExtensions.includes(extension)) { // 업로드 파일의 확장자가 허용 목록에 없을 경우
-                return callback(new DataValidationError({reason: '이미지 확장자가 유효하지 않습니다.'}));
+                return callback(new PhotoValidationError({extension: extension}));
             }
             
             // 디렉토리 path 설정 과정
