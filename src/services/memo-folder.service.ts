@@ -74,6 +74,10 @@ export const memoFolderUpdate = async (userId: bigint, folderId: bigint, body: B
 };
 
 export const memoTextUpdate = async (userId: bigint, folderId: bigint, body: BodyToMemoTextToUpdate): Promise<MemoTextImageListResponseDto> => {
+    const folder = await getMemoFolder(folderId);
+    if (folder === null) {
+        throw new FolderNotFoundError({folderId});
+    }
     const updatedMemoText = await updateMemoText(userId, folderId, body);
     return responseFromMemoTextImageList(updatedMemoText);
 };

@@ -4,7 +4,7 @@ import { bodyToMemoFolder, bodyToMemoTextToUpdate } from '../dtos/memo-folder.dt
 import { listMemoFolder, listMemoTextImage, memoFolderCreate, memoFolderImageCreate, memoFolderUpdate, memoSearch, memoTextUpdate } from '../services/memo-folder.service.js';
 import { memoFolderDelete, memoImageDelete } from '../services/memo-image.service.js';
 import { bodyToMemoImagesToDelete } from '../dtos/memo-image.dto.js';
-import { DataValidationError } from '../errors.js';
+import { DataValidationError, PhotoValidationError } from '../errors.js';
 
 export const handlerMemoFolderImageCreate = async (
   req: Request,
@@ -57,6 +57,119 @@ export const handlerMemoFolderImageCreate = async (
             }
         }
     };
+    #swagger.responses[400] = {
+        description: "유효하지 않은 데이터 에러",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "FAIL" },
+                        error: { 
+                            type: "object", 
+                            properties: {
+                                errorCode: { type: "string", example: "400" },
+                                reason: { type: "string" },
+                                data: {},
+                            }
+                        },
+                        success: { type: "object", nullable: true, example: null },  
+                    }
+                },
+                examples: {
+                    "폴더 생성 에러": {
+                        summary: "폴더 생성 에러",
+                        description: "폴더 생성 중 오류가 발생했습니다.",
+                        value: {
+                            resultType: "FAIL",
+                            error: { 
+                                errorCode: "FOL-400",
+                                reason: "폴더 생성 중 오류가 발생했습니다.",
+                                data: {
+                                    userId: "1",
+                                    folderName: "string"
+                                }
+                            },
+                            success: null 
+                        }
+                    },
+                    "유효하지 않은 사진 데이터 에러": {
+                        summary: "유효하지 않은 사진 데이터 에러",
+                        description: "저장할 사진이 없습니다.",
+                        value: {
+                            resultType: "FAIL",
+                            error: { 
+                                errorCode: "PHO-400",
+                                reason: "사진 데이터가 유효하지 않습니다.",
+                                data: {
+                                    reason: "저장할 사진이 없습니다."
+                                }
+                            },
+                            success: null 
+                        }
+                    },
+                    "사진 추가 에러": {
+                        summary: "사진 추가 에러",
+                        description: "메모 사진 추가 중 오류가 발생했습니다.",
+                        value: {
+                            resultType: "FAIL",
+                            error: { 
+                                errorCode: "MEM-400",
+                                reason: "메모 사진 추가 중 오류가 발생했습니다.",
+                                data: {
+                                    folderId: "1",
+                                    imageUrl: "string"
+                                }
+                            },
+                            success: null 
+                        }
+                    },
+                    "유효하지 않은 확장자 에러": {
+                        summary: "유효하지 않은 확장자 에러",
+                        description: "이미지 확장자가 유효하지 않습니다.",
+                        value: {
+                            resultType: "FAIL",
+                            error: { 
+                                errorCode: "PHO-400",
+                                reason: "사진 데이터가 유효하지 않습니다.",
+                                data: {
+                                    extension: "string"
+                                }
+                            },
+                            success: null 
+                        }
+                    }
+                }
+            }
+        }
+    };
+    #swagger.responses[409] = {
+        description: "폴더명 중복 에러",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "FAIL" },
+                        error: { 
+                            type: "object", 
+                            properties: {
+                                errorCode: { type: "string", example: "FOL-409" },
+                                reason: { type: "string", example: "이미 존재하는 폴더 이름입니다." },
+                                data: {
+                                    type: "object",
+                                    properties: {
+                                        folderName: { type: "string" },
+                                    }
+                                }
+                            }
+                        },
+                        success: { type: "object", nullable: true, example: null },  
+                    }
+                }
+            }
+        }
+    };
     */
     try{
         console.log('폴더 생성 및 사진 추가');
@@ -64,7 +177,7 @@ export const handlerMemoFolderImageCreate = async (
         console.log('image: ', req.file);
         const userId = BigInt(req.user!.id);
         if (!req.file) {
-            throw new DataValidationError({reason: '저장할 사진이 없습니다.'});
+            throw new PhotoValidationError({reason: '저장할 사진이 없습니다.'});
         }
         const imageUrl = (req.file as Express.MulterS3File).key;
         const folderId = req.uploadDirectory;
@@ -116,6 +229,61 @@ export const handlerMemoFolderAdd = async (
                                 folderName: { type: "string" },
                             }
                         }   
+                    }
+                }
+            }
+        }
+    };
+    #swagger.responses[400] = {
+        description: "사진 추가 에러",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "FAIL" },
+                        error: { 
+                            type: "object", 
+                            properties: {
+                                errorCode: { type: "string", example: "FOL-400" },
+                                reason: { type: "string", example: "폴더 생성 중 오류가 발생했습니다." },
+                                data: {
+                                    type: "object",
+                                    properties: {
+                                        userId: { type: "string", example: "1" },
+                                        folderName: { type: "string" },
+                                    }
+                                }
+                            }
+                        },
+                        success: { type: "object", nullable: true, example: null },  
+                    }
+                },
+            }
+        }
+    };
+    #swagger.responses[409] = {
+        description: "폴더명 중복 에러",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "FAIL" },
+                        error: { 
+                            type: "object", 
+                            properties: {
+                                errorCode: { type: "string", example: "FOL-409" },
+                                reason: { type: "string", example: "이미 존재하는 폴더 이름입니다." },
+                                data: {
+                                    type: "object",
+                                    properties: {
+                                        folderName: { type: "string" },
+                                    }
+                                }
+                            }
+                        },
+                        success: { type: "object", nullable: true, example: null },  
                     }
                 }
             }
@@ -243,6 +411,33 @@ export const handlerMemoSearch = async (
             }
         }
     };
+    #swagger.responses[400] = {
+        description: "유효하지 않은 입력 데이터 에러",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "FAIL" },
+                        error: { 
+                            type: "object", 
+                            properties: {
+                                errorCode: { type: "string", example: "SRH-400" },
+                                reason: { type: "string", example: "입력 데이터가 유효하지 않습니다." },
+                                data: {
+                                    type: "object",
+                                    properties: {
+                                        reason: { type: "string", example: "검색어를 1자 이상 입력하세요." },
+                                    }
+                                }
+                            }
+                        },
+                        success: { type: "object", nullable: true, example: null },  
+                    }
+                }
+            }
+        }
+    };
     */
     try{
         console.log('메모 검색');
@@ -320,6 +515,60 @@ export const handlerMemoImageDelete = async (req: Request, res: Response, next: 
             }
         }
     };
+    #swagger.responses[404] = {
+        description: "조회할 수 없는 데이터 에러",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "FAIL" },
+                        error: { 
+                            type: "object", 
+                            properties: {
+                                errorCode: { type: "string", example: "404" },
+                                reason: { type: "string" },
+                                data: {},
+                            }
+                        },
+                        success: { type: "object", nullable: true, example: null },  
+                    }
+                },
+                examples: {
+                    "폴더 조회 에러": {
+                        summary: "폴더 조회 에러",
+                        description: "해당 폴더를 찾을 수 없습니다.",
+                        value: {
+                            resultType: "FAIL",
+                            error: { 
+                                errorCode: "FOL-404",
+                                reason: "해당 폴더를 찾을 수 없습니다.",
+                                data: {
+                                    folderId: "1",
+                                }
+                            },
+                            success: null 
+                        }
+                    },
+                    "사진 조회 에러": {
+                        summary: "사진 조회 에러",
+                        description: "해당 사진 데이터가 없습니다.",
+                        value: {
+                            resultType: "FAIL",
+                            error: { 
+                                errorCode: "PHO-404",
+                                reason: "해당 사진 데이터가 없습니다.",
+                                data: {
+                                    imageId: "1"
+                                }
+                            },
+                            success: null 
+                        }
+                    },
+                }
+            }
+        }
+    };
     */
     try{
         const userId = BigInt(req.user!.id);
@@ -377,6 +626,33 @@ export const handlerMemoTextImageList = async (
                                 }
                             }
                         }     
+                    }
+                }
+            }
+        }
+    };
+    #swagger.responses[404] = {
+        description: "폴더 조회 에러",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "FAIL" },
+                        error: { 
+                            type: "object", 
+                            properties: {
+                                errorCode: { type: "string", example: "FOL-404" },
+                                reason: { type: "string", example: "해당 폴더를 찾을 수 없습니다." },
+                                data: {
+                                    type: "object",
+                                    properties: {
+                                        folderId: { type: "string", example: "1" },
+                                    }
+                                }
+                            }
+                        },
+                        success: { type: "object", nullable: true, example: null },  
                     }
                 }
             }
@@ -456,6 +732,114 @@ export const handlerMemoFolderUpdate = async (req: Request, res: Response, next:
             }
         }
     };
+    #swagger.responses[404] = {
+        description: "폴더 조회 에러",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "FAIL" },
+                        error: { 
+                            type: "object", 
+                            properties: {
+                                errorCode: { type: "string", example: "FOL-404" },
+                                reason: { type: "string", example: "해당 폴더를 찾을 수 없습니다." },
+                                data: {
+                                    type: "object",
+                                    properties: {
+                                        folderId: { type: "string", example: "1" },
+                                    }
+                                }
+                            }
+                        },
+                        success: { type: "object", nullable: true, example: null },  
+                    }
+                }
+            }
+        }
+    };
+    #swagger.responses[409] = {
+        description: "폴더명 중복 에러",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "FAIL" },
+                        error: { 
+                            type: "object", 
+                            properties: {
+                                errorCode: { type: "string", example: "FOL-409" },
+                                reason: { type: "string", example: "이미 존재하는 폴더 이름입니다." },
+                                data: {
+                                    type: "object",
+                                    properties: {
+                                        folderName: { type: "string" },
+                                    }
+                                }
+                            }
+                        },
+                        success: { type: "object", nullable: true, example: null },  
+                    }
+                }
+            }
+        }
+    };
+    #swagger.responses[400] = {
+        description: "유효하지 않은 데이터 에러",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "FAIL" },
+                        error: { 
+                            type: "object", 
+                            properties: {
+                                errorCode: { type: "string", example: "400" },
+                                reason: { type: "string" },
+                                data: {},
+                            }
+                        },
+                        success: { type: "object", nullable: true, example: null },  
+                    }
+                },
+                examples: {
+                    "폴더명 업데이트 에러": {
+                        summary: "폴더명 업데이트 에러",
+                        description: "폴더 업데이트 중 오류가 발생했습니다.",
+                        value: {
+                            resultType: "FAIL",
+                            error: { 
+                                errorCode: "FOL-400",
+                                reason: "폴더 업데이트 중 오류가 발생했습니다.",
+                                data: {
+                                    folderId: "1",
+                                }
+                            },
+                            success: null 
+                        }
+                    },
+                    "변경 전과 동일한 폴더명 에러": {
+                        summary: "변경 전과 동일한 폴더명 에러",
+                        description: "변경 전의 폴더 이름과 같습니다.",
+                        value: {
+                            resultType: "FAIL",
+                            error: { 
+                                errorCode: "FOL-400",
+                                reason: "변경 전의 폴더 이름과 같습니다.",
+                                data: {
+                                    folderName: "string"
+                                }
+                            },
+                            success: null 
+                        }
+                    }
+                }
+            }
+        }
+    };
     */
     try{
         const userId = BigInt(req.user!.id);
@@ -524,6 +908,33 @@ export const handlerMemoTextUpdate = async (req: Request, res: Response, next: N
                                 }
                             }
                         }     
+                    }
+                }
+            }
+        }
+    };
+    #swagger.responses[404] = {
+        description: "폴더 조회 에러",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "FAIL" },
+                        error: { 
+                            type: "object", 
+                            properties: {
+                                errorCode: { type: "string", example: "FOL-404" },
+                                reason: { type: "string", example: "해당 폴더를 찾을 수 없습니다." },
+                                data: {
+                                    type: "object",
+                                    properties: {
+                                        folderId: { type: "string", example: "1" },
+                                    }
+                                }
+                            }
+                        },
+                        success: { type: "object", nullable: true, example: null },  
                     }
                 }
             }
