@@ -1,78 +1,63 @@
 import dotenv from 'dotenv';
 import cors from 'cors';
-import express, {Request, Response, Express, NextFunction} from 'express';
-import swaggerAutogen from 'swagger-autogen';
+import express, {
+  Request,
+  Response,
+  NextFunction,
+  ErrorRequestHandler,
+} from 'express';
 import swaggerUiExpress from 'swagger-ui-express';
+import {memoFolderRouter} from './routers/memo.router.js';
+import {RegisterRoutes} from './routers/tsoaRoutes.js';
+import {challengeRouter} from './routers/challenge.router.js';
+import {authRouter} from './routers/auth.routers.js';
+import {userRouter} from './routers/user.router.js';
 import passport from 'passport';
 import session from 'express-session';
 import {PrismaSessionStore} from '@quixo3/prisma-session-store';
-
 import {prisma} from './db.config.js';
-import {memoFolderRouter} from './routers/memo.router.js';
-import {challengeRouter} from './routers/challenge.router.js';
-import {authRouter} from './routers/auth.routers.js';
-import {tagRouter} from './routers/tag.router.js';
-import {trustRouter} from './routers/trust.router.js';
+import swaggerDocumentOne from '../swagger/openapi.json' assert {type: 'json'};
+import swaggerDocumentTwo from '../swagger/swagger.json' assert {type: 'json'};
+import {BaseError} from './errors.js';
+import swaggerDocument from '../swagger/openapi.json' assert {type: 'json'};
+import {sessionAuthMiddleware} from './auth.config.js';
+import cookieParser from 'cookie-parser';
+import {ValidateError} from 'tsoa';
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT;
 
+// Middleware for basic configurations
 app.use(cors());
 app.use(express.static('public'));
 app.use(express.json());
-app.use(express.urlencoded({extended: false})); //true
+app.use(express.urlencoded({extended: false}));
+app.use(cookieParser());
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Sweepic');
-});
+// Swagger Docs
+app.use(
+  '/docs/v1',
+  swaggerUiExpress.serveFiles(swaggerDocumentOne),
+  swaggerUiExpress.setup(swaggerDocumentOne),
+);
 
 app.use(
-  '/docs',
-  swaggerUiExpress.serve,
-  swaggerUiExpress.setup(
-    {},
-    {
-      swaggerOptions: {
-        url: '/openapi.json',
-      },
-    },
-  ),
+  '/docs/v2',
+  swaggerUiExpress.serveFiles(swaggerDocumentTwo),
+  swaggerUiExpress.setup(swaggerDocumentTwo),
 );
 
-app.get(
-  '/openapi.json',
-  async (req: Request, res: Response, next: NextFunction) => {
-    // #swagger.ignore = true
-    const options = {
-      openapi: '3.0.0',
-      disableLogs: true,
-      writeOutputFile: false,
-    };
-    const outputFile = '/dev/null'; // 파일 출력은 사용하지 않습니다.
-    const routes = ['./src/app.ts']; // swagger-autogen이 분석할 파일 경로입니다.
-    const doc = {
-      openapi: '3.0.0',
-      info: {
-        title: 'Sweepic API',
-        description: 'Sweepic 프로젝트입니다.',
-        version: '1.0.0',
-      },
-      host: 'localhost:3000',
-    };
-    const result = await swaggerAutogen(options)(outputFile, routes, doc);
-    res.json(result ? result.data : null);
-  },
-);
-
+// Response customization middleware
 app.use((req: Request, res: Response, next: NextFunction) => {
-  res.success = success => {
+  res.success = (success: any) => {
     return res.json({resultType: 'SUCCESS', error: null, success});
   };
 
-  res.error = ({errorCode = 'unknown', reason = null, data = null}) => {
-    return res.json({
+  res.error = (error: {errorCode?: string; reason?: string; data?: any}) => {
+    const {errorCode = 'unknown', reason = null, data = null} = error;
+    return res.status(400).json({
       resultType: 'FAIL',
       error: {errorCode, reason, data},
       success: null,
@@ -82,14 +67,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-app.use('/memo', memoFolderRouter);
-
-app.use('/challenge', challengeRouter);
-
-app.use('/tag', tagRouter);
-
-app.use('/trust', trustRouter);
-
+// Session setup
 app.use(
   session({
     secret: process.env.EXPRESS_SESSION_SECRET!,
@@ -102,7 +80,6 @@ app.use(
       checkPeriod: 2 * 60 * 1000,
       dbRecordIdIsSessionId: true,
       serializer: {
-        // BigInt를 문자열로 변환하여 저장
         stringify: (obj: unknown) =>
           JSON.stringify(obj, (_, value) =>
             typeof value === 'bigint' ? value.toString() : value,
@@ -118,25 +95,70 @@ app.use(
   }),
 );
 
-//passport 초기화
 app.use(passport.initialize());
 app.use(passport.session());
 
+// 로그인 전
 app.use('/oauth2', authRouter);
 
-// 응답 통일 (임시)
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  if (res.headersSent) {
-    // 응답 헤더가 이미 클라이언트로 전송되었는지 확인
-    return next(err); // 추가적인 응답을 보낼 수 없으므로 에러를 다음 미들웨어로 전달
-  }
-  res.status(err.statusCode || 500).error({
-    errorCode: err.errorCode || 'unknown',
-    reason: err.reason || err.message || null,
-    data: err.data || null,
-  });
-});
+// 인증 미들웨어
+app.use(sessionAuthMiddleware);
 
+// 로그인 후
+app.use('/onboarding', userRouter);
+app.use('/memo', memoFolderRouter);
+app.use('/challenge', challengeRouter);
+RegisterRoutes(app);
+
+app.get('/', (req: Request, res: Response) => {
+  res.send('Sweepic');
+});
+// Error handling middleware (수정된 부분)
+const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
+  if (res.headersSent) {
+    next(err);
+    return;
+  }
+
+  if (err instanceof BaseError) {
+    res.status(err.statusCode).json({
+      resultType: 'FAIL',
+      error: {
+        errorCode: err.code,
+        reason: err.message,
+        data: err.details,
+      },
+      success: null,
+    });
+    return;
+  }
+
+  if (err instanceof ValidateError) {
+    res.status(err.status).json({
+      resultType: 'FAIL',
+      error: {
+        errorCode: 'VAL-001',
+        reason: 'Validation Error',
+        data: err.fields,
+      },
+      success: null,
+    });
+  }
+
+  console.error('Unexpected error:', err);
+  res.status(500).json({
+    resultType: 'FAIL',
+    error: {
+      errorCode: 'unknown',
+      reason: err.message || 'Unknown error occurred',
+      data: null,
+    },
+    success: null,
+  });
+};
+
+app.use(errorHandler);
+// Start server
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
