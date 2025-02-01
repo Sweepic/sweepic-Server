@@ -1,5 +1,5 @@
 import {prisma} from '../db.config.js';
-import {DBError} from '../errors.js';
+import {DBError, TagNotFound} from '../errors.js';
 import {
   ResponseFromTag,
   BodyToImageTag,
@@ -173,7 +173,7 @@ export async function newTag(
   const tagData = await addTag(content, tag_category_id);
 
   if (tagData === null) {
-    throw new Error('태그 생성 실패');
+    throw new TagNotFound();
   } // 태그 생성 실패 시 에러 반환
 
   const formattedTagDataId = tagData.id.toString();
