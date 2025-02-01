@@ -3,7 +3,7 @@ import {TagNotFound} from '../errors.js';
 import {selectTagsByDate} from '../repositories/tsoaTag.repository.js';
 
 export const findTagsByDate = async (dto: DateToTags): Promise<string[]> => {
-  let endDate = new Date(dto.createdAt);
+  const endDate = new Date(dto.createdAt);
   if (dto.dateExisted) {
     endDate.setDate(endDate.getDate() + 1);
   } else {

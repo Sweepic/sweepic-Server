@@ -6,6 +6,7 @@ import express, {
   NextFunction,
   ErrorRequestHandler,
 } from 'express';
+import process from 'process';
 import swaggerUiExpress from 'swagger-ui-express';
 import passport from 'passport';
 import session from 'express-session';
@@ -14,7 +15,6 @@ import {prisma} from './db.config.js';
 import swaggerDocumentOne from '../swagger/openapi.json' assert {type: 'json'};
 import swaggerDocumentTwo from '../swagger/swagger.json' assert {type: 'json'};
 import {BaseError} from './errors.js';
-import swaggerDocument from '../swagger/openapi.json' assert {type: 'json'};
 import {sessionAuthMiddleware} from './auth.config.js';
 import cookieParser from 'cookie-parser';
 import {ValidateError} from 'tsoa';
@@ -148,8 +148,6 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
       success: null,
     });
   }
-
-  console.error('Unexpected error:', err);
   res.status(500).json({
     resultType: 'FAIL',
     error: {
@@ -163,6 +161,4 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
 
 app.use(errorHandler);
 // Start server
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+app.listen(port, () => {});

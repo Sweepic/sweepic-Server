@@ -5,7 +5,6 @@ import {
   BodyToImageTag,
   ResponseFromImageTag,
 } from '../models/tag.model.js';
-import {tagcategory} from '../utils/tag.utils.js';
 
 export async function getImage(mediaId: bigint | number): Promise<bigint> {
   const imageTagData = await prisma.image.findFirst({
@@ -32,11 +31,9 @@ export async function addImageTag({
   for (let i = 0; i < tags.length; i++) {
     const tag = tags[i];
     const {content, tag_category_id} = tag;
-    console.log(`태그 생성 시작 ${i}번째`);
 
     // 태그가 빈 값일 경우, 해당 이미지의 태그 상태를 0으로 변경
     if (content === '') {
-      console.log('태그가 빈 값일 경우, 해당 이미지의 태그 상태를 0으로 변경');
       await inActiveTag(imageId, tag_category_id);
     }
     // 태그가 동일한 것이 있을 시, 태그를 반환하고 / 태그가 동일한 것이 없을 시, 태그를 생성
@@ -46,12 +43,10 @@ export async function addImageTag({
       await inActiveTag(imageId, tag_category_id);
       // 태그가 동일한 것이 없으면 생성
       if (!tagData) {
-        console.log('태그 생성 실행 후, 이미지-태그 테이블 태그 생성 실행');
         await newTag(imageId, content, tag_category_id);
       }
       // 태그가 동일한 것이 있으면 미생성
       else {
-        console.log('이미지-태그 테이블 태그 업데이트 실행');
         await updateTag(imageId, tagData);
       }
     }
@@ -231,7 +226,6 @@ export async function addTag(
   content: string,
   tag_category_id: bigint,
 ): Promise<ResponseFromTag | null> {
-  console.log('addTag 실행');
   const created = await prisma.tag.create({
     data: {
       content,
@@ -246,7 +240,7 @@ export async function getTag(
   content: string,
   tag_category_id: bigint,
 ): Promise<ResponseFromTag | null> {
-  const tagCategoryId = await prisma.tagCategory.findFirst({
+  await prisma.tagCategory.findFirst({
     where: {
       id: tag_category_id,
     },
@@ -269,16 +263,12 @@ export async function getTag(
 export async function getImageTag(
   imageId: bigint | number,
 ): Promise<ResponseFromImageTag[]> {
-  console.log('getImageTag 실행');
-
   const imageTagData = await prisma.imageTag.findMany({
     where: {
       imageId,
       status: 1,
     },
   });
-
-  console.log(imageTagData.length);
 
   return imageTagData;
 }

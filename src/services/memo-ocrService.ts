@@ -1,5 +1,6 @@
 import {ImageAnnotatorClient} from '@google-cloud/vision';
-import path from 'path';
+import {Buffer} from 'buffer';
+import process from 'process';
 import {folderRepository} from '../repositories/memo-OCR.repositoy.js';
 import {OCRRequest} from '../models/memo-OCR.model.js';
 import {
@@ -48,9 +49,7 @@ export const processOCRAndSave = async ({
 
     // 폴더가 이미 존재하면 중복 에러 반환
     if (folder) {
-      console.log('폴더 중복 에러 발생:', folder_name); // 로그 추가
       const error = new FolderDuplicateError({folderName: folder_name});
-      console.log('생성된 에러 객체:', error); // 에러 객체 확인
       throw error;
     }
 
@@ -101,21 +100,16 @@ export const performOCR = async (base64_image: string): Promise<string> => {
       image: {content: base64Data},
     });
 
-    console.log('Google Vision API response received:', result);
-
     const annotations = result.textAnnotations;
 
     if (!annotations || annotations.length === 0) {
-      console.log('No text annotations found.');
       throw new PhotoDataNotFoundError({
         reason: '이미지에서 텍스트를 찾지 못하였습니다.',
       });
     }
 
-    console.log('OCR result:', annotations[0].description);
     return annotations[0].description || '텍스트를 찾을 수 없습니다';
-  } catch (error) {
-    console.error(error);
+  } catch {
     throw new OCRProcessError();
   }
 };

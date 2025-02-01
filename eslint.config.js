@@ -3,7 +3,7 @@ import tsParser from '@typescript-eslint/parser';
 
 export default [
   {
-    ignores: ['node_modules', 'dist', 'build', 'tsconfig.json'],
+    ignores: ['node_modules', 'scripts', 'tsconfig.json', 'eslint.config.js'],
   },
   {
     files: ['**/*.ts', '**/*.js'],
@@ -12,7 +12,7 @@ export default [
       parserOptions: {
         ecmaVersion: 2021,
         sourceType: 'module',
-        //project: './tsconfig.json', // tsconfig.json 경로 추가
+        project: './tsconfig.json', // tsconfig.json 경로 추가
       },
     },
     plugins: {
@@ -22,6 +22,17 @@ export default [
       semi: ['error', 'always'],
       quotes: ['error', 'single'],
       '@typescript-eslint/no-namespace': 'off', // namespace 허용
+      '@typescript-eslint/no-explicit-any': 'warn', // 명시적 any 사용 경고
+      'no-unused-vars': 'error', // 사용하지 않는 변수는 에러
+      'no-console': 'warn', // console 사용 경고
+      'prefer-const': 'warn', // let 대신 const 사용 권장
+      'prefer-template': 'warn', // 문자열 연결 대신 템플릿 리터럴 사용 권장
+      'no-shadow': 'warn', // 외부 변수와 중복 변수 선언 경고
+      eqeqeq: ['error', 'always'], // == 대신 === 사용 권장
+      'no-duplicate-imports': 'error', // 중복 import 경고
+      'no-var': 'error', // var 사용 금지
+      'no-undef': 'error', // 선언되지 않은 변수 사용 금지
+      'no-const-assign': 'error', // const 재할당 금지
     },
   },
 ];

@@ -1,6 +1,4 @@
 import {
-  BaseBodyToTag,
-  BaseTagRequestDto,
   BodyToTag,
   TagRequsetDto,
   ResponseFromTag,

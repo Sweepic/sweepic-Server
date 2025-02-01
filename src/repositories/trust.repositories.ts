@@ -4,8 +4,6 @@ import {BodyToImage, ResponseFromImage} from '../models/image.model.js';
 export async function updateStatusImage(image: BodyToImage): Promise<bigint> {
   const {mediaId, userId} = image;
   let imageStatus: 0 | 1 = 0;
-  console.log('updateStatusImage 실행');
-  console.log('image: ', image);
 
   const user = await prisma.user.findFirst({
     where: {
@@ -51,9 +49,6 @@ export async function updateStatusImage(image: BodyToImage): Promise<bigint> {
 }
 
 export async function deleteImage(userId: bigint): Promise<boolean> {
-  console.log('deleteImage 실행');
-  console.log('userId: ', userId);
-
   const user = await prisma.user.findFirst({
     where: {
       id: userId,
@@ -70,8 +65,6 @@ export async function deleteImage(userId: bigint): Promise<boolean> {
       status: 0,
     },
   });
-
-  console.log('deleted: ', deleted);
 
   if (deleted === null) {
     throw new Error('이미지 삭제 에러');

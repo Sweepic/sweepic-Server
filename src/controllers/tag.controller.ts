@@ -1,13 +1,9 @@
-import {Request, Response, NextFunction} from 'express';
+import {Request, Response} from 'express';
 import {StatusCodes} from 'http-status-codes';
 import {bodyToTag} from '../dtos/tag.dto.js';
 import {tagCreate} from '../services/tag.service.js';
 
-async function handleNewTag(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> {
+async function handleNewTag(req: Request, res: Response): Promise<void> {
   /*
       #swagger.tags = ['tag-controller']
       #swagger.summary = '태그 생성 API';
@@ -79,8 +75,6 @@ async function handleNewTag(
           }
       };
       */
-  console.log('태그 생성 컨트롤러 실행');
-  console.log('body: ', req.body);
 
   const newImageTag = await tagCreate(bodyToTag(req.body));
   res.status(StatusCodes.OK).success(newImageTag);
