@@ -1,14 +1,13 @@
-import express, {Request} from 'express';
+import express from 'express';
 export const authRouter = express.Router();
-import { UserModel } from '../models/user.model.js';
+import {UserModel} from '../models/user.model.js';
 
 import passport from 'passport';
-import { naverStrategy,googleStrategy,kakaoStrategy } from '../auth.config.js';
-import { prisma } from '../db.config.js';
-
+import {naverStrategy, googleStrategy, kakaoStrategy} from '../auth.config.js';
+import {prisma} from '../db.config.js';
 
 // BigInt를 문자열로 직렬화
-(BigInt.prototype as unknown as { toJSON: () => string }).toJSON = function () {
+(BigInt.prototype as unknown as {toJSON: () => string}).toJSON = function () {
   return this.toString();
 };
 //passport 전략 설정
@@ -21,7 +20,7 @@ passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser<UserModel>(async (user: UserModel, done) => {
   try {
     // 사용자 조회
-    const checkUser = await prisma.user.findUnique({ where: { id: user.id } });
+    const checkUser = await prisma.user.findUnique({where: {id: user.id}});
 
     // 사용자 존재 여부 확인
     if (!checkUser) {
@@ -36,10 +35,11 @@ passport.deserializeUser<UserModel>(async (user: UserModel, done) => {
   }
 });
 
-
 //네이버 로그인 라우트
-authRouter.get('/login/naver', passport.authenticate('naver', {scope: ['email', 'name']})
-/* 
+authRouter.get(
+  '/login/naver',
+  passport.authenticate('naver', {scope: ['email', 'name']}),
+  /* 
   #swagger.tags = ['OAuth']
   #swagger.summary = '네이버 로그인 URL 요청'
   #swagger.description = '네이버 OAuth 로그인을 시작하는 엔드포인트입니다. 브라우저에서 호출하면 네이버 로그인 페이지로 리디렉트됩니다.'
@@ -58,11 +58,11 @@ authRouter.get('/login/naver', passport.authenticate('naver', {scope: ['email', 
 //네이버 로그인 콜백 라우트
 authRouter.get(
   '/callback/naver',
-  passport.authenticate('naver', { failureRedirect: '/' }),
+  passport.authenticate('naver', {failureRedirect: '/'}),
   (req, res) => {
     // 로그인 성공 시 처리
     res.redirect('/'); // 온보딩 페이지로 리디렉션(예정)
-  }
+  },
   /* 
   #swagger.tags = ['OAuth']
   #swagger.summary = '네이버 로그인 콜백'
@@ -96,8 +96,10 @@ authRouter.get(
 */
 );
 // 구글 로그인 라우트
-authRouter.get('/login/google', passport.authenticate('google', {scope: ['profile', 'email']})
-/* 
+authRouter.get(
+  '/login/google',
+  passport.authenticate('google', {scope: ['profile', 'email']}),
+  /* 
   #swagger.tags = ['OAuth']
   #swagger.summary = '구글 로그인 URL 요청'
   #swagger.description = '구글 OAuth 로그인을 시작하는 엔드포인트입니다.'
@@ -116,11 +118,11 @@ authRouter.get('/login/google', passport.authenticate('google', {scope: ['profil
 // 구글 로그인 콜백 라우트
 authRouter.get(
   '/callback/google',
-  passport.authenticate('google', { failureRedirect: '/' }),
+  passport.authenticate('google', {failureRedirect: '/'}),
   (req, res) => {
     // 로그인 성공 시 처리
     res.redirect('/'); // 온보딩 페이지로 리디렉션(예정)
-  }
+  },
   /* 
   #swagger.tags = ['OAuth']
   #swagger.summary = '구글 로그인 콜백'
@@ -154,8 +156,12 @@ authRouter.get(
 */
 );
 // 카카오 로그인 라우트
-authRouter.get('/login/kakao', passport.authenticate('kakao', {scope: ['profile_nickname', 'account_email']})
-/* 
+authRouter.get(
+  '/login/kakao',
+  passport.authenticate('kakao', {
+    scope: ['profile_nickname', 'account_email'],
+  }),
+  /* 
   #swagger.tags = ['OAuth']
   #swagger.summary = '카카오 로그인 URL 요청'
   #swagger.description = '카카오 OAuth 로그인을 시작하는 엔드포인트입니다.'
@@ -174,11 +180,11 @@ authRouter.get('/login/kakao', passport.authenticate('kakao', {scope: ['profile_
 // 카카오 로그인 콜백 라우트
 authRouter.get(
   '/callback/kakao',
-  passport.authenticate('kakao', { failureRedirect: '/' }),
+  passport.authenticate('kakao', {failureRedirect: '/'}),
   (req, res) => {
     // 로그인 성공 시 처리
     res.redirect('/'); // 온보딩 페이지로 리디렉션(예정)
-  }
+  },
   /* 
   #swagger.tags = ['OAuth']
   #swagger.summary = '카카오 로그인 콜백'

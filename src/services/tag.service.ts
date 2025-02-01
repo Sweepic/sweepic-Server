@@ -18,7 +18,6 @@ async function tagCreate({
 
   await addImageTag({imageId, tags});
 
-  console.log('태그 생성 후, 이미지-태그 테이블 태그 조회');
   const imageTagData = await getImageTag(imageId);
 
   return responseFromImageTag(imageTagData);

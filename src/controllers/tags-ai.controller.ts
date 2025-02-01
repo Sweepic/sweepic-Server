@@ -1,7 +1,7 @@
 import {NextFunction, Request, Response} from 'express';
 import {detectLabels} from '../services/tags-ai.service.js';
 import {StatusCodes} from 'http-status-codes';
-import {DataValidationError, LabelDetectionError} from '../errors.js';
+import {DataValidationError} from '../errors.js';
 
 export const labelDetectionController = async (
   req: Request,
@@ -98,7 +98,6 @@ export const labelDetectionController = async (
     // 라벨 반환
     res.status(StatusCodes.OK).json({topLabels: labels});
   } catch (error) {
-    console.error('Error in labelDetectionController:', error);
     next(error);
   }
 };

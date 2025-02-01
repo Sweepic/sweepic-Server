@@ -1,7 +1,6 @@
 import {NextFunction, Request, Response} from 'express';
 import {processOCRAndSave} from '../services/memo-ocrService.js';
 import {StatusCodes} from 'http-status-codes';
-import {BaseError} from '../errors.js';
 import {DataValidationError} from '../errors.js';
 
 export const createFolderOCR = async (
@@ -116,7 +115,6 @@ export const createFolderOCR = async (
     // 성공 응답
     res.status(StatusCodes.CREATED).success(result);
   } catch (error) {
-    console.error('에러 발생:', error);
     next(error);
   }
 };

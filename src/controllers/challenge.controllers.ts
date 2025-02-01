@@ -1,17 +1,23 @@
-import { Request, Response, NextFunction } from 'express';
-import { serviceAcceptChallenge, serviceCompleteChallenge, serviceDeleteChallenge, serviceGetByUserId, serviceUpdateChallenge } from '../services/challenge.services.js';
-import { StatusCodes } from 'http-status-codes';
-import { getIdNumber } from '../utils/challenge.utils.js';
-import { Challenge } from '@prisma/client';
-import { ResponseFromGetByUserIdReform } from '../models/challenge.entities.js';
-import { DataValidationError } from '../errors.js';
+import {Request, Response, NextFunction} from 'express';
+import {
+  serviceAcceptChallenge,
+  serviceCompleteChallenge,
+  serviceDeleteChallenge,
+  serviceGetByUserId,
+  serviceUpdateChallenge,
+} from '../services/challenge.services.js';
+import {StatusCodes} from 'http-status-codes';
+import {getIdNumber} from '../utils/challenge.utils.js';
+import {Challenge} from '@prisma/client';
+import {ResponseFromGetByUserIdReform} from '../models/challenge.entities.js';
+import {DataValidationError} from '../errors.js';
 
 export const handleUpdateChallenge = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ): Promise<void> => {
-    /*
+  /*
     #swagger.tags = ['challenge-controller']
     #swagger.summary = '챌린지 수정 API';
     #swagger.description = '챌린지를 수정하는 API입니다. 수정되는 내용은 정리 장수, 남은 장수 입니다.'
@@ -53,25 +59,24 @@ export const handleUpdateChallenge = async (
         }
     };
     */
-    try{
-        if(!req.body){
-            throw new DataValidationError({reason: '업데이트 내용이 없습니다.'});
-        }
-
-        serviceUpdateChallenge(req.body);
-        res.status(StatusCodes.OK).success(req.body);
-        console.log(req.body);
-    } catch(error){
-        next(error);
+  try {
+    if (!req.body) {
+      throw new DataValidationError({reason: '업데이트 내용이 없습니다.'});
     }
+
+    serviceUpdateChallenge(req.body);
+    res.status(StatusCodes.OK).success(req.body);
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const handleRemoveChallenge = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ): Promise<void> => {
-    /*
+  /*
     #swagger.tags = ['challenge-controller'];
     #swagger.summary = '챌린지 삭제 API';
     #swagger.description = '챌린지를 삭제하는 API입니다.';
@@ -110,24 +115,25 @@ export const handleRemoveChallenge = async (
         }
     };
     */
-    try{
-        if(!req.body){
-            throw new DataValidationError({reason: '삭제할 챌린지의 정보가 없습니다.'});
-        }
-        serviceDeleteChallenge(getIdNumber(req.body));
-        res.status(StatusCodes.OK).success(req.body);
-        console.log(req.body);
-    } catch(error){
-        next(error);
+  try {
+    if (!req.body) {
+      throw new DataValidationError({
+        reason: '삭제할 챌린지의 정보가 없습니다.',
+      });
     }
+    serviceDeleteChallenge(getIdNumber(req.body));
+    res.status(StatusCodes.OK).success(req.body);
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const handleAcceptChallenge = async (
-    req: Request<{id: string}>,
-    res: Response,
-    next: NextFunction
+  req: Request<{id: string}>,
+  res: Response,
+  next: NextFunction,
 ): Promise<void> => {
-    /*
+  /*
     #swagger.tags = ['challenge-controller'];
     #swagger.summary = '챌린지 수락 API';
     #swagger.description = '챌린지를 수락하는 API입니다.';
@@ -173,24 +179,28 @@ export const handleAcceptChallenge = async (
         }
     };
     */
-    try{
-        if(!req.params.id){
-            throw new DataValidationError({reason: '올바른 parameter값이 필요합니다.'});
-        }
-
-        const result: Challenge = await serviceAcceptChallenge(BigInt(req.params.id));
-        res.status(StatusCodes.OK).success(result);
-    } catch(error){
-        next(error);
+  try {
+    if (!req.params.id) {
+      throw new DataValidationError({
+        reason: '올바른 parameter값이 필요합니다.',
+      });
     }
+
+    const result: Challenge = await serviceAcceptChallenge(
+      BigInt(req.params.id),
+    );
+    res.status(StatusCodes.OK).success(result);
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const handleCompleteChallenge = async (
-    req: Request<{id: string}>,
-    res: Response,
-    next: NextFunction
+  req: Request<{id: string}>,
+  res: Response,
+  next: NextFunction,
 ): Promise<void> => {
-    /*
+  /*
     #swagger.tags = ['challenge-controller'];
     #swagger.summary = '챌린지 완료 API';
     #swagger.description = '챌린지를 완료하는 API입니다.';
@@ -236,24 +246,28 @@ export const handleCompleteChallenge = async (
         }
     };
     */
-    try{
-        if(!req.params.id){
-            throw new DataValidationError({reason: '올바른 parameter값이 필요합니다.'});
-        }
-
-        const result: Challenge = await serviceCompleteChallenge(BigInt(req.params.id));
-        res.status(StatusCodes.OK).success(result);
-    } catch(error){
-        next(error);
+  try {
+    if (!req.params.id) {
+      throw new DataValidationError({
+        reason: '올바른 parameter값이 필요합니다.',
+      });
     }
+
+    const result: Challenge = await serviceCompleteChallenge(
+      BigInt(req.params.id),
+    );
+    res.status(StatusCodes.OK).success(result);
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const handleGetByUserId = async (
-    req: Request<{userId: string}>,
-    res: Response,
-    next: NextFunction
+  req: Request<{userId: string}>,
+  res: Response,
+  next: NextFunction,
 ): Promise<void> => {
-    /*
+  /*
     #swagger.tags = ['challenge-controller'];
     #swagger.summary = '특정 유저의 챌린지 조회 API';
     #swagger.description = '특정 유저의 모든 챌린지를 조회하는 API입니다.';
@@ -304,10 +318,12 @@ export const handleGetByUserId = async (
         }
     };
     */
-    try{
-        const result: ResponseFromGetByUserIdReform[] = await serviceGetByUserId(BigInt(req.params.userId));
-        res.status(StatusCodes.OK).success(result);
-    } catch(error){
-        next(error);
-    }
+  try {
+    const result: ResponseFromGetByUserIdReform[] = await serviceGetByUserId(
+      BigInt(req.params.userId),
+    );
+    res.status(StatusCodes.OK).success(result);
+  } catch (error) {
+    next(error);
+  }
 };

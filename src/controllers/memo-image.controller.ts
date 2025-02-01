@@ -1,15 +1,11 @@
-import {Response, Request, NextFunction} from 'express';
+import {Response, Request, NextFunction, Express} from 'express';
 import {StatusCodes} from 'http-status-codes';
 import {
   memoFolderDelete,
   memoImageAdd,
-  memoImageDelete,
   memoImagesMove,
 } from '../services/memo-image.service.js';
-import {
-  bodyToMemoImagesToDelete,
-  bodyToMemoImagesToMove,
-} from '../dtos/memo-image.dto.js';
+import {bodyToMemoImagesToMove} from '../dtos/memo-image.dto.js';
 import {DataValidationError} from '../errors.js';
 
 export const handlerMemoImageAdd = async (
@@ -72,8 +68,6 @@ export const handlerMemoImageAdd = async (
     };
     */
   try {
-    console.log('특정 폴더에 사진 추가');
-    console.log('body: ', req.body);
     const folderId = BigInt(req.params.folderId);
     if (!req.file) {
       throw new DataValidationError({reason: '저장할 사진이 없습니다.'});
@@ -82,7 +76,6 @@ export const handlerMemoImageAdd = async (
     const memoImage = await memoImageAdd(folderId, imageUrl);
     res.status(StatusCodes.OK).success(memoImage);
   } catch (error) {
-    console.error('Error in handlerMemoImageAdd:', error);
     next(error);
   }
 };
@@ -154,7 +147,6 @@ export const handlerMemoImageMove = async (
     );
     res.status(StatusCodes.OK).success(memoImagesToMove);
   } catch (error) {
-    console.error('Error in handlerMemoImageMove:', error);
     next(error);
   }
 };
@@ -204,7 +196,6 @@ export const handlerMemoFolderDelete = async (
     const memoImagesToDelete = await memoFolderDelete(userId, folderId);
     res.status(StatusCodes.OK).success(memoImagesToDelete);
   } catch (error) {
-    console.error('Error in handlerMemoFolderDelete:', error);
     next(error);
   }
 };

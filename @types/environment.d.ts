@@ -1,5 +1,5 @@
 namespace NodeJS {
-  interface ProcessEnv extends NodeJS.ProcessEnv {
+  export interface ProcessEnv extends NodeJS.ProcessEnv {
     PORT: string;
     DATABASE_URL: string;
     EXPRESS_SESSION_SECRET: string;
