@@ -178,23 +178,12 @@ export async function newTag(
 
   const formattedTagDataId = tagData.id.toString();
 
-  // 이미지 태그 테이블에 image_id와 tag_id가 일치하는 데이터가 있는지 확인
-  const imageData = await prisma.imageTag.findFirst({
-    where: {
+  await prisma.imageTag.create({
+    data: {
       imageId,
       tagId: BigInt(formattedTagDataId),
     },
   });
-
-  // 이미지 태그 테이블에 데이터가 없으면 생성
-  if (!imageData) {
-    await prisma.imageTag.create({
-      data: {
-        imageId,
-        tagId: BigInt(formattedTagDataId),
-      },
-    });
-  }
 }
 
 export async function updateTag(
