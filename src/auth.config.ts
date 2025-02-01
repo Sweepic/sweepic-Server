@@ -109,7 +109,7 @@ const verifyUser = async (
   profile: SocialProfile,
   provider: string,
 ): Promise<{id: bigint; email: string; name: string}> => {
-  const email =
+  const userEmail =
     provider === 'KAKAO'
       ? (profile as KakaoProfile)._json?.kakao_account?.email
       : provider === 'NAVER'
@@ -117,16 +117,16 @@ const verifyUser = async (
           (profile as NaverProfile)._json?.email
         : (profile as GoogleProfile).emails?.[0]?.value;
 
-  if (!email) {
+  if (!userEmail) {
     throw new AuthError({
       reason: `profile.email was not found: ${JSON.stringify(profile)}`,
     });
   }
 
   // 기존 사용자 조회
-  const user = await prisma.user.findFirst({where: {email}});
+  const user = await prisma.user.findFirst({where: {email: userEmail}});
 
-  const name =
+  const userName =
     provider === 'KAKAO'
       ? profile.displayName || profile.username || 'Kakao User'
       : provider === 'NAVER'
@@ -146,8 +146,8 @@ const verifyUser = async (
   // 새로운 사용자 생성
   const createdUser = await prisma.user.create({
     data: {
-      email,
-      name,
+      email: userEmail,
+      name: userName,
       goalCount: 0, // default
       createdAt: new Date(),
       updatedAt: new Date(),
