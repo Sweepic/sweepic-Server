@@ -1,22 +1,27 @@
-import {responseFromTag} from '../dtos/tag.dto.js';
-import {BodyToTag, ResponseFromTag} from '../models/tag.model.js';
-import {addTag, updateTag, getTag} from '../repositories/tag.repositories.js';
+import {responseFromImageTag} from '../dtos/tag.dto.js';
+import {BodyToTag, ResponseFromImageTag} from '../models/tag.model.js';
+import {
+  addImageTag,
+  getImageTag,
+  getImage,
+} from '../repositories/tag.repositories.js';
 
-async function tagCreate(tag: BodyToTag): Promise<ResponseFromTag> {
-  const {content, tag_category_id} = tag;
-  const newTagId = await addTag(content, tag_category_id);
+/**
+ * 태그 생성
+ * 생성 시, 태그가 존재하면 어떤 태그인지 알려주고, 존재하지 않으면 생성
+ */
+async function tagCreate({
+  mediaId,
+  tags,
+}: BodyToTag): Promise<ResponseFromImageTag[]> {
+  const imageId = await getImage(mediaId);
 
-  const tagData = await getTag(newTagId);
+  await addImageTag({imageId, tags});
 
-  return responseFromTag(tagData);
+  console.log('태그 생성 후, 이미지-태그 테이블 태그 조회');
+  const imageTagData = await getImageTag(imageId);
+
+  return responseFromImageTag(imageTagData);
 }
 
-async function tagUpdate(id: number, tag: BodyToTag): Promise<ResponseFromTag> {
-  const newTagId = await updateTag(id, tag);
-
-  const tagData = await getTag(newTagId);
-
-  return responseFromTag(tagData);
-}
-
-export {tagCreate, tagUpdate};
+export {tagCreate};

@@ -7,11 +7,6 @@ import express, {
   ErrorRequestHandler,
 } from 'express';
 import swaggerUiExpress from 'swagger-ui-express';
-import {memoFolderRouter} from './routers/memo.router.js';
-import {RegisterRoutes} from './routers/tsoaRoutes.js';
-import {challengeRouter} from './routers/challenge.router.js';
-import {authRouter} from './routers/auth.routers.js';
-import {userRouter} from './routers/user.router.js';
 import passport from 'passport';
 import session from 'express-session';
 import {PrismaSessionStore} from '@quixo3/prisma-session-store';
@@ -23,6 +18,14 @@ import swaggerDocument from '../swagger/openapi.json' assert {type: 'json'};
 import {sessionAuthMiddleware} from './auth.config.js';
 import cookieParser from 'cookie-parser';
 import {ValidateError} from 'tsoa';
+
+// routers
+import {memoFolderRouter} from './routers/memo.router.js';
+import {RegisterRoutes} from './routers/tsoaRoutes.js';
+import {challengeRouter} from './routers/challenge.router.js';
+import {authRouter} from './routers/auth.routers.js';
+import {userRouter} from './routers/user.router.js';
+import {tagRouter} from './routers/tag.router.js';
 
 dotenv.config();
 
@@ -98,16 +101,17 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// 로그인 전
-app.use('/oauth2', authRouter);
+// // 로그인 전
+// app.use('/oauth2', authRouter);
 
-// 인증 미들웨어
-app.use(sessionAuthMiddleware);
+// // 인증 미들웨어
+// app.use(sessionAuthMiddleware);
 
 // 로그인 후
 app.use('/onboarding', userRouter);
 app.use('/memo', memoFolderRouter);
 app.use('/challenge', challengeRouter);
+app.use('/tag', tagRouter);
 RegisterRoutes(app);
 
 app.get('/', (req: Request, res: Response) => {

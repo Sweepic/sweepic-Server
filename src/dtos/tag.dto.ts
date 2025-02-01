@@ -5,21 +5,14 @@ import {
   TagRequsetDto,
   ResponseFromTag,
   TagResponseDto,
+  ResponseFromImageTag,
+  ImageTagResponseDto,
 } from '../models/tag.model.js';
 
-export function bodyToTag({
-  content,
-  tag_category_id,
-}: BodyToTag): TagRequsetDto {
+export function bodyToTag({mediaId, tags}: BodyToTag): TagRequsetDto {
   return {
-    content,
-    tag_category_id,
-  };
-}
-
-export function bodyToUpdateTag({content}: BaseBodyToTag): BaseTagRequestDto {
-  return {
-    content,
+    mediaId,
+    tags,
   };
 }
 
@@ -33,4 +26,21 @@ export function responseFromTag(tag: ResponseFromTag): TagResponseDto {
     status,
     tagCategoryId,
   };
+}
+
+export function responseFromImageTag(
+  imageTagData: ResponseFromImageTag[],
+): ImageTagResponseDto[] {
+  const responseData = imageTagData.map(data => {
+    const {id, createdAt, updatedAt, status, imageId, tagId} = data;
+    return {
+      id: id.toString(),
+      createdAt,
+      updatedAt,
+      status,
+      imageId: imageId.toString(),
+      tagId: tagId.toString(),
+    };
+  });
+  return responseData;
 }
