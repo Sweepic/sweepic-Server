@@ -252,7 +252,7 @@ export const handlerMemoSearch = async (
   try {
     const userId = BigInt(req.user!.id);
     const searchKeyword = req.query.keyword?.toString();
-    if (searchKeyword === null) {
+    if (searchKeyword === null || searchKeyword === undefined) {
       throw new DataValidationError({reason: '검색어를 1자 이상 입력하세요.'});
     }
     const searchMemoList = await memoSearch(userId, searchKeyword);
