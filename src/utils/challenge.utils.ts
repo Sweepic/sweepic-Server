@@ -23,7 +23,7 @@ export const getCoordinates = (data: string): Coordinates => {
     const result: Coordinates = decodeBase32(data);
     
     return result;
-}
+};
 
 export const getReverseGeocode = async (hashed: string): Promise<string> => {
     const NAVER_ID = process.env.NAVER_ID;
@@ -52,7 +52,7 @@ export const getReverseGeocode = async (hashed: string): Promise<string> => {
     const data: ResponseFromGeoCode = await response.json() as ResponseFromGeoCode;
 
     if(data.status.code !== 0){
-        throw new NaverGeoCodeError({reason: `네이버 API 호출 에러: ${data.status.code}`})
+        throw new NaverGeoCodeError({reason: `네이버 API 호출 에러: ${data.status.code}`});
     }
 
     const result: string = `${data.results[0].region.area0.name} ${data.results[0].region.area1.name} ${data.results[0].region.area2.name} ${data.results[0].region.area3.name}`;
