@@ -1,8 +1,8 @@
 import { Response, Request, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { memoFolderDelete, memoImageAdd, memoImageDelete, memoImagesMove } from '../services/memo-image.service.js';
-import { bodyToMemoImagesToDelete, bodyToMemoImagesToMove } from '../dtos/memo-image.dto.js';
-import { DataValidationError, PhotoDataNotFoundError } from '../errors.js';
+import { memoFolderDelete, memoImageAdd, memoImagesMove } from '../services/memo-image.service.js';
+import { bodyToMemoImagesToMove } from '../dtos/memo-image.dto.js';
+import { PhotoDataNotFoundError } from '../errors.js';
 
 export const handlerMemoImageAdd = async (
   req: Request,
@@ -173,8 +173,6 @@ export const handlerMemoImageAdd = async (
     };
     */
     try{
-        console.log('특정 폴더에 사진 추가');
-        console.log('body: ', req.body);
         const folderId = BigInt(req.params.folderId);
         if (!req.file) {
             throw new PhotoDataNotFoundError({reason: '저장할 사진이 없습니다.'});
@@ -184,7 +182,6 @@ export const handlerMemoImageAdd = async (
         res.status(StatusCodes.OK).success(memoImage);
     }
     catch(error) {
-        console.error('Error in handlerMemoImageAdd:', error);
         next(error);
     }
 };
@@ -337,7 +334,6 @@ export const handlerMemoImageMove = async (req: Request, res: Response, next: Ne
         res.status(StatusCodes.OK).success(memoImagesToMove);
     }
     catch(error) {
-      console.error('Error in handlerMemoImageMove:', error);  
       next(error);
     }
 };
@@ -411,7 +407,6 @@ export const handlerMemoFolderDelete = async (req: Request, res: Response, next:
         res.status(StatusCodes.OK).success(memoImagesToDelete);
     }
     catch(error) {
-        console.error('Error in handlerMemoFolderDelete:', error);
         next(error);
     }
 };

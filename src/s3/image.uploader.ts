@@ -6,7 +6,7 @@ import path from 'path'; // 확장자 처리
 import { s3 } from './awsS3Client.js';
 import { createMemoFolder } from '../repositories/memo-folder.repository.js';
 import { bodyToMemoFolder } from '../dtos/memo-folder.dto.js';
-import { DataValidationError, FolderDuplicateError, PhotoValidationError } from '../errors.js';
+import { FolderDuplicateError, PhotoValidationError } from '../errors.js';
 
 const allowedExtensions = ['.png', '.jpg', '.jpeg', '.bmp', '.PNG', '.JPG', '.webp']; // 확장자 검사 목록
 export const imageUploader = multer({ // 파일 업로드 미들웨어 설정

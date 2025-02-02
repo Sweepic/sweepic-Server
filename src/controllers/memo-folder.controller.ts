@@ -2,7 +2,7 @@ import { Response, Request, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { bodyToMemoFolder, bodyToMemoTextToUpdate } from '../dtos/memo-folder.dto.js';
 import { listMemoFolder, listMemoTextImage, memoFolderCreate, memoFolderImageCreate, memoFolderUpdate, memoSearch, memoTextUpdate } from '../services/memo-folder.service.js';
-import { memoFolderDelete, memoImageDelete } from '../services/memo-image.service.js';
+import { memoImageDelete } from '../services/memo-image.service.js';
 import { bodyToMemoImagesToDelete } from '../dtos/memo-image.dto.js';
 import { DataValidationError, PhotoValidationError } from '../errors.js';
 
@@ -172,21 +172,16 @@ export const handlerMemoFolderImageCreate = async (
     };
     */
     try{
-        console.log('폴더 생성 및 사진 추가');
-        console.log('body: ', req.body);
-        console.log('image: ', req.file);
         const userId = BigInt(req.user!.id);
         if (!req.file) {
             throw new PhotoValidationError({reason: '저장할 사진이 없습니다.'});
         }
         const imageUrl = (req.file as Express.MulterS3File).key;
         const folderId = req.uploadDirectory;
-        console.log('imageUrl', imageUrl);
         const memoFolderImage = await memoFolderImageCreate(userId, folderId, imageUrl, req.body);
         res.status(StatusCodes.OK).success(memoFolderImage);
     }
     catch(error){
-        console.error('Error in handlerMemoFolderImageCreate:', error);
         next(error);
     }
 };
@@ -291,15 +286,11 @@ export const handlerMemoFolderAdd = async (
     };
     */
     try{
-        console.log('폴더 생성');
-        console.log('body: ', req.body);
-        console.log(req.user);
         const userId = BigInt(req.user!.id);
         const memoFolder = await memoFolderCreate(userId, bodyToMemoFolder(req.body));
         res.status(StatusCodes.OK).success(memoFolder);
     }
     catch(error) {
-        console.error('Error in handlerMemoFolderAdd:', error);
         next (error);
     }
 };
@@ -349,13 +340,11 @@ export const handlerMemoFolderList = async (
     };
     */
     try{
-        console.log('메모 폴더 리스트 조회');
         const userId = BigInt(req.user!.id);
         const memoList = await listMemoFolder(userId);
         res.status(StatusCodes.OK).success(memoList);
     }
     catch(error) {
-        console.error('Error in handlerMemoFolderList:', error);
         next (error);
     }
 };
@@ -440,17 +429,15 @@ export const handlerMemoSearch = async (
     };
     */
     try{
-        console.log('메모 검색');
         const userId = BigInt(req.user!.id);
         const searchKeyword = req.query.keyword?.toString();
-        if (searchKeyword == null) {
+        if (searchKeyword === null || searchKeyword === undefined) {
             throw new DataValidationError({reason: '검색어를 1자 이상 입력하세요.'});
         }
         const searchMemoList = await memoSearch(userId, searchKeyword);
         res.status(StatusCodes.OK).success(searchMemoList);
     }
     catch(error) {
-        console.error('Error in handlerMemoSearch:', error);      
         next (error);
     }
 };
@@ -577,7 +564,6 @@ export const handlerMemoImageDelete = async (req: Request, res: Response, next: 
         res.status(StatusCodes.OK).success(memoImagesToMove);
     }
     catch(error) {
-      console.error('Error in handlerMemoImageDelete:', error);  
       next (error);
     }
 };
@@ -660,14 +646,12 @@ export const handlerMemoTextImageList = async (
     };
     */
     try{
-        console.log('특정 폴더의 사진&텍스트 리스트 조회');
         const userId = BigInt(req.user!.id);
         const folderId = BigInt(req.params.folderId);
         const memoTextImageList = await listMemoTextImage(userId, folderId);
         res.status(StatusCodes.OK).success(memoTextImageList);
     }
     catch(error) {
-      console.error('Error in handlerMemoTextImageList:', error);  
       next (error);
     }
 };
@@ -848,7 +832,6 @@ export const handlerMemoFolderUpdate = async (req: Request, res: Response, next:
         res.status(StatusCodes.OK).success(updatedMemoFolder);
     }
     catch(error) {
-        console.error('Error in handlerMemoFolderUpdate:', error);
         next (error);
     }
 };
@@ -942,14 +925,12 @@ export const handlerMemoTextUpdate = async (req: Request, res: Response, next: N
     };
     */
     try{
-        console.log('특정 폴더의 메모 텍스트 수정');
         const userId = BigInt(req.user!.id);
         const folderId = BigInt(req.params.folderId);
         const memoTextImageList = await memoTextUpdate(userId, folderId, bodyToMemoTextToUpdate(req.body));
         res.status(StatusCodes.OK).success(memoTextImageList);
     }
     catch(error) {
-        console.error('Error in handlerMemoTextUpdate:', error);
         next (error);
     }
 };
