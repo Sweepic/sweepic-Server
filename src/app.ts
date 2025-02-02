@@ -23,6 +23,7 @@ import swaggerDocument from '../swagger/openapi.json' assert {type: 'json'};
 import { sessionAuthMiddleware } from './auth.config.js';
 import cookieParser from 'cookie-parser';
 import {ValidateError} from 'tsoa';
+import { labelDetectionController } from './controllers/tags-ai.controller.js';
 
 dotenv.config();
 
@@ -108,6 +109,7 @@ app.use(sessionAuthMiddleware);
 app.use('/onboarding', userRouter);
 app.use('/memo', memoFolderRouter);
 app.use('/challenge', challengeRouter);
+app.post('/image/ai', labelDetectionController);
 RegisterRoutes(app);
 
 app.get('/', (req: Request, res: Response) => {

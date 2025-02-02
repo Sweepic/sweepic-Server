@@ -1,7 +1,7 @@
-import { responseFromMessage, responseFromMemoFolder, responseFromMemoFolderImage, responseFromMemoFolderList, responseFromMemoTextImageList } from '../dtos/memo-folder.dto.js';
+import { responseFromMemoFolder, responseFromMemoFolderImage, responseFromMemoFolderList, responseFromMemoTextImageList } from '../dtos/memo-folder.dto.js';
 import { FolderCreationError, FolderDuplicateError, FolderNameNotChangeError, FolderNotFoundError, FolderUpdateError, MemoImageAdditionError } from '../errors.js';
 import { BodyToMemoFolder, BodyToMemoTextToUpdate, MemoFolderImageResponseDto, MemoFolderListResponseDto, MemoFolderResponseDto, MemoTextImageListResponseDto } from '../models/memo-folder.model.js';
-import { createMemoFolder, deleteMemoFolder, getMemoFolder, getMemoFolderList, getMemoTextImageList, getSearchMemoList, updateMemoFolder, updateMemoText } from '../repositories/memo-folder.repository.js';
+import { createMemoFolder, getMemoFolder, getMemoFolderList, getMemoTextImageList, getSearchMemoList, updateMemoFolder, updateMemoText } from '../repositories/memo-folder.repository.js';
 import { addMemoImage, getMemoImage } from '../repositories/memo-image.repository.js';
 
 export const memoFolderCreate = async (userId: bigint, body: BodyToMemoFolder):Promise<MemoFolderResponseDto> => {
@@ -10,7 +10,6 @@ export const memoFolderCreate = async (userId: bigint, body: BodyToMemoFolder):P
         throw new FolderDuplicateError({folderName: body.folderName});
     }
     const memoFolder = await getMemoFolder(createdMemoFolderId);
-    console.log(memoFolder);
     if (memoFolder === null) {
         throw new FolderCreationError({userId, folderName: body.folderName});
     }
@@ -59,7 +58,7 @@ export const memoFolderUpdate = async (userId: bigint, folderId: bigint, body: B
     if (currentFolder === null) {
         throw new FolderNotFoundError({folderId});
     }
-    if (currentFolder?.name == body.folderName && currentFolder?.userId == userId) {
+    if (currentFolder?.name === body.folderName && currentFolder?.userId === userId) {
         throw new FolderNameNotChangeError({folderName: body.folderName});
     }
     const updatedFolder = await updateMemoFolder(userId, folderId, body.folderName);
@@ -74,6 +73,10 @@ export const memoFolderUpdate = async (userId: bigint, folderId: bigint, body: B
 };
 
 export const memoTextUpdate = async (userId: bigint, folderId: bigint, body: BodyToMemoTextToUpdate): Promise<MemoTextImageListResponseDto> => {
+    const folder = await getMemoFolder(folderId);
+    if (folder === null) {
+        throw new FolderNotFoundError({folderId});
+    }
     const updatedMemoText = await updateMemoText(userId, folderId, body);
     return responseFromMemoTextImageList(updatedMemoText);
 };

@@ -12,7 +12,7 @@ export const imageMover = async (userId: bigint, key: string, directory: bigint)
     // 대상 경로 설정
     const directoryToMove = directory ? `${directory}/` : ''; // 이동할 디렉토리
     const imageOwnerId = userId; // 사용자 ID
-    const targetKey = `${imageOwnerId}/${directoryToMove}` + key.replace(/^[^/]+\/[^/]+\//, ''); // 복사될 key(사용자ID/이동디렉토리/uuid_파일이름)
+    const targetKey = `${imageOwnerId}/${directoryToMove}${key.replace(/^[^/]+\/[^/]+\//, '')}`; // 복사될 key(사용자ID/이동디렉토리/uuid_파일이름)
 
     await updateMemoImageUrl(key, targetKey);
     
