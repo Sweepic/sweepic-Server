@@ -1,5 +1,5 @@
 import { prisma } from '../db.config.js';
-import { BodyToMemoFolder, BodyToMemoTextToUpdate, createdMemoFolderId, MemoFolderList, MemoFolderType, MemoFoler, MemoTextImageList, ResponseMessage } from '../models/memo-folder.model.js';
+import { BodyToMemoFolder, BodyToMemoTextToUpdate, MemoFolderList, MemoFolderType, MemoFoler, MemoTextImageList, ResponseMessage } from '../models/memo-folder.model.js';
 import { getPresignedUrl } from '../s3/get-presigned-url.js';
 import { imageDeleter } from '../s3/image.deleter.js';
 
@@ -42,7 +42,7 @@ export const getMemoFolder = async (memoFolderId: bigint) : Promise<MemoFoler | 
         }
     });
 
-    if (memoFolder == null) {
+    if (memoFolder === null) {
         return null;
     }
 
@@ -193,7 +193,7 @@ export const getMemoTextImageList = async (userId: bigint, folderId: bigint): Pr
         }
     });
 
-    if (memoTextImageList == null) {
+    if (memoTextImageList === null) {
         return null;
     }
 
@@ -244,7 +244,7 @@ export const deleteMemoFolder = async (userId:bigint, folderId: bigint) :Promise
             userId
         }
     });
-    if (folder == null) {
+    if (folder === null) {
         return null;
     }
     const imageUrlToDelete = await prisma.memoImage.findMany({
