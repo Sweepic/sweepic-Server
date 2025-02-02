@@ -2,7 +2,7 @@ import { Challenge } from '@prisma/client';
 import { LocationChallengeCreation, PhotoInfo, ResponseFromChallenge, ResponseFromLocationChallenge } from '../models/challenge.entities.js';
 import { getChallenge, getLocation, newLocationChallenge } from '../repositories/challenge.repositories.js';
 import { responseFromChallenge, responseFromLocationChallenge } from '../dtos/challenge.dtos.js';
-import { getHashedLocation } from '../utils/challenge.utils.js';
+import { getHashedLocation, getReverseGeocode } from '../utils/challenge.utils.js';
 import { LocationChallengeCreationError, LocationChallengeNotFoundError, PhotoDataNotFoundError } from '../errors.js';
 
 

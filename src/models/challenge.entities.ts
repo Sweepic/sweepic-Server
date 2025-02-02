@@ -134,3 +134,76 @@ export interface PhotoInfo {
     location: string | null;
     timestamp: Date;
 }
+
+export interface ResponseFromGeoCode {
+    status: {
+        code: number;
+        name: string;
+        message: string;
+    }
+    results: {
+        name: string
+        code: {
+            id: string;
+            type: string;
+            mappingId: string;
+        }
+        region: {
+            area0: {
+                name: string;
+                coords: {
+                    center: {
+                        crs: string;
+                        x: number;
+                        y: number;
+                    }
+                }
+                alias: string | null;
+            }
+            area1: {
+                name: string;
+                coords: {
+                    center: {
+                        crs: string;
+                        x: number;
+                        y: number;
+                    }
+                }
+                alias: string | null;
+            }
+            area2: {
+                name: string;
+                coords: {
+                    center: {
+                        crs: string;
+                        x: number;
+                        y: number;
+                    }
+                }
+                alias: string | null;
+            }
+            area3: {
+                name: string;
+                coords: {
+                    center: {
+                        crs: string;
+                        x: number;
+                        y: number;
+                    }
+                }
+                alias: string | null;
+            }
+            area4: {
+                name: string;
+                coords: {
+                    center: {
+                        crs: string;
+                        x: number;
+                        y: number;
+                    }
+                }
+                alias: string | null;
+            }
+        }
+    }[]
+}
