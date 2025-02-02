@@ -37,11 +37,10 @@ export const memoImagesMove = async (userId: bigint, folderId: bigint, body: Bod
         throw new FolderNotFoundError({folderId});
     }
     const memoImagesToMove = await moveMemoImages(userId, folderId, body);
-    if (folderId == body.targetFolderId) {
+    if (folderId === body.targetFolderId) {
         throw new FolderNotChangeError({folderId});
     }
-    console.log(typeof memoImagesToMove);
-    if (typeof memoImagesToMove == 'bigint' || typeof memoImagesToMove == 'number') {
+    if (typeof memoImagesToMove === 'bigint' || typeof memoImagesToMove === 'number') {
         throw new PhotoDataNotFoundError({imageId: memoImagesToMove});
     }
     const movedMemoImages = await getMemoTextImageList(userId, body.targetFolderId);
@@ -53,8 +52,7 @@ export const memoImagesMove = async (userId: bigint, folderId: bigint, body: Bod
 
 export const memoImageDelete = async (userId: bigint, folderId: bigint, body: BodyToMemoImagesToDelete): Promise<MemoTextImageListResponseDto> => {
     const memoImagesToDelete = await deleteMemoImages(userId, folderId, body);
-    console.log(typeof memoImagesToDelete);
-    if (typeof memoImagesToDelete == 'bigint' || typeof memoImagesToDelete == 'number') {
+    if (typeof memoImagesToDelete === 'bigint' || typeof memoImagesToDelete === 'number') {
         throw new PhotoDataNotFoundError({imageId: memoImagesToDelete});
     }
     const memoFolder = await getMemoTextImageList(userId, folderId);

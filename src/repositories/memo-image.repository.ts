@@ -23,7 +23,7 @@ export const getMemoImage = async (memoImageId: bigint): Promise<MemoImage | nul
         }
     });
 
-    if (memoImage == null) {
+    if (memoImage === null) {
         return null;
     }
 
@@ -47,7 +47,7 @@ export const moveMemoImages = async (userId: bigint, folderId:bigint, body: Body
                 folderId
             },    
         });
-        if (image == null) {
+        if (image === null) {
             return imgId;
         }
     }
@@ -81,7 +81,7 @@ export const deleteMemoImages = async (userId: bigint, folderId: bigint, data: B
             }
         });
 
-        if (image == null) { return imgId; }
+        if (image === null) { return imgId; }
     }
     for (const imgId of data.imageId) {
         const image = await prisma.memoImage.findFirst({
@@ -94,7 +94,7 @@ export const deleteMemoImages = async (userId: bigint, folderId: bigint, data: B
             }
         });
 
-        if (image == null) { return null; }
+        if (image === null) { return null; }
 
         imageDeleter(image.url);
 

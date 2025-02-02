@@ -5,6 +5,7 @@ export type ErrorDetails =
   | {latitude?: number; longitude?: number}
   | {reason?: string}
   | {searchKeyword?: string}
+  | {extension?: string}
   | null;
 
 // 기본 에러 클래스
@@ -60,7 +61,7 @@ export class FolderNotChangeError extends BaseError {
 
 export class FolderNameNotChangeError extends BaseError {
   constructor(details: {folderName: string}) {
-    super(409, 'FOL-409', '변경 전의 폴더 이름과 같습니다.', details);
+    super(400, 'FOL-400', '변경 전의 폴더 이름과 같습니다.', details);
   }
 }
 
@@ -196,7 +197,13 @@ export class NaverGeoCodeError extends BaseError {
 // 사진 데이터 관련 에러 (PHO-photo)
 export class PhotoDataNotFoundError extends BaseError {
   constructor(details?: ErrorDetails) {
-    super(404, 'PHO-404', '사진 데이터가 없습니다.', details);
+    super(404, 'PHO-404', '해당 사진 데이터가 없습니다.', details);
+  }
+}
+
+export class PhotoValidationError extends BaseError {
+  constructor(details?: ErrorDetails) {
+    super(400, 'PHO-400', '사진 데이터가 유효하지 않습니다.', details);
   }
 }
 
