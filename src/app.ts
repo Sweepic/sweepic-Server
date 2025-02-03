@@ -12,6 +12,7 @@ import {RegisterRoutes} from './routers/tsoaRoutes.js';
 import {challengeRouter} from './routers/challenge.router.js';
 import {authRouter} from './routers/auth.routers.js';
 import {userRouter} from './routers/user.router.js';
+import {myPageRouter} from './routers/mypage.routers.js';
 import passport from 'passport';
 import session from 'express-session';
 import {PrismaSessionStore} from '@quixo3/prisma-session-store';
@@ -109,7 +110,9 @@ app.use(sessionAuthMiddleware);
 app.use('/onboarding', userRouter);
 app.use('/memo', memoFolderRouter);
 app.use('/challenge', challengeRouter);
+app.use('/user',myPageRouter);
 app.post('/image/ai', labelDetectionController);
+
 RegisterRoutes(app);
 
 app.get('/', (req: Request, res: Response) => {
