@@ -110,7 +110,7 @@ app.use(sessionAuthMiddleware);
 app.use('/onboarding', userRouter);
 app.use('/memo', memoFolderRouter);
 app.use('/challenge', challengeRouter);
-app.use('/user',myPageRouter);
+app.use('/user/mypage',myPageRouter);
 app.post('/image/ai', labelDetectionController);
 
 RegisterRoutes(app);
