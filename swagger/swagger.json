@@ -7,18 +7,34 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"Response": {
+			"ITsoaSuccessResponse__tags-string-Array__": {
 				"properties": {
 					"resultType": {
-						"type": "string",
-						"default": "SUCCESS"
+						"type": "string"
 					},
 					"error": {
-						"default": null
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
 					},
 					"success": {
 						"properties": {
-							"data": {}
+							"data": {
+								"properties": {
+									"tags": {
+										"items": {
+											"type": "string"
+										},
+										"type": "array"
+									}
+								},
+								"required": [
+									"tags"
+								],
+								"type": "object"
+							}
 						},
 						"required": [
 							"data"
@@ -27,13 +43,197 @@
 					}
 				},
 				"required": [
+					"resultType",
+					"error",
+					"success"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"FieldErrors": {
+				"properties": {},
+				"type": "object",
+				"additionalProperties": {
+					"properties": {
+						"value": {},
+						"message": {
+							"type": "string"
+						}
+					},
+					"required": [
+						"message"
+					],
+					"type": "object"
+				}
+			},
+			"ErrorDetails": {
+				"anyOf": [
+					{
+						"properties": {
+							"folderName": {
+								"type": "string"
+							},
+							"userId": {
+								"type": "string"
+							},
+							"folderId": {
+								"type": "string"
+							}
+						},
+						"type": "object"
+					},
+					{
+						"properties": {
+							"imageUrl": {
+								"type": "string"
+							},
+							"imageId": {
+								"type": "string"
+							}
+						},
+						"type": "object"
+					},
+					{
+						"properties": {
+							"userId": {
+								"type": "string"
+							},
+							"challengeId": {
+								"type": "string"
+							}
+						},
+						"type": "object"
+					},
+					{
+						"properties": {
+							"longitude": {
+								"type": "number",
+								"format": "double"
+							},
+							"latitude": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"type": "object"
+					},
+					{
+						"properties": {
+							"reason": {
+								"type": "string"
+							}
+						},
+						"type": "object"
+					},
+					{
+						"properties": {
+							"searchKeyword": {
+								"type": "string"
+							}
+						},
+						"type": "object"
+					},
+					{
+						"$ref": "#/components/schemas/FieldErrors"
+					}
+				],
+				"nullable": true
+			},
+			"ITsoaErrorResponse": {
+				"properties": {
+					"resultType": {
+						"type": "string"
+					},
+					"error": {
+						"properties": {
+							"data": {
+								"$ref": "#/components/schemas/ErrorDetails"
+							},
+							"reason": {
+								"type": "string"
+							},
+							"errorCode": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"data",
+							"reason",
+							"errorCode"
+						],
+						"type": "object"
+					},
+					"success": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"success"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ITsoaSuccessResponse__id-string--mediaId-string_-Array_": {
+				"properties": {
+					"resultType": {
+						"type": "string"
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"success": {
+						"properties": {
+							"data": {
+								"items": {
+									"properties": {
+										"mediaId": {
+											"type": "string"
+										},
+										"id": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"mediaId",
+										"id"
+									],
+									"type": "object"
+								},
+								"type": "array"
+							}
+						},
+						"required": [
+							"data"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
 					"success"
 				],
 				"type": "object",
 				"additionalProperties": false
 			}
 		},
-		"securitySchemes": {}
+		"securitySchemes": {
+			"sessionAuth": {
+				"type": "apiKey",
+				"in": "cookie",
+				"name": "connect.sid"
+			}
+		}
 	},
 	"info": {
 		"title": "sweepic-server",
@@ -45,7 +245,7 @@
 		"contact": {}
 	},
 	"paths": {
-		"/tags/users/{userId}": {
+		"/tags/date": {
 			"get": {
 				"operationId": "GetTagListWithDate",
 				"responses": {
@@ -54,26 +254,106 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/Response"
+									"$ref": "#/components/schemas/ITsoaSuccessResponse__tags-string-Array__"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "VAL-001",
+												"reason": "Validation Error",
+												"data": {
+													"year": {
+														"message": "invalid float",
+														"value": "a"
+													}
+												}
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "TAG-001",
+												"reason": "태그가 없습니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SER-001",
+												"reason": "내부 서버 오류입니다.",
+												"data": null
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "DB-001",
+												"reason": "DB 에러 입니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
 								}
 							}
 						}
 					}
 				},
+				"description": "사용자가 날짜를 입력하면 해당 날짜에 찍은 사진들의 태그를 검색합니다.\r\n\r\ndate를 입력하지 않으면 해당 월에 찍은 사진들의 태그를 검색합니다.",
+				"summary": "날짜기반 태그 검색 API",
 				"tags": [
 					"Tag"
 				],
 				"security": [],
 				"parameters": [
 					{
-						"in": "path",
-						"name": "userId",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
+						"description": "년",
 						"in": "query",
 						"name": "year",
 						"required": true,
@@ -83,6 +363,7 @@
 						}
 					},
 					{
+						"description": "월",
 						"in": "query",
 						"name": "month",
 						"required": true,
@@ -92,6 +373,7 @@
 						}
 					},
 					{
+						"description": "일",
 						"in": "query",
 						"name": "date",
 						"required": false,
@@ -112,7 +394,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/Response"
+									"$ref": "#/components/schemas/ITsoaSuccessResponse__id-string--mediaId-string_-Array_"
 								}
 							}
 						}
@@ -145,7 +427,7 @@
 	},
 	"servers": [
 		{
-			"url": "http://3.37.137.212:3000",
+			"url": "http://localhost:3000",
 			"description": "Sweepic server"
 		}
 	]

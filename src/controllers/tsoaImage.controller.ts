@@ -9,12 +9,15 @@ import {
   Route,
   SuccessResponse,
   Tags,
-  TsoaResponse,
 } from 'tsoa';
 import {RequestTagSearch} from '../dtos/tsoaImage.dto.js';
 import {findImagesFromTag} from '../services/tsoaImage.service.js';
 import {BaseError, ServerError} from '../errors.js';
-import {Response} from '../models/tsoaResponse.js';
+import {
+  ITsoaErrorResponse,
+  ITsoaSuccessResponse,
+  TsoaSuccessResponse,
+} from '../models/tsoaResponse.js';
 
 @Route('images')
 export class ImagesController extends Controller {
@@ -24,7 +27,7 @@ export class ImagesController extends Controller {
   public async getImageListFromTag(
     @Path() userId: string,
     @Query() tag: string,
-  ): Promise<Response<{id: string; mediaId: string}[]>> {
+  ): Promise<ITsoaSuccessResponse<{id: string; mediaId: string}[]>> {
     const dto = new RequestTagSearch(tag, userId);
     const images = await findImagesFromTag(dto).catch(err => {
       if (err instanceof BaseError) {
@@ -34,6 +37,6 @@ export class ImagesController extends Controller {
       }
     });
 
-    return new Response(images);
+    return new TsoaSuccessResponse(images);
   }
 }

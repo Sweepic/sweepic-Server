@@ -27,6 +27,11 @@ export const selectTagsByDate = async (
                   userId: dto.userId,
                 },
               },
+              {
+                status: {
+                  equals: 1,
+                },
+              },
             ],
           },
         },
