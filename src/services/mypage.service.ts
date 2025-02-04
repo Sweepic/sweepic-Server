@@ -1,10 +1,10 @@
 import {userRepository} from '../repositories/mypage.repository.js';
 import {UserModel} from '../models/user.model.js';
-import {UserNotFoundError, UserCreationError} from '../errors.js';
+import {UserNotFoundError, UserUpdateError} from '../errors.js';
 export const getUserById = async (user_id: bigint): Promise<UserModel | null> => {
     const user = await userRepository.findUserById(user_id);
     if (!user) {
-        throw new UserNotFoundError;
+        throw new UserNotFoundError();
     }
     return user;
 };
@@ -12,7 +12,7 @@ export const getUserById = async (user_id: bigint): Promise<UserModel | null> =>
 export const updateUser = async (user_id: bigint, updatedData: Partial<UserModel>): Promise<UserModel | null> => {
     const user = await userRepository.updateUser(user_id, updatedData);
     if (!user) {
-        throw new UserCreationError;
+        throw new UserUpdateError();
     }
     return user;
 };
