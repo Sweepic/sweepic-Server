@@ -7,12 +7,6 @@ export const userRepository = {
             where: { id: Number(user_id) },
         });
 
-        if (user) {
-            return {
-                ...user,
-                updatedAt: user.updatedAt ?? new Date(),
-            };
-        }
         return user;
     },
 
@@ -22,10 +16,7 @@ export const userRepository = {
             data: { ...updatedData, updatedAt: new Date() },
         });
 
-        return {
-            ...user,
-            updatedAt: user.updatedAt ?? new Date(),
-        };
+        return user;
     },
 
     deleteUser: async (user_id: bigint): Promise<boolean> => {

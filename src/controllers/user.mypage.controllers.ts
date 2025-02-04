@@ -35,7 +35,7 @@ export const updateUser = async (req: Request, res: Response, next:NextFunction)
     }
 };
 
-export const deleteUser = async (req: Request, res: Response) => {
+export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
         if (!req.user?.id) {
         throw new AuthError({reason: 'User_id를 찾을 수 없습니다'});
@@ -50,6 +50,6 @@ export const deleteUser = async (req: Request, res: Response) => {
 
         res.status(204).send(); // No Content
     } catch (error) {
-        res.status(500).json({ message: "Failed to delete user" });
+        next(error);
     }
 };
