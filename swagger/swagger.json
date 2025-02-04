@@ -135,6 +135,14 @@
 					},
 					{
 						"$ref": "#/components/schemas/FieldErrors"
+					},
+					{
+						"properties": {
+							"extension": {
+								"type": "string"
+							}
+						},
+						"type": "object"
 					}
 				],
 				"nullable": true

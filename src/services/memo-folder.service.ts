@@ -1,5 +1,4 @@
 import {
-  responseFromMessage,
   responseFromMemoFolder,
   responseFromMemoFolderImage,
   responseFromMemoFolderList,
@@ -23,7 +22,6 @@ import {
 } from '../models/memo-folder.model.js';
 import {
   createMemoFolder,
-  deleteMemoFolder,
   getMemoFolder,
   getMemoFolderList,
   getMemoTextImageList,
@@ -45,7 +43,6 @@ export const memoFolderCreate = async (
     throw new FolderDuplicateError({folderName: body.folderName});
   }
   const memoFolder = await getMemoFolder(createdMemoFolderId);
-  console.log(memoFolder);
   if (memoFolder === null) {
     throw new FolderCreationError({userId, folderName: body.folderName});
   }
@@ -107,8 +104,8 @@ export const memoFolderUpdate = async (
     throw new FolderNotFoundError({folderId});
   }
   if (
-    currentFolder?.name == body.folderName &&
-    currentFolder?.userId == userId
+    currentFolder?.name === body.folderName &&
+    currentFolder?.userId === userId
   ) {
     throw new FolderNameNotChangeError({folderName: body.folderName});
   }
@@ -132,6 +129,10 @@ export const memoTextUpdate = async (
   folderId: bigint,
   body: BodyToMemoTextToUpdate,
 ): Promise<MemoTextImageListResponseDto> => {
+  const folder = await getMemoFolder(folderId);
+  if (folder === null) {
+    throw new FolderNotFoundError({folderId});
+  }
   const updatedMemoText = await updateMemoText(userId, folderId, body);
   return responseFromMemoTextImageList(updatedMemoText);
 };
