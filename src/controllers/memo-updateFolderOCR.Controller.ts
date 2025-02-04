@@ -1,7 +1,7 @@
 import {NextFunction, Request, Response} from 'express';
 import {processOCRAndSave} from '../services/memo-ocrService.js';
 import {StatusCodes} from 'http-status-codes';
-import {DataValidationError} from '../errors.js';
+import {DataValidationError, PhotoValidationError} from '../errors.js';
 
 export const updateFolderOCR = async (
   req: Request,
@@ -24,20 +24,15 @@ export const updateFolderOCR = async (
     #swagger.requestBody = {
         required: true,
         content: {
-            "application/json": {
+            "multipart/form-data": {
                 schema: {
                     type: "object",
-                    required: ["base64_image", "user_id"],
+                    required: ["base64_image"],
                     properties: {
                         base64_image: {
                             type: "string",
                             description: "OCR 처리를 위한 이미지 URL",
                             example: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA..."
-                        },
-                        user_id: {
-                            type: "number",
-                            description: "사용자 ID",
-                            example: 1
                         }
                     }
                 }
@@ -100,8 +95,16 @@ export const updateFolderOCR = async (
     }
   */
   try {
+    let base64_image: string | undefined = req.body.base64_image;
+
+    // 파일이 존재하는 경우 base64 변환
+    if (req.file) {
+      base64_image = `data:image/png;base64,${req.file.buffer.toString('base64')}`;
+    }
+
     const {folderId} = req.params; // URL 매개변수에서 folderId 가져오기
-    const {base64_image, user_id} = req.body;
+
+    const user_id = BigInt(req.user!.id);
 
     // 유효성 검사
     if (!folderId) {
@@ -120,6 +123,12 @@ export const updateFolderOCR = async (
       throw new DataValidationError({reason: 'user_id가 필요합니다.'});
     }
 
+    //bae64 이미지 형태 검증
+    if (!isValidBase64(base64_image)) {
+      throw new PhotoValidationError({
+        reason: '올바른 Base64 이미지 형식이 아닙니다.',
+      });
+    }
     const result = await processOCRAndSave({
       folder_id: Number(folderId),
       base64_image,
@@ -131,4 +140,10 @@ export const updateFolderOCR = async (
     console.error('Error occurred:', error);
     next(error);
   }
+};
+
+const isValidBase64 = (base64String: string): boolean => {
+  // MIME 타입 검증 (jpeg, png, jpg 허용)
+  const base64Regex = /^data:image\/(jpeg|png|jpg);base64,[A-Za-z0-9+/=]+$/;
+  return base64Regex.test(base64String);
 };

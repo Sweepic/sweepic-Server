@@ -32,6 +32,7 @@ export const processOCRAndSave = async ({
   let folder;
 
   // user_id를 BigInt로 변환
+
   const userIdBigInt = BigInt(user_id);
 
   if (!folder_id) {
@@ -59,10 +60,7 @@ export const processOCRAndSave = async ({
     folder_id = Number(folder.folder_id); // 생성된 폴더 ID를 number로 변환하여 업데이트
   } else {
     // PATCH 요청 - folder_id로 폴더 조회
-    folder = await folderRepository.findFolderById(
-      BigInt(folder_id),
-      userIdBigInt,
-    );
+    folder = await folderRepository.findFolderById(folder_id, userIdBigInt);
 
     if (!folder) {
       throw new FolderNotFoundError({folderId: BigInt(folder_id)});

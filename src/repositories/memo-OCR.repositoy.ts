@@ -6,7 +6,7 @@ export const folderRepository = {
    * 폴더 ID와 사용자 ID로 폴더 조회
    */
   findFolderById: async (
-    folder_id: bigint,
+    folder_id: number,
     user_id: bigint,
   ): Promise<OCRResponse | null> => {
     const folder = await prisma.memoFolder.findFirst({
