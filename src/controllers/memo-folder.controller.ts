@@ -171,7 +171,6 @@ export const handlerMemoFolderImageCreate = async (
         }
     };
     */
-
     try{
         const userId = BigInt(req.user!.id);
         if (!req.file) {
@@ -185,19 +184,6 @@ export const handlerMemoFolderImageCreate = async (
     catch(error){
         next(error);
     }
-  
-    const imageUrl = (req.file as Express.MulterS3File).key;
-    const folderId = req.uploadDirectory;
-    const memoFolderImage = await memoFolderImageCreate(
-      userId,
-      folderId,
-      imageUrl,
-      req.body,
-    );
-    res.status(StatusCodes.OK).success(memoFolderImage);
-  } catch (error) {
-    next(error);
-  }
 };
 export const handlerMemoFolderAdd = async (
   req: Request,
@@ -299,16 +285,14 @@ export const handlerMemoFolderAdd = async (
         }
     };
     */
-  try {
-    const userId = BigInt(req.user!.id);
-    const memoFolder = await memoFolderCreate(
-      userId,
-      bodyToMemoFolder(req.body),
-    );
-    res.status(StatusCodes.OK).success(memoFolder);
-  } catch (error) {
-    next(error);
-  }
+    try{
+        const userId = BigInt(req.user!.id);
+        const memoFolder = await memoFolderCreate(userId, bodyToMemoFolder(req.body));
+        res.status(StatusCodes.OK).success(memoFolder);
+    }
+    catch(error) {
+        next (error);
+    }
 };
 
 export const handlerMemoFolderList = async (
@@ -355,13 +339,14 @@ export const handlerMemoFolderList = async (
         }
     };
     */
-  try {
-    const userId = BigInt(req.user!.id);
-    const memoList = await listMemoFolder(userId);
-    res.status(StatusCodes.OK).success(memoList);
-  } catch (error) {
-    next(error);
-  }
+    try{
+        const userId = BigInt(req.user!.id);
+        const memoList = await listMemoFolder(userId);
+        res.status(StatusCodes.OK).success(memoList);
+    }
+    catch(error) {
+        next (error);
+    }
 };
 
 export const handlerMemoSearch = async (
@@ -443,7 +428,6 @@ export const handlerMemoSearch = async (
         }
     };
     */
-
     try{
         const userId = BigInt(req.user!.id);
         const searchKeyword = req.query.keyword?.toString();
@@ -456,20 +440,10 @@ export const handlerMemoSearch = async (
     catch(error) {
         next (error);
     }
-  
-    const searchMemoList = await memoSearch(userId, searchKeyword);
-    res.status(StatusCodes.OK).success(searchMemoList);
-  } catch (error) {
-    next(error);
-  }
 };
 
-export const handlerMemoImageDelete = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
-  /*
+export const handlerMemoImageDelete = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    /*
     #swagger.tags = ['memo-image-controller']
     #swagger.summary = '사진 삭제 API';
     #swagger.description = '특정 폴더의 사진을 삭제하는 API입니다.'
@@ -593,7 +567,6 @@ export const handlerMemoImageDelete = async (
       next (error);
     }
 };
-
 export const handlerMemoTextImageList = async (
   req: Request,
   res: Response,
@@ -672,7 +645,6 @@ export const handlerMemoTextImageList = async (
         }
     };
     */
-
     try{
         const userId = BigInt(req.user!.id);
         const folderId = BigInt(req.params.folderId);
@@ -684,12 +656,8 @@ export const handlerMemoTextImageList = async (
     }
 };
 
-export const handlerMemoFolderUpdate = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
-  /*
+export const handlerMemoFolderUpdate = async (req: Request, res: Response, next: NextFunction) :Promise<void> => {
+    /*
     #swagger.tags = ['memo-folder-controller']
     #swagger.summary = '메모 폴더 이름 수정 API';
     #swagger.description = '특정 폴더의 이름을 수정하는 API입니다.'
@@ -868,12 +836,8 @@ export const handlerMemoFolderUpdate = async (
     }
 };
 
-export const handlerMemoTextUpdate = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
-  /*
+export const handlerMemoTextUpdate = async (req: Request, res: Response, next: NextFunction): Promise<void> =>{
+    /*
     #swagger.tags = ['memo-folder-controller']
     #swagger.summary = '특정 폴더의 메모 텍스트 수정 API';
     #swagger.description = '특정 폴더의 메모 텍스트를 수정하는 API입니다.'
@@ -960,7 +924,6 @@ export const handlerMemoTextUpdate = async (
         }
     };
     */
-
     try{
         const userId = BigInt(req.user!.id);
         const folderId = BigInt(req.params.folderId);
