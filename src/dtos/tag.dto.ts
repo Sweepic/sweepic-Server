@@ -7,9 +7,9 @@ import {
   ImageTagResponseDto,
 } from '../models/tag.model.js';
 
-export function bodyToTag({mediaId, tags}: BodyToTag): TagRequsetDto {
+export function bodyToTag({imageId, tags}: BodyToTag): TagRequsetDto {
   return {
-    mediaId,
+    imageId,
     tags,
   };
 }

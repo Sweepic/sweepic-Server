@@ -1,27 +1,10 @@
 import {prisma} from '../db.config.js';
-import {DBError, TagNotFound} from '../errors.js';
+import {TagNotFound} from '../errors.js';
 import {
   ResponseFromTag,
   BodyToImageTag,
   ResponseFromImageTag,
 } from '../models/tag.model.js';
-
-export async function getImage(mediaId: bigint | number): Promise<bigint> {
-  const imageTagData = await prisma.image.findFirst({
-    where: {
-      mediaId,
-    },
-    select: {
-      id: true,
-    },
-  });
-
-  if (imageTagData === null) {
-    throw new DBError();
-  }
-
-  return imageTagData.id;
-}
 
 // 태그가 있을 시, 태그를 반환하고 없을 시, 태그를 생성
 export async function addImageTag({
