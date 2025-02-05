@@ -1,12 +1,14 @@
 import multer from 'multer'; // 파일 업로드 처리를 위한 미들웨어
 import multerS3 from 'multer-s3'; // AWS S3를 연결하는 라이브러리
-import { Request } from 'express';
-import { v4 as uuidv4 } from 'uuid'; // 고유한 식별자(UUID) 생성
+import {Request} from 'express';
+import {v4 as uuidv4} from 'uuid'; // 고유한 식별자(UUID) 생성
 import path from 'path'; // 확장자 처리
-import { s3 } from './awsS3Client.js';
-import { createMemoFolder } from '../repositories/memo-folder.repository.js';
-import { bodyToMemoFolder } from '../dtos/memo-folder.dto.js';
-import { FolderDuplicateError, PhotoValidationError } from '../errors.js';
+import process from 'process';
+
+import {s3} from './awsS3Client.js';
+import {createMemoFolder} from '../repositories/memo-folder.repository.js';
+import {bodyToMemoFolder} from '../dtos/memo-folder.dto.js';
+import {FolderDuplicateError, PhotoValidationError} from '../errors.js';
 
 const allowedExtensions = ['.png', '.jpg', '.jpeg', '.bmp', '.PNG', '.JPG', '.webp']; // 확장자 검사 목록
 export const imageUploader = multer({ // 파일 업로드 미들웨어 설정

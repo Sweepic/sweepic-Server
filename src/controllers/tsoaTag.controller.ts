@@ -1,19 +1,7 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Path,
-  Post,
-  Query,
-  Res,
-  Route,
-  SuccessResponse,
-  TsoaResponse,
-  Tags,
-} from 'tsoa';
+import {Controller, Get, Path, Query, Route, SuccessResponse, Tags} from 'tsoa';
 import {findTagsByDate} from '../services/tsoaTag.service.js';
 import {DateToTags} from '../dtos/tsoaTag.dto.js';
-import {BaseError, ServerError, TagBadRequest} from '../errors.js';
+import {BaseError, ServerError} from '../errors.js';
 import {Response} from '../models/tsoaResponse.js';
 
 @Route('tags')

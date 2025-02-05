@@ -1,17 +1,23 @@
-import { NextFunction } from 'express';
-import { Response, Request } from 'express';
-import { serviceCreateNewLocationChallenge, serviceGetLocationChallenge, serviceLocationLogic } from '../services/challenge.location.services.js';
-import { StatusCodes } from 'http-status-codes';
-import { LocationChallengeCreation, ResponseFromChallenge } from '../models/challenge.entities.js';
-import { bodyToLocationCreation } from '../dtos/challenge.dtos.js';
-import { DataValidationError } from '../errors.js';
+import {Response, Request, NextFunction} from 'express';
+import {
+  serviceCreateNewLocationChallenge,
+  serviceGetLocationChallenge,
+  serviceLocationLogic,
+} from '../services/challenge.location.services.js';
+import {StatusCodes} from 'http-status-codes';
+import {
+  LocationChallengeCreation,
+  ResponseFromChallenge,
+} from '../models/challenge.entities.js';
+import {bodyToLocationCreation} from '../dtos/challenge.dtos.js';
+import {DataValidationError} from '../errors.js';
 
 export const handleNewLocationChallenge = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ): Promise<void> => {
-    /*
+  /*
     #swagger.tags = ['challenge-location-controller']
     #swagger.summary = '위치 기반 챌린지 생성 API';
     #swagger.description = '위치 기반 챌린지를 생성하는 API입니다.'
@@ -63,26 +69,28 @@ export const handleNewLocationChallenge = async (
         }
     };
     */
-    try{
-        if(!req.body){
-            throw new DataValidationError({reason: '위치 챌린지를 생성할 데이터가 없습니다.'});
-        }
-
-        const data: LocationChallengeCreation = bodyToLocationCreation(req.body);
-        const result: ResponseFromChallenge = await serviceCreateNewLocationChallenge(data);
-        res.status(StatusCodes.OK).success(result);
-        console.log(req.body);
-    } catch(error){
-        next(error);
+  try {
+    if (!req.body) {
+      throw new DataValidationError({
+        reason: '위치 챌린지를 생성할 데이터가 없습니다.',
+      });
     }
+
+    const data: LocationChallengeCreation = bodyToLocationCreation(req.body);
+    const result: ResponseFromChallenge =
+      await serviceCreateNewLocationChallenge(data);
+    res.status(StatusCodes.OK).success(result);
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const handleGetLocationChallenge = async (
-    req: Request<{id: string}>,
-    res: Response,
-    next: NextFunction
+  req: Request<{id: string}>,
+  res: Response,
+  next: NextFunction,
 ): Promise<void> => {
-    /*
+  /*
     #swagger.tags = ['challenge-location-controller']
     #swagger.summary = '위치 기반 챌린지 불러오기 API';
     #swagger.description = '위치 기반 챌린지를 불러오는 API입니다.'
@@ -129,25 +137,26 @@ export const handleGetLocationChallenge = async (
         }
     };
     */
-    try{
-        if(!req.params.id){
-            throw new DataValidationError({reason: '올바른 parameter 값이 필요합니다.'});
-        }
-
-        const result = await serviceGetLocationChallenge(BigInt(req.params.id));
-        res.status(StatusCodes.OK).success(result);
-        console.log(req.params.id);
-    } catch(error){
-        next(error);
+  try {
+    if (!req.params.id) {
+      throw new DataValidationError({
+        reason: '올바른 parameter 값이 필요합니다.',
+      });
     }
+
+    const result = await serviceGetLocationChallenge(BigInt(req.params.id));
+    res.status(StatusCodes.OK).success(result);
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const handleLocationLogic = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ): Promise<void> => {
-    /*
+  /*
     #swagger.tags = ['challenge-location-controller']
     #swagger.summary = '위치 기반 챌린지 사진 판별 API';
     #swagger.description = '위치 기반 챌린지를 위한 사진을 골라내는 API입니다.'
@@ -200,10 +209,10 @@ export const handleLocationLogic = async (
         }
     };
     */
-    try{
-        const result = await serviceLocationLogic(req.body);
-        res.status(StatusCodes.OK).success(result);
-    } catch(error){
-        next(error);
-    }
+  try {
+    const result = await serviceLocationLogic(req.body);
+    res.status(StatusCodes.OK).success(result);
+  } catch (error) {
+    next(error);
+  }
 };

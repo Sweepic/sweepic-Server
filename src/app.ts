@@ -6,12 +6,8 @@ import express, {
   NextFunction,
   ErrorRequestHandler,
 } from 'express';
+import process from 'process';
 import swaggerUiExpress from 'swagger-ui-express';
-import {memoFolderRouter} from './routers/memo.router.js';
-import {RegisterRoutes} from './routers/tsoaRoutes.js';
-import {challengeRouter} from './routers/challenge.router.js';
-import {authRouter} from './routers/auth.routers.js';
-import {userRouter} from './routers/user.router.js';
 import passport from 'passport';
 import session from 'express-session';
 import {PrismaSessionStore} from '@quixo3/prisma-session-store';
@@ -19,11 +15,18 @@ import {prisma} from './db.config.js';
 import swaggerDocumentOne from '../swagger/openapi.json' assert {type: 'json'};
 import swaggerDocumentTwo from '../swagger/swagger.json' assert {type: 'json'};
 import {BaseError} from './errors.js';
-import swaggerDocument from '../swagger/openapi.json' assert {type: 'json'};
-import { sessionAuthMiddleware } from './auth.config.js';
+import {sessionAuthMiddleware} from './auth.config.js';
 import cookieParser from 'cookie-parser';
 import {ValidateError} from 'tsoa';
 import { labelDetectionController } from './controllers/tags-ai.controller.js';
+
+// routers
+import {memoFolderRouter} from './routers/memo.router.js';
+import {RegisterRoutes} from './routers/tsoaRoutes.js';
+import {challengeRouter} from './routers/challenge.router.js';
+import {authRouter} from './routers/auth.routers.js';
+import {userRouter} from './routers/user.router.js';
+import {tagRouter} from './routers/tag.router.js';
 
 dotenv.config();
 
@@ -34,7 +37,7 @@ const port = process.env.PORT;
 app.use(cors());
 app.use(express.static('public'));
 app.use(express.json());
-app.use(express.urlencoded({extended: false})); 
+app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 
 // Swagger Docs
@@ -109,6 +112,7 @@ app.use(sessionAuthMiddleware);
 app.use('/onboarding', userRouter);
 app.use('/memo', memoFolderRouter);
 app.use('/challenge', challengeRouter);
+app.use('/tag', tagRouter);
 app.post('/image/ai', labelDetectionController);
 RegisterRoutes(app);
 
@@ -146,8 +150,6 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
       success: null,
     });
   }
-  
-  console.error('Unexpected error:', err);
   res.status(500).json({
     resultType: 'FAIL',
     error: {
@@ -161,6 +163,4 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
 
 app.use(errorHandler);
 // Start server
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+app.listen(port, () => {});

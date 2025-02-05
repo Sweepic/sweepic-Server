@@ -1,16 +1,22 @@
-import { Response, Request, NextFunction } from 'express';
-import { ResponseFromChallenge, WeeklyChallengeCreation } from '../models/challenge.entities.js';
-import { bodyToWeeklyCreation } from '../dtos/challenge.dtos.js';
-import { StatusCodes } from 'http-status-codes';
-import { serviceCreateNewWeeklyChallenge, serviceGetWeeklyChallenge } from '../services/challenge.weekly.services.js';
-import { DataValidationError } from '../errors.js';
+import {Response, Request, NextFunction} from 'express';
+import {
+  ResponseFromChallenge,
+  WeeklyChallengeCreation,
+} from '../models/challenge.entities.js';
+import {bodyToWeeklyCreation} from '../dtos/challenge.dtos.js';
+import {StatusCodes} from 'http-status-codes';
+import {
+  serviceCreateNewWeeklyChallenge,
+  serviceGetWeeklyChallenge,
+} from '../services/challenge.weekly.services.js';
+import {DataValidationError} from '../errors.js';
 
-export const handleNewWeeklyChallenge = async(
-    req: Request,
-    res: Response,
-    next: NextFunction
+export const handleNewWeeklyChallenge = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ): Promise<void> => {
-    /*
+  /*
     #swagger.tags = ['challenge-weekly-controller']
     #swagger.summary = '날짜 기반 챌린지 생성 API';
     #swagger.description = '날짜 기반 챌린지를 생성하는 API입니다.'
@@ -62,26 +68,28 @@ export const handleNewWeeklyChallenge = async(
         }
     };
     */
-    try{
-        if(!req.body){
-            throw new DataValidationError({reason: '날짜 챌린지를 생성할 데이터가 없습니다.'});
-        }
-
-        const data: WeeklyChallengeCreation = bodyToWeeklyCreation(req.body);
-        const result: ResponseFromChallenge = await serviceCreateNewWeeklyChallenge(data);
-        res.status(StatusCodes.OK).success(result);
-        console.log(req.headers);
-    } catch(error){
-        next(error);
+  try {
+    if (!req.body) {
+      throw new DataValidationError({
+        reason: '날짜 챌린지를 생성할 데이터가 없습니다.',
+      });
     }
+
+    const data: WeeklyChallengeCreation = bodyToWeeklyCreation(req.body);
+    const result: ResponseFromChallenge =
+      await serviceCreateNewWeeklyChallenge(data);
+    res.status(StatusCodes.OK).success(result);
+  } catch (error) {
+    next(error);
+  }
 };
 
-export const handleGetWeeklyChallenge = async(
-    req: Request,
-    res: Response,
-    next: NextFunction
+export const handleGetWeeklyChallenge = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ): Promise<void> => {
-    /*
+  /*
     #swagger.tags = ['challenge-weekly-controller']
     #swagger.summary = '날짜 기반 챌린지 불러오기 API';
     #swagger.description = '날짜 기반 챌린지를 불러오는 API입니다.'
@@ -128,14 +136,16 @@ export const handleGetWeeklyChallenge = async(
         }
     };
     */
-    try{
-        if(!req.params.id){
-            throw new DataValidationError({reason: '올바른 parameter값이 필요합니다.'});
-        }
-        
-        const result = await serviceGetWeeklyChallenge(BigInt(req.params.id));
-        res.status(StatusCodes.OK).success(result);
-    } catch(error){
-        next(error);
+  try {
+    if (!req.params.id) {
+      throw new DataValidationError({
+        reason: '올바른 parameter값이 필요합니다.',
+      });
     }
+
+    const result = await serviceGetWeeklyChallenge(BigInt(req.params.id));
+    res.status(StatusCodes.OK).success(result);
+  } catch (error) {
+    next(error);
+  }
 };
