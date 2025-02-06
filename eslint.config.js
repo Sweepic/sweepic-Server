@@ -37,7 +37,7 @@ export default [
       eqeqeq: ['error', 'always'], // == 대신 === 사용 권장
       'no-duplicate-imports': 'error', // 중복 import 경고
       'no-var': 'error', // var 사용 금지
-      'no-undef': 'off', // 선언되지 않은 변수 사용 금지
+      'no-undef': 'error', // 선언되지 않은 변수 사용 금지
       'no-const-assign': 'error', // const 재할당 금지
     },
   },
