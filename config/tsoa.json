@@ -6,16 +6,18 @@
     "outputDirectory": "./swagger",
     "specVersion": 3,
     "validate": true,
-    "servers": [
-      {
-        "url": "http://localhost:3000",
-        "description": "Sweepic local server"
-      },
-      {
-        "url": "http://3.37.137.212:3000",
-        "description": "Sweepic server"
-      }
-    ],
+    "spec": {
+      "servers": [
+        {
+          "url": "http://localhost:3000",
+          "description": "Sweepic local server"
+        },
+        {
+          "url": "http://3.37.137.212:3000",
+          "description": "Sweepic server"
+        }
+      ]
+    },
     "securityDefinitions": {
       "sessionAuth": {
         "type": "apiKey",
