@@ -1,3 +1,4 @@
+import {Controller, Get, Patch, Path, Query, Route, SuccessResponse, Tags} from 'tsoa';
 import {Request, Response, NextFunction} from 'express';
 import {
   serviceAcceptChallenge,
@@ -337,6 +338,14 @@ export const naverController = async(
     res: Response,
     next: NextFunction
 ): Promise<void> => {
+  try{
+    if(req.query.hashedLocation as string === null){
+      throw new DataValidationError({reason: 'query문이 비었습니다. hashedLocation에 geohash값을 넣어주세요.'});
+    }
     const data: string = await getReverseGeocode(req.query.hashedLocation as string);
     res.status(StatusCodes.OK).success(data);
+  }
+  catch(error){
+    next(error);
+  }
 };

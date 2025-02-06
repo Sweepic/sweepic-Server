@@ -65,12 +65,11 @@ export const serviceLocationLogic = async (
       });
     }
 
-    let isCreateChallenge: boolean = false;
     let challengePics: PhotoInfo[] = [];
     const iterator: ArrayIterator<[number, PhotoInfo]> = data.entries();
     const hashPosition: Map<string, number> = new Map<string, number>(); //hash된 위치의 map 각 key를 위치로, value를 개수로 설정함
 
-    for (const [index, photo] of iterator) {
+    for (const [index, photo] of iterator) {   //lint 규칙에 어긋나지만 문법 상 index가 필요하지만, 밑의 반복문에서는 필요하지 않습니다.
       if (photo.latitude === null || photo.longitude === null) {
         continue;
       }
@@ -84,9 +83,8 @@ export const serviceLocationLogic = async (
     }
 
     hashPosition.forEach(
-      (value: number, key: string, map: Map<string, number>) => {
+      (value: number, key: string) => {
         if (value > 0 && value < 5) {
-          isCreateChallenge = true;
           challengePics = data.filter(
             (photo: PhotoInfo) => photo.location === key,
           );

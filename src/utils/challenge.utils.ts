@@ -1,7 +1,9 @@
 import CoordinateParser from 'coordinate-parser';
+import process from 'process';
 import { Coordinates, decodeBase32, encodeBase32 } from 'geohashing';
 import { ResponseFromGeoCode } from '../models/challenge.entities.js';
 import { DataValidationError, NaverGeoCodeError } from '../errors.js';
+import fetch, {Response} from 'node-fetch';
 
 export const getIdNumber = (data: {id: string}): bigint => {
     return BigInt(data.id);
@@ -30,7 +32,6 @@ export const getReverseGeocode = async (hashed: string): Promise<string> => {
     const NAVER_SECRET = process.env.NAVER_SECRET;
 
     if (!NAVER_ID || !NAVER_SECRET) {
-        console.error('네이버 API 키가 설정되지 않았습니다.');
         throw new DataValidationError({reason: 'Invalid Naver API keys.'});
     }
 
