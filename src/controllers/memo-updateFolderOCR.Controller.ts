@@ -128,7 +128,6 @@ export const updateFolderOCR = async (
 
     res.status(StatusCodes.OK).success(result);
   } catch (error) {
-    console.error('Error occurred:', error);
     next(error);
   }
 };

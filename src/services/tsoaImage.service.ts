@@ -20,7 +20,7 @@ export const findImagesFromTag = async (
     });
   if (images.length === 0) {
     throw new PhotoDataNotFoundError({
-      reason: '<' + dto.tag + '> 태그에 해당하는 사진이 존재하지 않습니다.',
+      reason: `<${  dto.tag  }> 태그에 해당하는 사진이 존재하지 않습니다.`,
     });
   }
   return images;

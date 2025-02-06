@@ -7,7 +7,6 @@ export const selectTagsByDate = async (
   dto: DateToTags,
   endDate: Date,
 ): Promise<Pick<Tag, 'content'>[]> => {
-  console.log(dto.createdAt);
   const tags = await prisma.tag
     .findMany({
       where: {
@@ -38,8 +37,7 @@ export const selectTagsByDate = async (
         content: 'asc',
       },
     })
-    .catch(err => {
-      console.log(err);
+    .catch(() => {
       throw new DBError();
     });
 

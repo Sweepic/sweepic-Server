@@ -10,7 +10,6 @@
     "build": "tsx scripts/build.ts",
     "start": "node dist/app.cjs",
     "lint": "gts lint",
-    "clean": "gts clean",
     "compile": "tsc",
     "fix": "gts fix",
     "prepare": "yarn run compile",
@@ -18,7 +17,8 @@
     "posttest": "yarn run lint",
     "swagger": "tsx swagger/swagger.ts",
     "tsoa-swagger": "tsoa spec -c ./config/tsoa.json",
-    "tsoa-routes": "tsoa routes -c ./config/tsoa.json"
+    "tsoa-routes": "tsoa routes -c ./config/tsoa.json",
+    "clean": "gts clean"
   },
   "author": "",
   "license": "ISC",
@@ -60,7 +60,7 @@
     "@types/express-session": "^1.18.1",
     "@types/multer": "^1.4.12",
     "@types/multer-s3": "^3.0.3",
-    "@types/node": "^22.10.3",
+    "@types/node": "^22.7.5",
     "@types/passport": "^1.0.17",
     "@types/passport-google-oauth20": "^2.0.16",
     "@types/passport-kakao": "^1.0.3",

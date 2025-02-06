@@ -16,18 +16,23 @@ export const memoFolderCreate = async (userId: bigint, body: BodyToMemoFolder):P
     return responseFromMemoFolder(memoFolder);
 };
 
-export const memoFolderImageCreate = async (userId: bigint, folderId: bigint, imageUrl: string, body:BodyToMemoFolder ):Promise<MemoFolderImageResponseDto> => {
-    //const createdMemoFolderId = await createMemoFolder(body, userId);
-    const addedMemoImageId = await addMemoImage(folderId, imageUrl);
-    const memoFolder = await getMemoFolder(folderId);
-    const memoImage = await getMemoImage(addedMemoImageId);
-    if (memoFolder === null) {
-        throw new FolderCreationError({userId, folderName: body.folderName});
-    }
-    if (memoImage === null) {
-        throw new MemoImageAdditionError({folderId, imageUrl });
-    }
-    return responseFromMemoFolderImage({ memoFolder, memoImage });
+export const memoFolderImageCreate = async (
+  userId: bigint,
+  folderId: bigint,
+  imageUrl: string,
+  body: BodyToMemoFolder,
+): Promise<MemoFolderImageResponseDto> => {
+  //const createdMemoFolderId = await createMemoFolder(body, userId);
+  const addedMemoImageId = await addMemoImage(folderId, imageUrl);
+  const memoFolder = await getMemoFolder(folderId);
+  const memoImage = await getMemoImage(addedMemoImageId);
+  if (memoFolder === null) {
+    throw new FolderCreationError({userId, folderName: body.folderName});
+  }
+  if (memoImage === null) {
+    throw new MemoImageAdditionError({folderId, imageUrl});
+  }
+  return responseFromMemoFolderImage({memoFolder, memoImage});
 };
 
 export const listMemoFolder = async (
@@ -45,13 +50,17 @@ export const memoSearch = async (
   return responseFromMemoFolderList(searchMemoList);
 };
 
-export const listMemoTextImage = async (userId: bigint, folderId: bigint): Promise<MemoTextImageListResponseDto> => {
-    const memoTextImageList = await getMemoTextImageList(userId, folderId);
-    if (memoTextImageList === null) {
-        throw new FolderNotFoundError({folderId});
-    }
-    return responseFromMemoTextImageList(memoTextImageList);
+export const listMemoTextImage = async (
+  userId: bigint,
+  folderId: bigint,
+): Promise<MemoTextImageListResponseDto> => {
+  const memoTextImageList = await getMemoTextImageList(userId, folderId);
+  if (memoTextImageList === null) {
+    throw new FolderNotFoundError({folderId});
+  }
+  return responseFromMemoTextImageList(memoTextImageList);
 };
+
 
 export const memoFolderUpdate = async (userId: bigint, folderId: bigint, body: BodyToMemoFolder):Promise<MemoTextImageListResponseDto> => {
     const currentFolder = await getMemoFolder(folderId);
