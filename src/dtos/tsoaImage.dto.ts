@@ -2,8 +2,8 @@ export class RequestTagSearch {
   tag: string;
   userId: bigint;
 
-  constructor(tag: string, userId: string) {
+  constructor(tag: string, userId: bigint) {
     this.tag = tag;
-    this.userId = BigInt(userId);
+    this.userId = userId;
   }
 }
