@@ -8,12 +8,6 @@ import express, {
 } from 'express';
 import process from 'process';
 import swaggerUiExpress from 'swagger-ui-express';
-import {memoFolderRouter} from './routers/memo.router.js';
-import {RegisterRoutes} from './routers/tsoaRoutes.js';
-import {challengeRouter} from './routers/challenge.router.js';
-import {authRouter} from './routers/auth.routers.js';
-import {userRouter} from './routers/user.router.js';
-import {myPageRouter} from './routers/mypage.routers.js';
 import passport from 'passport';
 import session from 'express-session';
 import {PrismaSessionStore} from '@quixo3/prisma-session-store';
@@ -33,6 +27,7 @@ import {challengeRouter} from './routers/challenge.router.js';
 import {authRouter} from './routers/auth.routers.js';
 import {userRouter} from './routers/user.router.js';
 import {tagRouter} from './routers/tag.router.js';
+import {myPageRouter} from './routers/mypage.routers.js';
 
 dotenv.config();
 
