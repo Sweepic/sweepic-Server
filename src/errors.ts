@@ -156,14 +156,14 @@ export class ChallengeAcceptError extends BaseError {
 
 // 챌린지 완료 관련 에러 (CHL)
 export class ChallengeCompleteError extends BaseError {
-  constructor(details: {challengeId: bigint; reason: string}){
+  constructor(details: {challengeId: bigint; reason: string}) {
     super(400, 'CHL-400', '챌린지 완료 실패', details);
   }
 }
 
 // 챌린지 조회 관련 에러 (CHL)
 export class ChallengeNotFoundError extends BaseError {
-  constructor(details: {userId: bigint}){
+  constructor(details: {userId: bigint}) {
     super(404, 'CHL-404', '해당 유저의 챌린지를 찾을 수 없습니다.', details);
   }
 }
@@ -231,7 +231,6 @@ export class UserUpdateError extends BaseError {
     super(400, 'USR-400', '사용자 정보 업데이트 실패.');
   }
 }
-
 
 // 인증 관련 에러 (AUT-Auth)
 

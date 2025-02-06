@@ -1,5 +1,5 @@
 import {prisma} from '../db.config.js';
-import {OCRRequest, OCRResponse} from '../models/memo-OCR.model.js';
+import {OCRResponse} from '../models/memo-OCR.model.js';
 
 export const folderRepository = {
   /**
@@ -123,7 +123,7 @@ export const folderRepository = {
       throw new Error('Folder not found');
     }
 
-    const updatedText = (folder.imageText || '') + '\n' + additional_text;
+    const updatedText = `${folder.imageText || ''}\n${additional_text}`;
 
     const updatedFolder = await prisma.memoFolder.update({
       where: {id: folder_id},

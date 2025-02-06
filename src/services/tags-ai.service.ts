@@ -1,7 +1,7 @@
 import {ImageAnnotatorClient} from '@google-cloud/vision';
-import path from 'path';
-import {fileURLToPath} from 'url';
 import {LabelDetectionError, LabelInsufficientError} from '../errors.js';
+import {Buffer} from 'buffer';
+import process from 'process';
 
 // 환경변수에서 Base64로 인코딩된 JSON 키 가져오기
 const keyFileBase64 = process.env.GOOGLE_CLOUD_KEY_FILE;
@@ -43,9 +43,8 @@ export const detectLabels = async (
         description: label.description || 'Unknown',
         score: label.score || 0,
       }));
-  } catch (error) {
+  } catch {
     //try에서 예외 상황 발생시 500에러 커스텀해서 전달하도록 함
-    console.error('Error in detectLabels service:', error);
     throw new LabelDetectionError({
       reason: '라벨링 처리 중 오류가 발생했습니다.',
     });
