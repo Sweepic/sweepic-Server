@@ -6,6 +6,7 @@
     "outputDirectory": "./swagger",
     "host": "localhost:3000",
     "specVersion": 3,
+    "validate": true,
     "spec": {
       "servers": [
         {

@@ -31,7 +31,6 @@ export class TagsController extends Controller {
    * date를 입력하지 않으면 해당 월에 찍은 사진들의 태그를 검색합니다.
    *
    * @summary 날짜기반 태그 검색 API
-   * @param userId 유저ID
    * @param year 년
    * @param month 월
    * @param date 일

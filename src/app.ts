@@ -22,7 +22,7 @@ import {BaseError} from './errors.js';
 import {sessionAuthMiddleware} from './auth.config.js';
 import cookieParser from 'cookie-parser';
 import {ValidateError} from 'tsoa';
-import { labelDetectionController } from './controllers/tags-ai.controller.js';
+import {labelDetectionController} from './controllers/tags-ai.controller.js';
 
 dotenv.config();
 
@@ -144,6 +144,7 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
       },
       success: null,
     });
+    return;
   }
 
   console.error('Unexpected error:', err);

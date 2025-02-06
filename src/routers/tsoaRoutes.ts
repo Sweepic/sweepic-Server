@@ -107,10 +107,10 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsImagesController_getImageListFromTag: Record<string, TsoaRoute.ParameterSchema> = {
-                userId: {"in":"path","name":"userId","required":true,"dataType":"string"},
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
                 tag: {"in":"query","name":"tag","required":true,"dataType":"string"},
         };
-        app.get('/images/users/:userId',
+        app.get('/images',
             ...(fetchMiddlewares<RequestHandler>(ImagesController)),
             ...(fetchMiddlewares<RequestHandler>(ImagesController.prototype.getImageListFromTag)),
 
