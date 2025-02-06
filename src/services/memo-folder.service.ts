@@ -94,7 +94,6 @@ export const listMemoTextImage = async (
   return responseFromMemoTextImageList(memoTextImageList);
 };
 
-<<<<<<< HEAD
 export const memoFolderUpdate = async (
   userId: bigint,
   folderId: bigint,
@@ -123,26 +122,6 @@ export const memoFolderUpdate = async (
     throw new FolderUpdateError({folderId});
   }
   return responseFromMemoTextImageList(updatedMemoFolder);
-=======
-
-export const memoFolderUpdate = async (userId: bigint, folderId: bigint, body: BodyToMemoFolder):Promise<MemoTextImageListResponseDto> => {
-    const currentFolder = await getMemoFolder(folderId);
-    if (currentFolder === null) {
-        throw new FolderNotFoundError({folderId});
-    }
-    if (currentFolder?.name === body.folderName && currentFolder?.userId === userId) {
-        throw new FolderNameNotChangeError({folderName: body.folderName});
-    }
-    const updatedFolder = await updateMemoFolder(userId, folderId, body.folderName);
-    if (updatedFolder === null) {
-        throw new FolderDuplicateError({folderName: body.folderName});
-    }
-    const updatedMemoFolder = await getMemoTextImageList(userId, folderId);
-    if (updatedMemoFolder === null) {
-        throw new FolderUpdateError({folderId});
-    }
-    return responseFromMemoTextImageList(updatedMemoFolder);
->>>>>>> ee2c59cc9b28faabbd979a0fd3e058c4b5f750e2
 };
 
 export const memoTextUpdate = async (

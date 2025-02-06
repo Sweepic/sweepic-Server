@@ -28,13 +28,7 @@
     "@google-cloud/vision": "^4.3.2",
     "@prisma/client": "^6.1.0",
     "@quixo3/prisma-session-store": "^3.1.13",
-<<<<<<< HEAD
-    "cookie-parser": "^1.4.7",
-=======
->>>>>>> ee2c59cc9b28faabbd979a0fd3e058c4b5f750e2
     "@tsoa/runtime": "^6.6.0",
-    "@types/cookie-parser": "^1.4.8",
-    "@types/navermaps": "^3.7.8",
     "cookie-parser": "^1.4.7",
     "coordinate-parser": "^1.0.7",
     "cors": "^2.8.5",
@@ -58,11 +52,13 @@
   },
   "devDependencies": {
     "@tsconfig/node20": "^20.1.4",
+    "@types/cookie-parser": "^1.4.8",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/express-session": "^1.18.1",
     "@types/multer": "^1.4.12",
     "@types/multer-s3": "^3.0.3",
+    "@types/navermaps": "^3.7.8",
     "@types/node": "^22.7.5",
     "@types/passport": "^1.0.17",
     "@types/passport-google-oauth20": "^2.0.16",
@@ -70,10 +66,6 @@
     "@types/passport-naver": "^1.0.4",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.7",
-    "@types/navermaps": "^3.7.8",
-    "@types/cookie-parser": "^1.4.8",
-    "@typescript-eslint/eslint-plugin": "^8.19.1",
-    "@typescript-eslint/parser": "^8.19.1",
     "esbuild": "^0.24.2",
     "esbuild-plugin-copy": "^2.1.1",
     "eslint": "^9.17.0",
@@ -81,6 +73,7 @@
     "nodemon": "^3.1.9",
     "tsoa": "^6.6.0",
     "tsx": "^4.19.2",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.23.0"
   }
 }
