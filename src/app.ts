@@ -103,10 +103,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // 로그인 전
-//app.use('/oauth2', authRouter);
+app.use('/oauth2', authRouter);
 
 // 인증 미들웨어
-//app.use(sessionAuthMiddleware);
+app.use(sessionAuthMiddleware);
 
 // 로그인 후
 app.use('/onboarding', userRouter);
