@@ -27,6 +27,7 @@ import {challengeRouter} from './routers/challenge.router.js';
 import {authRouter} from './routers/auth.routers.js';
 import {userRouter} from './routers/user.router.js';
 import {tagRouter} from './routers/tag.router.js';
+import {myPageRouter} from './routers/mypage.routers.js';
 
 dotenv.config();
 
@@ -112,8 +113,10 @@ app.use(sessionAuthMiddleware);
 app.use('/onboarding', userRouter);
 app.use('/memo', memoFolderRouter);
 app.use('/challenge', challengeRouter);
+app.use('/user/mypage',myPageRouter);
 app.use('/tag', tagRouter);
 app.post('/image/ai', labelDetectionController);
+
 RegisterRoutes(app);
 
 app.get('/', (req: Request, res: Response) => {

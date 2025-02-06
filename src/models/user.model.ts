@@ -4,6 +4,6 @@ export interface UserModel {
   name: string;
   goalCount: number;
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt: Date | null;
   status: number;
 }
