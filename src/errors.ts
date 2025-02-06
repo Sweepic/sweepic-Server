@@ -223,6 +223,7 @@ export class ChallengeCompleteError extends BaseError {
 // 챌린지 조회 관련 에러 (CHL)
 export class ChallengeNotFoundError extends BaseError {
   constructor(details: {userId: bigint}) {
+<<<<<<< HEAD
     const errorDetails = {
       userId: details.userId.toString(),
     };
@@ -232,6 +233,9 @@ export class ChallengeNotFoundError extends BaseError {
       '해당 유저의 챌린지를 찾을 수 없습니다.',
       errorDetails,
     );
+=======
+    super(404, 'CHL-404', '해당 유저의 챌린지를 찾을 수 없습니다.', details);
+>>>>>>> ee2c59cc9b28faabbd979a0fd3e058c4b5f750e2
   }
 }
 
