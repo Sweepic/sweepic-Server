@@ -9,11 +9,12 @@ export const userRepository = {
 
         return user;
     },
-    
+
     deleteUser: async (user_id: bigint): Promise<boolean> => {
         try {
-            await prisma.user.delete({
+            await prisma.user.update({
                 where: { id: Number(user_id) },
+                data: { status:0 },
             });
             return true;
         } catch (error) {

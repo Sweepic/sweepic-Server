@@ -7,4 +7,4 @@ myPageRouter.get('/', getUser);
 myPageRouter.patch('/name', updateUserNameController);
 myPageRouter.patch('/goal', updateUserGoalCountController);
 myPageRouter.get('/logout', logOutUser);
-myPageRouter.delete('/', deleteUser);
+myPageRouter.patch('/', deleteUser);
