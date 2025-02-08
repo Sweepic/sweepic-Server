@@ -187,6 +187,13 @@ export class DateChallengeNotFoundError extends BaseError {
   }
 }
 
+// 네이버 API 관련 에러
+export class NaverGeoCodeError extends BaseError {
+  constructor(details: {reason: string}){
+    super(500, 'CHL-500', '네이버 API 호출에 문제가 있습니다.', details);
+  }
+}
+
 // 사진 데이터 관련 에러 (PHO-photo)
 export class PhotoDataNotFoundError extends BaseError {
   constructor(details?: ErrorDetails) {
