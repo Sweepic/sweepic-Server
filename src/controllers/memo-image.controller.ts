@@ -1,8 +1,12 @@
-import { Response, Request, NextFunction } from 'express';
-import { StatusCodes } from 'http-status-codes';
-import { memoFolderDelete, memoImageAdd, memoImagesMove } from '../services/memo-image.service.js';
-import { bodyToMemoImagesToMove } from '../dtos/memo-image.dto.js';
-import { PhotoDataNotFoundError } from '../errors.js';
+import {Response, Request, NextFunction, Express} from 'express';
+import {StatusCodes} from 'http-status-codes';
+import {
+  memoFolderDelete,
+  memoImageAdd,
+  memoImagesMove,
+} from '../services/memo-image.service.js';
+import {bodyToMemoImagesToMove} from '../dtos/memo-image.dto.js';
+import {PhotoDataNotFoundError} from '../errors.js';
 
 export const handlerMemoImageAdd = async (
   req: Request,
@@ -172,22 +176,25 @@ export const handlerMemoImageAdd = async (
         }
     };
     */
-    try{
-        const folderId = BigInt(req.params.folderId);
-        if (!req.file) {
-            throw new PhotoDataNotFoundError({reason: '저장할 사진이 없습니다.'});
-        }
-        const imageUrl = (req.file as Express.MulterS3File).key;
-        const memoImage = await memoImageAdd(folderId, imageUrl);
-        res.status(StatusCodes.OK).success(memoImage);
+  try {
+    const folderId = BigInt(req.params.folderId);
+    if (!req.file) {
+      throw new PhotoDataNotFoundError({reason: '저장할 사진이 없습니다.'});
     }
-    catch(error) {
-        next(error);
-    }
+    const imageUrl = (req.file as Express.MulterS3File).key;
+    const memoImage = await memoImageAdd(folderId, imageUrl);
+    res.status(StatusCodes.OK).success(memoImage);
+  } catch (error) {
+    next(error);
+  }
 };
 
-export const handlerMemoImageMove = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    /*
+export const handlerMemoImageMove = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  /*
     #swagger.tags = ['memo-image-controller']
     #swagger.summary = '사진 이동 API';
     #swagger.description = '특정 폴더의 사진을 이동하는 API입니다.'
@@ -327,19 +334,26 @@ export const handlerMemoImageMove = async (req: Request, res: Response, next: Ne
         }
     };
     */
-    try{
-        const userId = BigInt(req.user!.id);
-        const folderId = BigInt(req.params.folderId);
-        const memoImagesToMove = await memoImagesMove(userId, folderId, bodyToMemoImagesToMove(req.body));
-        res.status(StatusCodes.OK).success(memoImagesToMove);
-    }
-    catch(error) {
-      next(error);
-    }
+  try {
+    const userId = BigInt(req.user!.id);
+    const folderId = BigInt(req.params.folderId);
+    const memoImagesToMove = await memoImagesMove(
+      userId,
+      folderId,
+      bodyToMemoImagesToMove(req.body),
+    );
+    res.status(StatusCodes.OK).success(memoImagesToMove);
+  } catch (error) {
+    next(error);
+  }
 };
 
-export const handlerMemoFolderDelete = async (req: Request, res: Response, next: NextFunction) :Promise<void> => {
-    /*
+export const handlerMemoFolderDelete = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  /*
     #swagger.tags = ['memo-folder-controller']
     #swagger.summary = '폴더 삭제 API';
     #swagger.description = '특정 폴더를 삭제하는 API입니다.'
@@ -400,13 +414,12 @@ export const handlerMemoFolderDelete = async (req: Request, res: Response, next:
         }
     };
     */
-    try{
-        const userId = BigInt(req.user!.id);
-        const folderId = BigInt(req.params.folderId);
-        const memoImagesToDelete = await memoFolderDelete(userId, folderId);
-        res.status(StatusCodes.OK).success(memoImagesToDelete);
-    }
-    catch(error) {
-        next(error);
-    }
+  try {
+    const userId = BigInt(req.user!.id);
+    const folderId = BigInt(req.params.folderId);
+    const memoImagesToDelete = await memoFolderDelete(userId, folderId);
+    res.status(StatusCodes.OK).success(memoImagesToDelete);
+  } catch (error) {
+    next(error);
+  }
 };
