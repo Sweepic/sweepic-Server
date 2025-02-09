@@ -10,8 +10,8 @@ import {
   ResponseFromMemoFolder,
   ResponseFromMemoList,
   BodyToMemoTextToUpdate,
-} from '../models/memo-folder.model.js';
-import {ResponseFromMemoImage} from '../models/memo-image.model.js';
+} from '../models/memo-folder.model.tsoa.js';
+import {ResponseFromMemoImage} from '../models/memo-image.model.tsoa.js';
 
 export const bodyToMemoFolder = ({
   folderName,

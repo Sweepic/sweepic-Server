@@ -9,6 +9,7 @@ export type ErrorDetails =
   | {searchKeyword?: string}
   | FieldErrors
   | {extension?: string}
+  | {folderId?: string; imageId?: string[]}
   | null;
 
 // 기본 에러 클래스
@@ -215,7 +216,11 @@ export class ChallengeAcceptError extends BaseError {
 // 챌린지 완료 관련 에러 (CHL)
 export class ChallengeCompleteError extends BaseError {
   constructor(details: {challengeId: bigint; reason: string}) {
-    super(400, 'CHL-400', '챌린지 완료 실패', details);
+    const errorDetails = {
+      ...details,
+      challengeId: details.challengeId.toString(),
+    };
+    super(400, 'CHL-400', '챌린지 완료 실패', errorDetails);
   }
 }
 
@@ -263,7 +268,7 @@ export class DateChallengeNotFoundError extends BaseError {
 
 // 네이버 API 관련 에러
 export class NaverGeoCodeError extends BaseError {
-  constructor(details: {reason: string}){
+  constructor(details: {reason: string}) {
     super(500, 'CHL-500', '네이버 API 호출에 문제가 있습니다.', details);
   }
 }
