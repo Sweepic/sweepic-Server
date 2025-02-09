@@ -13,7 +13,7 @@ export const restoreImages = async (mediaIds: number[]): Promise<{ mediaId: numb
 
 export const deleteImages = async (mediaIds: number[]): Promise<boolean> => {
    const images = await trustRepository.getImagesByIds(mediaIds);
-   if (images.some(({ status }) => status ===1)){
+   if (!images.length || images.some(({ status }) => status ===1)){
     return false;
    }
    await trustRepository.removeImages(mediaIds);
