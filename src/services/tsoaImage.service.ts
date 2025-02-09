@@ -1,5 +1,6 @@
 import {RequestImageData, RequestTagSearch} from '../dtos/tsoaImage.dto.js';
 import {
+  findImage,
   insertImage,
   selectImagesFromTag,
 } from '../repositories/tsoaImage.repository.js';
@@ -30,11 +31,13 @@ export const findImagesFromTag = async (
 };
 
 export const addImage = async (dto: RequestImageData): Promise<bigint> => {
-  const createdImageId = await insertImage(
-    dto.mediaId,
-    dto.createdAt,
-    dto.userId,
-  );
+  const imageId = await findImage(dto.mediaId, dto.userId).catch(err => {
+    if (err.code === 'P2025') {
+      return insertImage(dto.mediaId, dto.createdAt, dto.userId);
+    } else {
+      throw err;
+    }
+  });
 
-  return createdImageId;
+  return imageId;
 };

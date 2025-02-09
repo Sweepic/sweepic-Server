@@ -31,9 +31,8 @@ export const selectImagesFromTag = async (
   return images;
 };
 
-export const insertImage = async (
+export const findImage = async (
   mediaId: bigint,
-  createdAt: Date,
   userId: bigint,
 ): Promise<bigint> => {
   const image = await prisma.image
@@ -58,20 +57,33 @@ export const insertImage = async (
       return result;
     })
     .catch(err => {
-      if (err.code === 'P2025') {
-        return prisma.image.create({
-          data: {
-            userId: userId,
-            mediaId: mediaId,
-            createdAt: createdAt,
-          },
-          select: {
-            id: true,
-          },
-        });
+      if (err instanceof PhotoValidationError || err.code === 'P2025') {
+        throw err;
       } else {
         throw new DBError({reason: err.message});
       }
+    });
+  return image.id;
+};
+
+export const insertImage = async (
+  mediaId: bigint,
+  createdAt: Date,
+  userId: bigint,
+): Promise<bigint> => {
+  const image = await prisma.image
+    .create({
+      data: {
+        userId: userId,
+        mediaId: mediaId,
+        createdAt: createdAt,
+      },
+      select: {
+        id: true,
+      },
+    })
+    .catch(err => {
+      throw new DBError({reason: err.message});
     });
 
   return image.id;
