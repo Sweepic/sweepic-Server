@@ -194,6 +194,20 @@ export class NaverGeoCodeError extends BaseError {
   }
 }
 
+// 히스토리 관련 에러
+export class NoDataFoundError extends BaseError {
+  constructor(details: {reason: string}){
+    super(404, 'HIS-404', '조회를 요청한 데이터가 없습니다.', details);
+  }
+}
+
+// 어워드 중복 에러
+export class DuplicateAwardError extends BaseError {
+  constructor(details: {reason: string}){
+    super(400, 'HIS-400', '이미 해당 월의 어워드가 존재합니다.', details);
+  }
+}
+
 // 사진 데이터 관련 에러 (PHO-photo)
 export class PhotoDataNotFoundError extends BaseError {
   constructor(details?: ErrorDetails) {

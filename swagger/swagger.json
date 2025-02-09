@@ -141,11 +141,26 @@
 					}
 				]
 			}
+		},
+		"/user/history/most_tagged/get": {
+			"get": {
+				"operationId": "GetMostTagged",
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				},
+				"tags": [
+					"History"
+				],
+				"security": [],
+				"parameters": []
+			}
 		}
 	},
 	"servers": [
 		{
-			"url": "http://3.37.137.212:3000",
+			"url": "http://localhost:3000",
 			"description": "Sweepic server"
 		}
 	]
