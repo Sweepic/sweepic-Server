@@ -306,7 +306,7 @@ export class MemoFolderController extends Controller {
     try {
       const userId = BigInt(req.user!.id);
       const searchKeyword = keyword?.toString();
-      if (searchKeyword === null) {
+      if (searchKeyword === null || searchKeyword.trim().length === 0) {
         throw new DataValidationError({
           reason: '검색어를 1자 이상 입력하세요.',
         });
