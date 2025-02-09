@@ -1,30 +1,18 @@
-import {BodyToImage, ResponseFromImage} from '../models/image.model.js';
-import {responseFromImage} from '../dtos/image.dto.js';
-import {
-  updateStatusImage,
-  getImage,
-  deleteImage,
-} from '../repositories/trust.repositories.js';
+import * as trustRepository from '../repositories/trust.repositories.js';
 
-async function imageStatusUpdate(
-  image: BodyToImage,
-): Promise<ResponseFromImage> {
-  console.log('imageStatusUpdate 실행');
-  console.log('image: ', image);
+export const deactivateImages = async (imageId: number): Promise <void> => {
+    await trustRepository.updateImageStatus([imageId], 0);
+};
 
-  const newImageId = await updateStatusImage(image);
-  const imageData = await getImage(newImageId);
+export const restoreImages = async (imageIds: number[]): Promise<void> => {
+    await trustRepository.updateImageStatus(imageIds, 1);
+};
 
-  return responseFromImage(imageData);
-}
-
-async function imageDelete(userId: bigint): Promise<boolean> {
-  console.log('imageDelete 실행');
-  console.log('userId: ', userId);
-
-  const deleted = await deleteImage(userId);
-
-  return deleted;
-}
-
-export {imageStatusUpdate, imageDelete};
+export const deleteImages = async (imageIds: number[]): Promise<boolean> => {
+   const images = await trustRepository.getImagesByIds(imageIds);
+   if (images.some(({ status }) => status ===1)){
+    return false;
+   }
+   await trustRepository.removeImages(imageIds);
+   return true;
+};
