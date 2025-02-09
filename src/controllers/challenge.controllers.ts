@@ -7,7 +7,10 @@ import {
   serviceUpdateChallenge,
 } from '../services/challenge.services.js';
 import {StatusCodes} from 'http-status-codes';
-import {getIdNumber} from '../utils/challenge.utils.js';
+import {
+  getIdNumber,
+  getReverseGeocode
+} from '../utils/challenge.utils.js';
 import {Challenge} from '@prisma/client';
 import {ResponseFromGetByUserIdReform} from '../models/challenge.entities.js';
 import {DataValidationError} from '../errors.js';
@@ -172,7 +175,7 @@ export const handleAcceptChallenge = async (
                                 completedAt: { type: "string", format: "date-time", example: "2025-01-20T18:19:47.415Z" },
                                 status: { type: "number", example: 1 }
                             }
-                        }   
+                        }
                     }
                 }
             }
@@ -318,12 +321,30 @@ export const handleGetByUserId = async (
         }
     };
     */
-  try {
-    const result: ResponseFromGetByUserIdReform[] = await serviceGetByUserId(
-      BigInt(req.params.userId),
-    );
-    res.status(StatusCodes.OK).success(result);
-  } catch (error) {
+    try{
+        if(req.user === null || req.user === undefined){
+            throw new DataValidationError({reason: 'req.user 정보가 없습니다.'});
+        }
+        const result: ResponseFromGetByUserIdReform[] = await serviceGetByUserId(BigInt(req.user.id));
+        res.status(StatusCodes.OK).success(result);
+    } catch(error){
+        next(error);
+    }
+};
+
+export const naverController = async(
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+  try{
+    if(req.query.hashedLocation as string === null){
+      throw new DataValidationError({reason: 'query문이 비었습니다. hashedLocation에 geohash값을 넣어주세요.'});
+    }
+    const data: string = await getReverseGeocode(req.query.hashedLocation as string);
+    res.status(StatusCodes.OK).success(data);
+  }
+  catch(error){
     next(error);
   }
 };
