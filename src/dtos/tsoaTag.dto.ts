@@ -12,3 +12,13 @@ export class DateToTags {
     this.userId = userId;
   }
 }
+
+export class ImageToTags {
+  userId: bigint;
+  mediaId: number;
+
+  constructor(userId: bigint, mediaId: number) {
+    this.userId = userId;
+    this.mediaId = mediaId;
+  }
+}
