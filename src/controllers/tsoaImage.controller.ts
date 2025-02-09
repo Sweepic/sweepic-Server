@@ -36,7 +36,7 @@ export class ImagesController extends Controller {
     resultType: 'FAIL',
     error: {
       errorCode: 'PHO-404',
-      reason: '<인하대학교교> 태그에 해당하는 사진이 존재하지 않습니다.',
+      reason: '<인하대학교> 태그에 해당하는 사진이 존재하지 않습니다.',
       data: null,
     },
     success: null,
@@ -62,7 +62,7 @@ export class ImagesController extends Controller {
       error: {
         errorCode: 'SER-001',
         reason: '내부 서버 오류입니다.',
-        data: null,
+        data: {reason: '에러원인 메시지'},
       },
       success: null,
     },
@@ -75,7 +75,7 @@ export class ImagesController extends Controller {
       error: {
         errorCode: 'DB-001',
         reason: 'DB 에러 입니다.',
-        data: null,
+        data: {reason: '에러원인 메시지'},
       },
       success: null,
     },
@@ -95,7 +95,7 @@ export class ImagesController extends Controller {
       if (err instanceof BaseError) {
         throw err;
       } else {
-        throw new ServerError();
+        throw new ServerError({reason: err.message});
       }
     });
     return new TsoaSuccessResponse(images);

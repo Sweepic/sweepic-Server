@@ -10,23 +10,27 @@ export const userRepository = {
         return user;
     },
 
-    updateUser: async (user_id: bigint, updatedData: Partial<UserModel>): Promise<UserModel | null> => {
-        const user = await prisma.user.update({
-            where: { id: Number(user_id) },
-            data: { ...updatedData, updatedAt: new Date() },
-        });
-
-        return user;
-    },
-
     deleteUser: async (user_id: bigint): Promise<boolean> => {
         try {
-            await prisma.user.delete({
+            await prisma.user.update({
                 where: { id: Number(user_id) },
+                data: { status:0 },
             });
             return true;
         } catch (error) {
-            return false;
+            throw error;
         }
     },
+};
+
+export const logoutUserRepository = async (sessionId: string): Promise<void> => {
+    try {
+        await prisma.session.delete({
+            where: {
+                sid: sessionId,
+            },
+        });
+    } catch (error) {
+        throw error;
+    }
 };

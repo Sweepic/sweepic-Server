@@ -18,12 +18,20 @@ import type { Request as ExRequest, Response as ExResponse, RequestHandler, Rout
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
 const models: TsoaRoute.Models = {
-    "ITsoaSuccessResponse__tags-string-Array__": {
+    "ResponseTagListWithDate": {
+        "dataType": "refObject",
+        "properties": {
+            "tags": {"dataType":"array","array":{"dataType":"string"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ITsoaSuccessResponse_ResponseTagListWithDate_": {
         "dataType": "refObject",
         "properties": {
             "resultType": {"dataType":"string","required":true},
             "error": {"dataType":"enum","enums":[null],"required":true},
-            "success": {"dataType":"nestedObjectLiteral","nestedProperties":{"tags":{"dataType":"array","array":{"dataType":"string"},"required":true}},"required":true},
+            "success": {"ref":"ResponseTagListWithDate","required":true},
         },
         "additionalProperties": false,
     },
@@ -46,6 +54,24 @@ const models: TsoaRoute.Models = {
             "resultType": {"dataType":"string","required":true},
             "error": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"ref":"ErrorDetails","required":true},"reason":{"dataType":"string","required":true},"errorCode":{"dataType":"string","required":true}},"required":true},
             "success": {"dataType":"enum","enums":[null],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ResponseTagListFromImage": {
+        "dataType": "refObject",
+        "properties": {
+            "tags": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"tagCategory":{"dataType":"nestedObjectLiteral","nestedProperties":{"tagType":{"dataType":"string","required":true},"id":{"dataType":"string","required":true}},"required":true},"content":{"dataType":"string","required":true}}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ITsoaSuccessResponse_ResponseTagListFromImage_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"string","required":true},
+            "error": {"dataType":"enum","enums":[null],"required":true},
+            "success": {"ref":"ResponseTagListFromImage","required":true},
         },
         "additionalProperties": false,
     },
@@ -125,6 +151,16 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ITsoaSuccessResponse_ResponseFromAward-Array_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"string","required":true},
+            "error": {"dataType":"enum","enums":[null],"required":true},
+            "success": {"dataType":"array","array":{"dataType":"refObject","ref":"ResponseFromAward"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
 const templateService = new ExpressTemplateService(models, {"noImplicitAdditionalProperties":"throw-on-extras","bodyCoercion":true});
 
@@ -164,6 +200,37 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getTagListWithDate',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsTagsController_getTagListFromImage: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                mediaId: {"in":"path","name":"mediaId","required":true,"dataType":"double"},
+        };
+        app.get('/tags/images/:mediaId',
+            ...(fetchMiddlewares<RequestHandler>(TagsController)),
+            ...(fetchMiddlewares<RequestHandler>(TagsController.prototype.getTagListFromImage)),
+
+            async function TagsController_getTagListFromImage(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsTagsController_getTagListFromImage, request, response });
+
+                const controller = new TagsController();
+
+              await templateService.apiHandler({
+                methodName: 'getTagListFromImage',
                 controller,
                 response,
                 next,
