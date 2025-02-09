@@ -1,25 +1,25 @@
 import {prisma} from '../db.config.js';
 
-export const updateImageStatus = async (imageIds: number[], status: number) => {
-    return prisma.image.updateMany({
-        where: { id: { in: imageIds } },
+export const updateImageStatus = async (mediaIds: number[], status: number): Promise<void> => {
+    await prisma.image.updateMany({
+        where: { mediaId: { in: mediaIds } },
         data: { status }
     });
 };
 
-export const removeImages = async (imageIds: number[]) => {
-    return prisma.image.deleteMany({
-        where: { id: { in: imageIds }, status: 0 }
+export const removeImages = async (mediaIds: number[]): Promise<void> => {
+    await prisma.image.deleteMany({
+        where: { mediaId: { in: mediaIds }, status: 0 }
     });
 };
 
-export const getImagesByIds = async (imageIds: number[]): Promise<{ id: number; status: number }[]> => {
+export const getImagesByIds = async (mediaIds: number[]): Promise<{ mediaId: number; status: number }[]> => {
   const images = await prisma.image.findMany({
-      where: { id: { in: imageIds } },
-      select: { id: true, status: true }
+      where: { mediaId: { in: mediaIds } },
+      select: { mediaId: true, status: true }
   });
-  return images.map(({ id, status }) => ({
-    id: Number(id), // 변환 적용
+  return images.map(({ mediaId, status }) => ({
+    mediaId: Number(mediaId), // 변환 적용
     status
   }));
 };
