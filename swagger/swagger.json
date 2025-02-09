@@ -7,7 +7,22 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"ITsoaSuccessResponse__tags-string-Array__": {
+			"ResponseTagListWithDate": {
+				"properties": {
+					"tags": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"tags"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ITsoaSuccessResponse_ResponseTagListWithDate_": {
 				"properties": {
 					"resultType": {
 						"type": "string"
@@ -20,26 +35,7 @@
 						"nullable": true
 					},
 					"success": {
-						"properties": {
-							"data": {
-								"properties": {
-									"tags": {
-										"items": {
-											"type": "string"
-										},
-										"type": "array"
-									}
-								},
-								"required": [
-									"tags"
-								],
-								"type": "object"
-							}
-						},
-						"required": [
-							"data"
-						],
-						"type": "object"
+						"$ref": "#/components/schemas/ResponseTagListWithDate"
 					}
 				},
 				"required": [
@@ -187,6 +183,69 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ResponseTagListFromImage": {
+				"properties": {
+					"tags": {
+						"items": {
+							"properties": {
+								"tagCategory": {
+									"properties": {
+										"tagType": {
+											"type": "string"
+										},
+										"id": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"tagType",
+										"id"
+									],
+									"type": "object"
+								},
+								"content": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"tagCategory",
+								"content"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"tags"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ITsoaSuccessResponse_ResponseTagListFromImage_": {
+				"properties": {
+					"resultType": {
+						"type": "string"
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"success": {
+						"$ref": "#/components/schemas/ResponseTagListFromImage"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"success"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ITsoaSuccessResponse__id-string--mediaId-string_-Array_": {
 				"properties": {
 					"resultType": {
@@ -200,30 +259,22 @@
 						"nullable": true
 					},
 					"success": {
-						"properties": {
-							"data": {
-								"items": {
-									"properties": {
-										"mediaId": {
-											"type": "string"
-										},
-										"id": {
-											"type": "string"
-										}
-									},
-									"required": [
-										"mediaId",
-										"id"
-									],
-									"type": "object"
+						"items": {
+							"properties": {
+								"mediaId": {
+									"type": "string"
 								},
-								"type": "array"
-							}
+								"id": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"mediaId",
+								"id"
+							],
+							"type": "object"
 						},
-						"required": [
-							"data"
-						],
-						"type": "object"
+						"type": "array"
 					}
 				},
 				"required": [
@@ -262,7 +313,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ITsoaSuccessResponse__tags-string-Array__"
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_ResponseTagListWithDate_"
 								}
 							}
 						}
@@ -332,7 +383,9 @@
 											"error": {
 												"errorCode": "SER-001",
 												"reason": "내부 서버 오류입니다.",
-												"data": null
+												"data": {
+													"reason": "에러원인 메시지"
+												}
 											},
 											"success": null
 										}
@@ -343,7 +396,9 @@
 											"error": {
 												"errorCode": "DB-001",
 												"reason": "DB 에러 입니다.",
-												"data": null
+												"data": {
+													"reason": "에러원인 메시지"
+												}
 											},
 											"success": null
 										}
@@ -385,6 +440,130 @@
 						"in": "query",
 						"name": "date",
 						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/tags/images/{mediaId}": {
+			"get": {
+				"operationId": "GetTagListFromImage",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_ResponseTagListFromImage_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "VAL-001",
+												"reason": "Validation Error",
+												"data": {
+													"mediaId": {
+														"message": "invalid float",
+														"value": "a"
+													}
+												}
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "TAG-001",
+												"reason": "태그가 없습니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SER-001",
+												"reason": "내부 서버 오류입니다.",
+												"data": {
+													"reason": "에러원인 메시지"
+												}
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "DB-001",
+												"reason": "DB 에러 입니다.",
+												"data": {
+													"reason": "에러원인 메시지"
+												}
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "사용자가 mediaId를 제공하면 해당 이미지와 연관된 태그들의 정보를 제공합니다.",
+				"summary": "이미지의 태그 조회",
+				"tags": [
+					"Tag"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "이미지의 고유 mediaId",
+						"in": "path",
+						"name": "mediaId",
+						"required": true,
 						"schema": {
 							"format": "double",
 							"type": "number"
@@ -447,7 +626,7 @@
 											"resultType": "FAIL",
 											"error": {
 												"errorCode": "PHO-404",
-												"reason": "<인하대학교교> 태그에 해당하는 사진이 존재하지 않습니다.",
+												"reason": "<인하대학교> 태그에 해당하는 사진이 존재하지 않습니다.",
 												"data": null
 											},
 											"success": null
@@ -471,7 +650,9 @@
 											"error": {
 												"errorCode": "SER-001",
 												"reason": "내부 서버 오류입니다.",
-												"data": null
+												"data": {
+													"reason": "에러원인 메시지"
+												}
 											},
 											"success": null
 										}
@@ -482,7 +663,9 @@
 											"error": {
 												"errorCode": "DB-001",
 												"reason": "DB 에러 입니다.",
-												"data": null
+												"data": {
+													"reason": "에러원인 메시지"
+												}
 											},
 											"success": null
 										}
