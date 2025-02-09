@@ -5,7 +5,7 @@ import { handleUpdateChallenge, handleRemoveChallenge, handleAcceptChallenge, ha
 import { handleGetWeeklyChallenge, handleNewWeeklyChallenge } from '../controllers/challenge.weekly.controllers.js';
 
 challengeRouter.patch('/update', handleUpdateChallenge);
-challengeRouter.delete('/delete', handleRemoveChallenge);
+challengeRouter.delete('/delete/:id', handleRemoveChallenge);
 challengeRouter.patch('/accept/:id', handleAcceptChallenge);
 challengeRouter.patch('/complete/:id', handleCompleteChallenge);
 challengeRouter.get('/get', handleGetByUserId);

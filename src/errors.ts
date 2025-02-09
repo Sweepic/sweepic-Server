@@ -221,7 +221,7 @@ export class ChallengeCompleteError extends BaseError {
 
 // 챌린지 조회 관련 에러 (CHL)
 export class ChallengeNotFoundError extends BaseError {
-  constructor(details: {userId: bigint}) {
+  constructor(details: {userId: bigint; reason?: string}) {
     const errorDetails = {
       userId: details.userId.toString(),
     };
