@@ -19,6 +19,7 @@ import {
   handlerMemoTextUpdate,
 } from '../controllers/memo-folder.controller.js';
 import {imageUploader} from '../s3/image.uploader.js';
+import upload from '../ai/ai-upload.js';
 
 memoFolderRouter.post('/folders/not-tsoa', handlerMemoFolderAdd);
 memoFolderRouter.get('/folders/:folderId/not-tsoa', handlerMemoTextImageList);
@@ -54,5 +55,14 @@ memoFolderRouter.post(
 memoFolderRouter.delete('/folders/:folderId/not-tsoa', handlerMemoFolderDelete);
 
 // OCR 요청 처리 추가
-memoFolderRouter.post('/text-format/folders', createFolderOCR); // 새 폴더의 OCR 처리
-memoFolderRouter.patch('/text-format/folders/:folderId', updateFolderOCR); // 기존 폴더의 OCR 처리
+memoFolderRouter.post(
+  '/text-format/folders',
+  upload.single('base64_image'), // OCR을 위한 파일 업로드
+  createFolderOCR,
+); // 새 폴더의 OCR 처리
+
+memoFolderRouter.patch(
+  '/text-format/folders/:folderId',
+  upload.single('base64_image'), // OCR을 위한 파일 업로드
+  updateFolderOCR,
+); // 기존 폴더의 OCR 처리
