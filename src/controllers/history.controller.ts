@@ -1,51 +1,335 @@
-import { Controller, Get, Route, SuccessResponse, Tags, Request, Post} from 'tsoa';
+import { 
+    Controller, 
+    Get, 
+    Route, 
+    SuccessResponse, 
+    Tags, 
+    Request, 
+    Post, 
+    Patch, 
+    Query,
+    Response
+} from 'tsoa';
 import { Request as ExpressRequest } from 'express';
-import { DataValidationError } from 'src/errors.js';
-import { serviceGetMostTagged, serviceNewAward } from 'src/services/history.services.js';
-import { ResponseFromMostTagToClient } from 'src/models/history.model.js';
-import {Response} from '../models/tsoaResponse.js';
+import { BaseError, DataValidationError, ServerError } from '../errors.js';
+import { serviceGetAward, serviceGetMostTagged, serviceNewAward, serviceUpdateAward } from '../services/history.services.js';
+import { ResponseFromMostTagToClient, ResponseFromAward, ResponseFromUpdateAward } from '../models/history.model.js';
+import { ITsoaErrorResponse, ITsoaSuccessResponse, TsoaSuccessResponse } from '../models/tsoaResponse.js';
+import { bodyToUpdateAward } from '../dtos/history.dto.js';
+import { StatusCodes } from 'http-status-codes';
 
+//most tag controller
 @Route('user')
 export class MostTaggedController extends Controller{
     @Get('/history/most_tagged/get')
     @Tags('History')
     @SuccessResponse('200', 'OK')
+    @Response<ITsoaErrorResponse>(
+        StatusCodes.NOT_FOUND, 
+        'Not Found', 
+        {
+            resultType: 'FAIL',
+            error: {
+                errorCode: 'HIS-404',
+                reason: '조회를 요청한 데이터가 없습니다.',
+                data: null,
+            },
+            success: null,
+        },
+    )
+    @Response<ITsoaErrorResponse>(
+        StatusCodes.BAD_REQUEST, 
+        'Not Found', 
+        {
+            resultType: 'FAIL',
+            error: {
+                errorCode: 'SRH-400',
+                reason: '유저 정보가 없습니다. 다시 로그인 해주세요.',
+                data: null,
+            },
+            success: null,
+        },
+    )
+    @Response<ITsoaErrorResponse>(
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        'Internal Server Error',
+        {
+          resultType: 'FAIL',
+          error: {
+            errorCode: 'SER-001',
+            reason: '내부 서버 오류입니다.',
+            data: null,
+          },
+          success: null,
+        },
+      )
     public async getMostTagged(
         @Request() req: ExpressRequest,
-    ): Promise<Response> {
+    ): Promise<ITsoaSuccessResponse<ResponseFromMostTagToClient[]>> {
         if(!req.user){
            throw new DataValidationError({reason: '유저 정보가 없습니다. 다시 로그인 해주세요.'});
         }
         const userId: bigint = req.user.id;
 
-        const result: ResponseFromMostTagToClient[] = await serviceGetMostTagged(userId);
-        
-        //console.log(result);
+        const result: ResponseFromMostTagToClient[] = await serviceGetMostTagged(userId)
+        .then(r => {
+            return r;
+        })
+        .catch(err => {
+            if (!(err instanceof BaseError)) {
+                throw new ServerError();
+            } else {
+                throw err;
+            }
+        });
 
-        return new Response(result);
+        return new TsoaSuccessResponse(result);
     }
 }
 
+//award controllers
 @Route('user')
 export class AwardController extends Controller{
     @Post('/history/award/create')
     @Tags('Award')
     @SuccessResponse('200', 'OK')
+    @Response<ITsoaErrorResponse>(
+        StatusCodes.NOT_FOUND, 
+        'Not Found', 
+        {
+            resultType: 'FAIL',
+            error: {
+                errorCode: 'HIS-404',
+                reason: '조회를 요청한 데이터가 없습니다.',
+                data: null,
+            },
+            success: null,
+        },
+    )
+    @Response<ITsoaErrorResponse>(
+        StatusCodes.BAD_REQUEST, 
+        'Not Found', 
+        {
+            resultType: 'FAIL',
+            error: {
+                errorCode: 'SRH-400',
+                reason: '유저 정보가 없습니다. 다시 로그인 해주세요.',
+                data: null,
+            },
+            success: null,
+        },
+    )
+    @Response<ITsoaErrorResponse>(
+        StatusCodes.BAD_REQUEST, 
+        'Not Found', 
+        {
+            resultType: 'FAIL',
+            error: {
+                errorCode: 'HIS-400',
+                reason: '이미 해당 월의 어워드가 존재합니다.',
+                data: null,
+            },
+            success: null,
+        },
+    )
+    @Response<ITsoaErrorResponse>(
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        'Internal Server Error',
+        {
+          resultType: 'FAIL',
+          error: {
+            errorCode: 'SER-001',
+            reason: '내부 서버 오류입니다.',
+            data: null,
+          },
+          success: null,
+        },
+      )
     public async createNewAward(
         @Request() req: ExpressRequest
-    ): Promise<Response> {
-        try{
-            if(!req.user){
-                throw new DataValidationError({reason: '유저 정보가 없습니다.'});
+    ): Promise<ITsoaSuccessResponse<ResponseFromAward>> {
+        if(!req.user){
+            throw new DataValidationError({reason: '유저 정보가 없습니다. 다시 로그인 해주세요.'});
+        }
+        const userId: bigint = req.user.id;
+
+        const result: ResponseFromAward = await serviceNewAward(userId)
+        .then(r => {
+            return r;
+        })
+        .catch(err => {
+            if (!(err instanceof BaseError)) {
+                throw new ServerError();
+            } else {
+                throw err;
             }
+        });
 
-            serviceNewAward(req.user.id);
-        }
-        catch(error){
-            //console.error('Controller error');
-            throw error;
-        }
-
-        return new Response('success');
+        return new TsoaSuccessResponse(result);
     }
-}
+
+    @Patch('/history/award/modify')
+    @Tags('Award')
+    @SuccessResponse('200', 'OK')
+    @Response<ITsoaErrorResponse>(
+        StatusCodes.NOT_FOUND, 
+        'Not Found', 
+        {
+            resultType: 'FAIL',
+            error: {
+                errorCode: 'HIS-404',
+                reason: '조회를 요청한 데이터가 없습니다.',
+                data: null,
+            },
+            success: null,
+        },
+    )
+    @Response<ITsoaErrorResponse>(
+        StatusCodes.BAD_REQUEST, 
+        'Not Found', 
+        {
+            resultType: 'FAIL',
+            error: {
+                errorCode: 'SRH-400',
+                reason: '유저 정보가 없습니다. 다시 로그인 해주세요.',
+                data: null,
+            },
+            success: null,
+        },
+    )
+    @Response<ITsoaErrorResponse>(
+        StatusCodes.BAD_REQUEST, 
+        'Not Found', 
+        {
+            resultType: 'FAIL',
+            error: {
+                errorCode: 'HIS-400',
+                reason: '어워드 사진 형식이 잘못되었습니다.',
+                data: null,
+            },
+            success: null,
+        },
+    )
+    @Response<ITsoaErrorResponse>(
+        StatusCodes.BAD_REQUEST, 
+        'Not Found', 
+        {
+            resultType: 'FAIL',
+            error: {
+                errorCode: 'HIS-400',
+                reason: '어워드 업데이트를 실패했습니다.',
+                data: null,
+            },
+            success: null,
+        },
+    )
+    @Response<ITsoaErrorResponse>(
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        'Internal Server Error',
+        {
+          resultType: 'FAIL',
+          error: {
+            errorCode: 'SER-001',
+            reason: '내부 서버 오류입니다.',
+            data: null,
+          },
+          success: null,
+        },
+      )
+    public async modifyAward(
+        @Request() req: ExpressRequest,
+        @Query() awardId: string,
+    ): Promise<ITsoaSuccessResponse<ResponseFromUpdateAward[]>> {
+        if(!req.user){
+            throw new DataValidationError({reason: '유저 정보가 없습니다. 다시 로그인 해주세요.'});
+        }
+
+        if(!req.body || !awardId){
+            throw new DataValidationError({reason: '어워드 업데이트 정보가 없습니다.'});
+        }
+
+        const userId: bigint = req.user.id;
+
+        const input: bigint[] = bodyToUpdateAward(req.body as string[]);
+
+        const result: ResponseFromUpdateAward[] = await serviceUpdateAward(userId, BigInt(awardId), input)
+        .then(r => {
+            return r;
+        })
+        .catch(err => {
+            if (!(err instanceof BaseError)) {
+                throw new ServerError();
+            } else {
+                throw err;
+            }
+        });
+
+        return new TsoaSuccessResponse(result);
+    }
+
+    @Get('/history/award/get')
+    @Tags('/award')
+    @SuccessResponse('200', 'OK')
+    @Response<ITsoaErrorResponse>(
+        StatusCodes.NOT_FOUND, 
+        'Not Found', 
+        {
+            resultType: 'FAIL',
+            error: {
+                errorCode: 'HIS-404',
+                reason: '조회를 요청한 데이터가 없습니다.',
+                data: null,
+            },
+            success: null,
+        },
+    )
+    @Response<ITsoaErrorResponse>(
+        StatusCodes.BAD_REQUEST, 
+        'Not Found', 
+        {
+            resultType: 'FAIL',
+            error: {
+                errorCode: 'SRH-400',
+                reason: '유저 정보가 없습니다. 다시 로그인 해주세요.',
+                data: null,
+            },
+            success: null,
+        },
+    )
+    @Response<ITsoaErrorResponse>(
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        'Internal Server Error',
+        {
+          resultType: 'FAIL',
+          error: {
+            errorCode: 'SER-001',
+            reason: '내부 서버 오류입니다.',
+            data: null,
+          },
+          success: null,
+        },
+      )
+    public async getAward(
+        @Request() req: ExpressRequest
+    ): Promise<ITsoaSuccessResponse<ResponseFromAward[]>> {
+        if(!req.user){
+            throw new DataValidationError({reason: '유저 정보가 없습니다. 다시 로그인 해주세요.'});
+        }
+
+        const userId: bigint = req.user.id;
+
+        const result: ResponseFromAward[] = await serviceGetAward(userId)
+        .then(r => {
+            return r;
+        })
+        .catch(err => {
+            if (!(err instanceof BaseError)) {
+                throw new ServerError();
+            } else {
+                throw err;
+            }
+        });
+
+        return new TsoaSuccessResponse(result);
+    }
+};

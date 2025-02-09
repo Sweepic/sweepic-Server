@@ -18,7 +18,7 @@ import {BaseError} from './errors.js';
 import {sessionAuthMiddleware} from './auth.config.js';
 import cookieParser from 'cookie-parser';
 import {ValidateError} from 'tsoa';
-import { labelDetectionController } from './controllers/tags-ai.controller.js';
+import {labelDetectionController} from './controllers/tags-ai.controller.js';
 
 // routers
 import {memoFolderRouter} from './routers/memo.router.js';
@@ -152,6 +152,7 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
       },
       success: null,
     });
+    return;
   }
   res.status(500).json({
     resultType: 'FAIL',

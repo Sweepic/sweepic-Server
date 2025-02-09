@@ -14,11 +14,19 @@ export interface ResponseFromMostTagToClient{
     content: string;
 }
 
-export interface ResponseFromNewAward{
+export interface ResponseFromAward{
     id: string,
     awardMonth: Date,
     createdAt: Date,
     updatedAt: Date | null,
     status: number,
     userId: string
+}
+
+export interface ResponseFromUpdateAward{
+    imageId: string;
+    createdAt: Date;
+    updatedAt: Date | null;
+    status: number;
+    awardId: string;
 }

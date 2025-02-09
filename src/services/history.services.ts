@@ -1,8 +1,8 @@
-import { Award } from '@prisma/client';
-import { responseFromMostTag, responseFromNewAward } from 'src/dtos/history.dto.js';
-import { DuplicateAwardError, NoDataFoundError } from 'src/errors.js';
-import { ResponseFromMostTag, ResponseFromMostTagToClient, ResponseFromNewAward } from 'src/models/history.model.js';
-import { getMostTagged, newUserAward } from 'src/repositories/history.repositories.js';
+import { Award, AwardImage } from '@prisma/client';
+import { responseFromGetAward, responseFromMostTag, responseFromNewAward, responseFromUpdateAward } from '../dtos/history.dto.js';
+import { AwardUpdateError, DuplicateAwardError, NoDataFoundError } from '../errors.js';
+import { ResponseFromMostTag, ResponseFromMostTagToClient, ResponseFromAward } from '../models/history.model.js';
+import { getMostTagged, getUserAwards, newUserAward, updateAwardImage } from '../repositories/history.repositories.js';
 
 
 export const serviceGetMostTagged = async (userId: bigint): Promise<ResponseFromMostTagToClient[]> => {
@@ -33,7 +33,7 @@ export const serviceGetMostTagged = async (userId: bigint): Promise<ResponseFrom
     return responseFromMostTag(sortedResult);
 };
 
-export const serviceNewAward = async (id: bigint): Promise<ResponseFromNewAward> => {
+export const serviceNewAward = async (id: bigint): Promise<ResponseFromAward> => {
     const newAward: Award | null = await newUserAward(id);
 
     if(newAward === null){
@@ -41,4 +41,24 @@ export const serviceNewAward = async (id: bigint): Promise<ResponseFromNewAward>
     }
 
     return responseFromNewAward(newAward);
+};
+
+export const serviceUpdateAward = async (userId: bigint, awardId: bigint, mediaId: bigint[]) => {
+    const updatedAwardImages: AwardImage[] | null = await updateAwardImage(userId, awardId, mediaId);
+
+    if(updatedAwardImages === null || updatedAwardImages.length === 0){
+        throw new AwardUpdateError({reason: `${mediaId} 사진들을 업데이트할 수 없습니다.`});
+    }
+
+    return responseFromUpdateAward(updatedAwardImages);
+};
+
+export const serviceGetAward = async (userId: bigint): Promise<ResponseFromAward[]> => {
+    const result: Award[] | null = await getUserAwards(userId);
+
+    if(result === null || result.length === 0){
+        throw new NoDataFoundError({reason: `${userId} 유저의 어워드가 존재하지 않습니다.`});
+    }
+
+    return responseFromGetAward(result);
 };

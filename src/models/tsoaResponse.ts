@@ -1,9 +1,27 @@
-export class Response {
+import {ErrorDetails} from '../errors.js';
+
+export interface ITsoaErrorResponse {
+  resultType: string;
+  error: {
+    errorCode: string;
+    reason: string;
+    data: ErrorDetails;
+  };
+  success: null;
+}
+
+export interface ITsoaSuccessResponse<T> {
+  resultType: string;
+  error: null;
+  success: T;
+}
+
+export class TsoaSuccessResponse<T> {
   resultType: string = 'SUCCESS';
   error = null;
-  success: {data: any};
+  success: T;
 
-  constructor(data: any) {
-    this.success = {data};
+  constructor(data: T) {
+    this.success = data;
   }
 }

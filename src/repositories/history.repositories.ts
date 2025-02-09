@@ -1,7 +1,7 @@
-import { ResponseFromMostTag } from 'src/models/history.model.js';
+import { ResponseFromMostTag } from '../models/history.model.js';
 import {prisma} from '../db.config.js';
-import { DuplicateAwardError, NoDataFoundError } from 'src/errors.js';
-import { Award } from '@prisma/client';
+import { AwardImageError, DuplicateAwardError, NoDataFoundError } from '../errors.js';
+import { Award, AwardImage } from '@prisma/client';
 
 export const getMostTagged = async (userId: bigint): Promise<ResponseFromMostTag[]> => {
     const currentTime: Date = new Date();
@@ -69,13 +69,11 @@ export const getMostTagged = async (userId: bigint): Promise<ResponseFromMostTag
     return countTagCategory;
 };
 
-export const newUserAward = async(id: bigint): Promise<Award | null> => {
+export const newUserAward = async (id: bigint): Promise<Award | null> => {
     const currentDate: Date = new Date();
-    //console.log(currentDate);
     currentDate.setMonth(currentDate.getMonth() + 1);
     currentDate.setDate(1);
     currentDate.setHours(0, 0, 0, 0);
-    //console.log(currentDate);
 
     const isAwardExist = await prisma.award.findFirst({
         where: {
@@ -96,4 +94,57 @@ export const newUserAward = async(id: bigint): Promise<Award | null> => {
     });
 
     return newAward;
+};
+
+export const updateAwardImage = async (userId: bigint, awardId: bigint, imageId: bigint[]): Promise<AwardImage[]> => {
+    if(imageId.length !== 5){
+        throw new AwardImageError({reason: `${imageId.length}는 올바른 이미지 개수가 아닙니다. 
+            총 5개의 이미지가 필요합니다.`});
+    }
+    
+    const verifyImages = await prisma.image.findMany({
+        where: {
+            userId: userId,
+            mediaId: {
+                in: imageId
+            }
+        }
+    });
+
+    if(verifyImages === null || verifyImages.length === 0){
+        throw new NoDataFoundError({reason: `${userId} 유저의 ${imageId} 이미지를 찾을 수 없습니다.`});
+    }
+
+    await prisma.awardImage.deleteMany({
+        where: {
+            awardId: awardId
+        }
+    });
+
+    for(let i = 0; i < verifyImages.length; i++){
+        await prisma.awardImage.create({
+            data: {
+                imageId: verifyImages[i].id,
+                awardId: awardId
+            }
+        });
+    }
+
+    const result = await prisma.awardImage.findMany({
+        where: {
+            awardId: awardId
+        }
+    });
+
+    return result;
+};
+
+export const getUserAwards = async (userId: bigint): Promise<Award[]> => {
+    const userAwards: Award[] = await prisma.award.findMany({
+        where: {
+            userId: userId
+        }
+    });
+
+    return userAwards;
 };
