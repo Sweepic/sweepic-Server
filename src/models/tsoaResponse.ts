@@ -13,15 +13,15 @@ export interface ITsoaErrorResponse {
 export interface ITsoaSuccessResponse<T> {
   resultType: string;
   error: null;
-  success: {data: T};
+  success: T;
 }
 
 export class TsoaSuccessResponse<T> {
   resultType: string = 'SUCCESS';
   error = null;
-  success: {data: T};
+  success: T;
 
   constructor(data: T) {
-    this.success = {data};
+    this.success = data;
   }
 }
