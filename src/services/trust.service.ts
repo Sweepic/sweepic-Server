@@ -1,18 +1,21 @@
 import * as trustRepository from '../repositories/trust.repositories.js';
 
-export const deactivateImages = async (imageId: number): Promise <void> => {
-    await trustRepository.updateImageStatus([imageId], 0);
+export const deactivateImages = async (mediaId: number): Promise <{mediaId: number; status: number}> => {
+    await trustRepository.updateImageStatus([mediaId], 0);
+    const [updatedImage] = await trustRepository.getImagesByIds([mediaId]);
+    return updatedImage;
 };
 
-export const restoreImages = async (imageIds: number[]): Promise<void> => {
-    await trustRepository.updateImageStatus(imageIds, 1);
+export const restoreImages = async (mediaIds: number[]): Promise<{ mediaId: number; status: number }[]> => {
+    await trustRepository.updateImageStatus(mediaIds, 1);
+    return trustRepository.getImagesByIds(mediaIds);
 };
 
-export const deleteImages = async (imageIds: number[]): Promise<boolean> => {
-   const images = await trustRepository.getImagesByIds(imageIds);
+export const deleteImages = async (mediaIds: number[]): Promise<boolean> => {
+   const images = await trustRepository.getImagesByIds(mediaIds);
    if (images.some(({ status }) => status ===1)){
     return false;
    }
-   await trustRepository.removeImages(imageIds);
+   await trustRepository.removeImages(mediaIds);
    return true;
 };
