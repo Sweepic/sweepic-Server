@@ -246,19 +246,9 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"ITsoaSuccessResponse__id-string--mediaId-string_-Array_": {
+			"ResponseGetImageListFromTag": {
 				"properties": {
-					"resultType": {
-						"type": "string"
-					},
-					"error": {
-						"type": "number",
-						"enum": [
-							null
-						],
-						"nullable": true
-					},
-					"success": {
+					"images": {
 						"items": {
 							"properties": {
 								"mediaId": {
@@ -275,6 +265,64 @@
 							"type": "object"
 						},
 						"type": "array"
+					}
+				},
+				"required": [
+					"images"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ITsoaSuccessResponse_ResponseGetImageListFromTag_": {
+				"properties": {
+					"resultType": {
+						"type": "string"
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"success": {
+						"$ref": "#/components/schemas/ResponseGetImageListFromTag"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"success"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ResponseCreateImage": {
+				"properties": {
+					"imageId": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"imageId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ITsoaSuccessResponse_ResponseCreateImage_": {
+				"properties": {
+					"resultType": {
+						"type": "string"
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"success": {
+						"$ref": "#/components/schemas/ResponseCreateImage"
 					}
 				},
 				"required": [
@@ -581,7 +629,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ITsoaSuccessResponse__id-string--mediaId-string_-Array_"
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_ResponseGetImageListFromTag_"
 								}
 							}
 						}
@@ -692,6 +740,132 @@
 						}
 					}
 				]
+			},
+			"post": {
+				"operationId": "CreateImage",
+				"responses": {
+					"201": {
+						"description": "CREATED",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_ResponseCreateImage_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "VAL-001",
+												"reason": "Validation Error",
+												"data": {
+													"mediaId": {
+														"message": "invalid float",
+														"value": "a"
+													}
+												}
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "PHO-400",
+												"reason": "사진 데이터가 유효하지 않습니다.",
+												"data": {
+													"reason": "이미 휴지통에 있는 사진입니다"
+												}
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SER-001",
+												"reason": "내부 서버 오류입니다.",
+												"data": {
+													"reason": "에러원인 메시지"
+												}
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "DB-001",
+												"reason": "DB 에러 입니다.",
+												"data": {
+													"reason": "에러원인 메시지"
+												}
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "mediaId에 해당하는 사진데이터가 존재하면 해당 사진데이터의 imageId를 보여줍니다.(조회)\r\n\r\nmediaId에 해당하는 사진데이터가 존재하지 않는다면 사진데이터를 생성하고 생성한 사진데이터의 imageId를 보여줍니다.(생성)",
+				"summary": "이미지 데이터 생성 및 조회",
+				"tags": [
+					"Image"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "미디어ID, 사진 생성일",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"timestamp": {
+										"type": "string",
+										"format": "date-time"
+									},
+									"mediaId": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"timestamp",
+									"mediaId"
+								],
+								"type": "object",
+								"description": "미디어ID, 사진 생성일"
+							}
+						}
+					}
+				}
 			}
 		}
 	},

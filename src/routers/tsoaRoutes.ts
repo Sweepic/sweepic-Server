@@ -72,12 +72,38 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ITsoaSuccessResponse__id-string--mediaId-string_-Array_": {
+    "ResponseGetImageListFromTag": {
+        "dataType": "refObject",
+        "properties": {
+            "images": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"mediaId":{"dataType":"string","required":true},"id":{"dataType":"string","required":true}}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ITsoaSuccessResponse_ResponseGetImageListFromTag_": {
         "dataType": "refObject",
         "properties": {
             "resultType": {"dataType":"string","required":true},
             "error": {"dataType":"enum","enums":[null],"required":true},
-            "success": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"mediaId":{"dataType":"string","required":true},"id":{"dataType":"string","required":true}}},"required":true},
+            "success": {"ref":"ResponseGetImageListFromTag","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ResponseCreateImage": {
+        "dataType": "refObject",
+        "properties": {
+            "imageId": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ITsoaSuccessResponse_ResponseCreateImage_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"string","required":true},
+            "error": {"dataType":"enum","enums":[null],"required":true},
+            "success": {"ref":"ResponseCreateImage","required":true},
         },
         "additionalProperties": false,
     },
@@ -188,6 +214,37 @@ export function RegisterRoutes(app: Router) {
                 next,
                 validatedArgs,
                 successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsImagesController_createImage: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"timestamp":{"dataType":"datetime","required":true},"mediaId":{"dataType":"string","required":true}}},
+        };
+        app.post('/images',
+            ...(fetchMiddlewares<RequestHandler>(ImagesController)),
+            ...(fetchMiddlewares<RequestHandler>(ImagesController.prototype.createImage)),
+
+            async function ImagesController_createImage(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsImagesController_createImage, request, response });
+
+                const controller = new ImagesController();
+
+              await templateService.apiHandler({
+                methodName: 'createImage',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 201,
               });
             } catch (err) {
                 return next(err);
