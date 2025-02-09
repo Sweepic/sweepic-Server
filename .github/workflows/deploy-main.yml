@@ -41,6 +41,10 @@ jobs:
           yarn tsx ./swagger/swagger.js
           yarn tsoa spec -c ./config/tsoa.json
 
+      - name: Generate Tsoa Routes
+        run: |
+          yarn tsoa routes -c ./config/tsoa.json
+
       - name: Run build
         run: |
           yarn prisma generate

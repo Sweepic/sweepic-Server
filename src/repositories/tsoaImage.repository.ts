@@ -22,6 +22,11 @@ export const selectImagesFromTag = async (
           {
             userId: userId,
           },
+          {
+            status: {
+              equals: 1,
+            },
+          },
         ],
       },
       select: {
