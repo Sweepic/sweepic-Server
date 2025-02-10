@@ -188,6 +188,77 @@ export const handleImageRestore = async (req: Request, res: Response, next: Next
 };
 
 export const handleImageDelete = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    /* 
+    #swagger.tags = ['Trust']
+    #swagger.summary = '휴지통에서 이미지 삭제 API'
+    #swagger.description = '선택한 이미지를 휴지통에서 삭제하는 API입니다.'
+
+    #swagger.requestBody = { 
+      required: true, 
+      content: { 
+        "application/json": { 
+          schema: { 
+            type: "object", 
+            properties: { 
+              imageIds: { 
+                type: "array", 
+                items: { type: "integer" }, 
+                description: "삭제할 이미지의 imageId 리스트"
+              } 
+            }, 
+            required: ["imageIds"] 
+          } 
+        } 
+      } 
+    }
+
+    #swagger.responses[200] = { 
+      description: "삭제 성공", 
+      schema: { 
+        type: "object", 
+        properties: { 
+          resultType: { type: "string", example: "SUCCESS" }, 
+          error: { type: "object", nullable: true, example: null }, 
+          success: { type: "boolean", example: true } 
+        } 
+      } 
+    }
+
+    #swagger.responses[500] = { 
+      description: "잘못된 요청 (imageIds가 올바르지 않음)", 
+      schema: { 
+        type: "object", 
+        properties: { 
+          resultType: { type: "string", example: "FAILURE" }, 
+          error: { 
+            type: "object", 
+            properties: { 
+              reason: { type: "string", example: "imageIds가 올바르지 않습니다" } 
+            } 
+          }, 
+          success: { type: "object", nullable: true, example: null } 
+        } 
+      } 
+    }
+
+    #swagger.responses[400] = { 
+      description: "삭제할 이미지가 존재하지 않음", 
+      schema: { 
+        type: "object", 
+        properties: { 
+          resultType: { type: "string", example: "FAILURE" }, 
+          error: { 
+            type: "object", 
+            properties: { 
+              reason: { type: "string", example: "해당 사진이 휴지통에 존재하지 않습니다" } 
+            } 
+          }, 
+          success: { type: "object", nullable: true, example: null } 
+        } 
+      } 
+    }
+    */
+    
     try {
         const { mediaIds } = req.body;
         if (!Array.isArray(mediaIds)) {
