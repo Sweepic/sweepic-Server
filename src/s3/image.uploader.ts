@@ -9,8 +9,8 @@ import {s3} from './awsS3Client.js';
 import {
   createMemoFolder,
   getMemoFolder,
-} from '../repositories/memo-folder.repository.js';
-import {bodyToMemoFolder} from '../dtos/memo-folder.dto.js';
+} from '../repositories/memo-folder.repository.tsoa.js';
+import {bodyToMemoFolder} from '../dtos/memo-folder.dto.tsoa.js';
 import {
   FolderDuplicateError,
   FolderNotFoundError,

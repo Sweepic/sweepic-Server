@@ -1,6 +1,6 @@
 import {CopyObjectCommand, DeleteObjectCommand} from '@aws-sdk/client-s3';
 import {s3} from './awsS3Client.js';
-import {updateMemoImageUrl} from '../repositories/memo-image.repository.js';
+import {updateMemoImageUrl} from '../repositories/memo-image.repository.tsoa.js';
 import process from 'process';
 
 // AWS S3에서 특정 이미지의 디렉토리를 변경하는 함수
