@@ -1,149 +1,61 @@
-import {Request, Response} from 'express';
+import {Request, Response, NextFunction} from 'express';
+import * as trustService from '../services/trust.service.js';
+import {SearchNoResultsError,ServerError,DataValidationError} from 'src/errors.js';
 import {StatusCodes} from 'http-status-codes';
 
-import {imageStatusUpdate, imageDelete} from '../services/trust.service.js';
-import {bodyToImage} from '../dtos/image.dto.js';
+export const handleImageStatus = async (req: Request, res: Response, next:NextFunction): Promise<void> => {
+    try {
+        const {mediaId} = req.body;
+        const parsedMediaId = parseInt(mediaId);
+        if (isNaN(parsedMediaId)) {
+            throw new SearchNoResultsError({searchKeyword: 'mediaId가 올바르지 않습니다'});
+                }
+        const updatedImage = await trustService.deactivateImages(mediaId);
+        if (!updatedImage) {
+            throw new SearchNoResultsError({ searchKeyword: '해당 mediaId에 대한 이미지가 존재하지 않습니다' });
+        }
+        const result = {
+            mediaId: updatedImage.mediaId,
+            status: updatedImage.status
+        };
+        res.status(StatusCodes.OK).success(result);
+    } catch (error) {
+        next(error);
+    }
+};
 
-async function handleImageStatus(req: Request, res: Response): Promise<void> {
-  /*
-        #swagger.tags = ['trust-controller']
-        #swagger.summary = '이미지 상태 변화 API';
-        #swagger.description = '이미지를 활성화(1) 또는 비활성화(0) 시키는 API입니다. 유저나 이미지 고유 id를 통해 이미지 상태를 변경할 수 있습니다.'
-        #swagger.requestBody = {
-            required: true,
-            content: {
-                "multipart/form-data": {
-                    schema: {
-                        type: "object",
-                        required: ['userId', 'imageId'],
-                        properties: {
-                            userId: { type: "interger", description: "사용자 ID" },
-                            imageId: { type: "integer", description: "이미지 고유 ID" , example: 1000100124}
-                        }
-                    }
-                }
-            }
-        };
-        #swagger.responses[200] = {
-            description: "이미지 상태 변화 성공 응답",
-            content: {
-                "application/json": {
-                    schema: {
-                        type: "object",
-                        properties: {
-                            resultType: { type: "string", example: "SUCCESS" },
-                            error: { type: "object", nullable: true, example: null },
-                            success: {
-                                type: "object", 
-                                properties: {
-                                    id: { type: "string", example: "1" },
-                                    mediaId: { type: "string", example: "1000100124" },
-                                    userId: { type: "string", example: "1" },
-                                    createdAt: { type: "string", example: "2021-08-31T07:00:00.000Z" },
-                                    updatedAt: { type: "string", example: "2021-08-31T07:00:00.000Z" },
-                                    status: { type: "number", example: 1 }
-                                }
-                            }   
-                        }
-                    }
-                }
-            }
-        };  
-        #swagger.responses[400] = {
-            description: "이미지 상태 변화 실패 응답",
-            content: {
-                "application/json": {
-                    schema: {
-                        type: "object",
-                        properties: {
-                            resultType: { type: "string", example: "FAIL" },
-                            error: { 
-                               type: "object",
-                               properties: {
-                                  errorCode: { type: "string", example: "U400" },
-                                  reason: { type: "string", example: "이미지 조회 에러" },
-                                  data: { 
-                                      type: "object", 
-                                      example: null
-                                  }
-                               }         
-                            },
-                            success: { type: "object", nullable: true, example: null }
-                            }   
-                        }
-                    }
-                }
-            }
-        };
-        */
-  const updateImageStatus = await imageStatusUpdate(bodyToImage(req.body));
-  res.status(StatusCodes.OK).success(updateImageStatus);
-}
+export const handleImageRestore = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+        const {mediaIds} = req.body;
+        if (!Array.isArray(mediaIds)) {
+            throw new SearchNoResultsError({searchKeyword: 'mediaIds가 올바르지 않습니다'});
+        }
+        const restoredImages = await trustService.restoreImages(mediaIds);
+        if (!restoredImages.length) {
+            throw new SearchNoResultsError({ searchKeyword: '해당 mediaIds에 대한 이미지가 존재하지 않습니다' });
+        }
+        const result = restoredImages.map(image => ({
+            mediaId: image.mediaId,
+            status: image.status
+        }));
+        res.status(StatusCodes.OK).success(result);
+    } catch (error) {
+        next(error);
+    }
+};
 
-async function handleImageDelete(req: Request, res: Response): Promise<void> {
-  /*
-        #swagger.tags = ['trust-controller']
-        #swagger.summary = '휴지통 비우기 API';
-        #swagger.description = '비활성화(0)된 이미지를 일괄 삭제시키는 API입니다. 유저 상태를 이용하여 변경할 수 있습니다.'
-        #swagger.requestBody = {
-            required: true,
-            content: {
-                "multipart/form-data": {
-                    schema: {
-                        type: "object",
-                        required: ['userId', 'imageId'],
-                        properties: {
-                            userId: { type: "interger", description: "사용자 ID" },
-                        }
-                    }
-                }
-            }
-        };
-        #swagger.responses[200] = {
-            description: "휴지통 비우기 성공 응답",
-            content: {
-                "application/json": {
-                    schema: {
-                        type: "object",
-                        properties: {
-                            resultType: { type: "string", example: "SUCCESS" },
-                            error: { type: "object", nullable: true, example: null },
-                            success: { type: "boolean", example: "true" }
-                            }   
-                        }
-                    }
-                }
-            }
-        };  
-        #swagger.responses[400] = {
-            description: "휴지통 비우기 실패 응답",
-            content: {
-                "application/json": {
-                    schema: {
-                        type: "object",
-                        properties: {
-                            resultType: { type: "string", example: "FAIL" },
-                            error: { 
-                               type: "object",
-                               properties: {
-                                  errorCode: { type: "string", example: "U400" },
-                                  reason: { type: "string", example: "유저 조회 에러" },
-                                  data: { 
-                                      type: "object", 
-                                      example: null
-                                  }
-                               }         
-                            },
-                            success: { type: "object", nullable: true, example: null }
-                            }   
-                        }
-                    }
-                }
-            }
-        };
-        */
-  const deleteImage = await imageDelete(req.body.userId);
-  res.status(StatusCodes.OK).success(deleteImage);
-}
-
-export {handleImageStatus, handleImageDelete};
+export const handleImageDelete = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+        const { mediaIds } = req.body;
+        if (!Array.isArray(mediaIds)) {
+            throw new SearchNoResultsError({searchKeyword: 'mediaIds가 올바르지 않습니다'});
+        }
+        const deleteable = await trustService.deleteImages(mediaIds);
+        if(!deleteable) {
+            throw new DataValidationError({reason: '해당 사진이 휴지통에 존재하지 않습니다'});
+        }
+        res.status(StatusCodes.OK).success(deleteable);
+    } catch (error) {
+        next(error);
+    }
+};
