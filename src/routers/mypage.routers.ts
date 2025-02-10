@@ -1,6 +1,7 @@
 import express from 'express';
 export const myPageRouter = express.Router();
-import {getUser, deleteUser} from '../controllers/user.mypage.controllers.js';
+import {getUser, logOutUser, deleteUser} from '../controllers/user.mypage.controllers.js';
 
-myPageRouter.get('/', getUser);
-myPageRouter.delete('/', deleteUser);
+myPageRouter.get('/', getUser
+myPageRouter.get('/logout', logOutUser);
+myPageRouter.patch('/', deleteUser);

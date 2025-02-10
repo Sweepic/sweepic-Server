@@ -9,28 +9,24 @@ export const selectImagesFromTag = async (
   const images = await prisma.image
     .findMany({
       where: {
-        AND: [
-          {
-            tags: {
-              some: {
-                tag: {
-                  content: tag,
-                },
-              },
+        userId: userId,
+        tags: {
+          some: {
+            tag: {
+              content: tag,
             },
+            status: 1,
           },
-          {
-            userId: userId,
-          },
-        ],
+        },
+        status: 1,
       },
       select: {
         id: true,
         mediaId: true,
       },
     })
-    .catch(() => {
-      throw new DBError();
+    .catch(err => {
+      throw new DBError({reason: err.message});
     });
   return images;
 };

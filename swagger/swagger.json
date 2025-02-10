@@ -7,33 +7,495 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"Response": {
+			"ResponseTagListWithDate": {
 				"properties": {
-					"resultType": {
-						"type": "string",
-						"default": "SUCCESS"
-					},
-					"error": {
-						"default": null
-					},
-					"success": {
-						"properties": {
-							"data": {}
+					"tags": {
+						"items": {
+							"type": "string"
 						},
-						"required": [
-							"data"
-						],
-						"type": "object"
+						"type": "array"
 					}
 				},
 				"required": [
+					"tags"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ITsoaSuccessResponse_ResponseTagListWithDate_": {
+				"properties": {
+					"resultType": {
+						"type": "string"
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"success": {
+						"$ref": "#/components/schemas/ResponseTagListWithDate"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"success"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"FieldErrors": {
+				"properties": {},
+				"type": "object",
+				"additionalProperties": {
+					"properties": {
+						"value": {},
+						"message": {
+							"type": "string"
+						}
+					},
+					"required": [
+						"message"
+					],
+					"type": "object"
+				}
+			},
+			"ErrorDetails": {
+				"anyOf": [
+					{
+						"properties": {
+							"folderName": {
+								"type": "string"
+							},
+							"userId": {
+								"type": "string"
+							},
+							"folderId": {
+								"type": "string"
+							}
+						},
+						"type": "object"
+					},
+					{
+						"properties": {
+							"imageUrl": {
+								"type": "string"
+							},
+							"imageId": {
+								"type": "string"
+							}
+						},
+						"type": "object"
+					},
+					{
+						"properties": {
+							"userId": {
+								"type": "string"
+							},
+							"challengeId": {
+								"type": "string"
+							}
+						},
+						"type": "object"
+					},
+					{
+						"properties": {
+							"longitude": {
+								"type": "number",
+								"format": "double"
+							},
+							"latitude": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"type": "object"
+					},
+					{
+						"properties": {
+							"reason": {
+								"type": "string"
+							}
+						},
+						"type": "object"
+					},
+					{
+						"properties": {
+							"searchKeyword": {
+								"type": "string"
+							}
+						},
+						"type": "object"
+					},
+					{
+						"$ref": "#/components/schemas/FieldErrors"
+					},
+					{
+						"properties": {
+							"extension": {
+								"type": "string"
+							}
+						},
+						"type": "object"
+					}
+				],
+				"nullable": true
+			},
+			"ITsoaErrorResponse": {
+				"properties": {
+					"resultType": {
+						"type": "string"
+					},
+					"error": {
+						"properties": {
+							"data": {
+								"$ref": "#/components/schemas/ErrorDetails"
+							},
+							"reason": {
+								"type": "string"
+							},
+							"errorCode": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"data",
+							"reason",
+							"errorCode"
+						],
+						"type": "object"
+					},
+					"success": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"success"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ResponseTagListFromImage": {
+				"properties": {
+					"tags": {
+						"items": {
+							"properties": {
+								"tagCategory": {
+									"properties": {
+										"tagType": {
+											"type": "string"
+										},
+										"id": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"tagType",
+										"id"
+									],
+									"type": "object"
+								},
+								"content": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"tagCategory",
+								"content"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"tags"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ITsoaSuccessResponse_ResponseTagListFromImage_": {
+				"properties": {
+					"resultType": {
+						"type": "string"
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"success": {
+						"$ref": "#/components/schemas/ResponseTagListFromImage"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"success"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ITsoaSuccessResponse__id-string--mediaId-string_-Array_": {
+				"properties": {
+					"resultType": {
+						"type": "string"
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"success": {
+						"items": {
+							"properties": {
+								"mediaId": {
+									"type": "string"
+								},
+								"id": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"mediaId",
+								"id"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"success"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ResponseFromMostTagToClient": {
+				"properties": {
+					"_count": {
+						"properties": {
+							"_all": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"_all"
+						],
+						"type": "object"
+					},
+					"tagCategoryId": {
+						"type": "string"
+					},
+					"content": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"_count",
+					"tagCategoryId",
+					"content"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ITsoaSuccessResponse_ResponseFromMostTagToClient-Array_": {
+				"properties": {
+					"resultType": {
+						"type": "string"
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"success": {
+						"items": {
+							"$ref": "#/components/schemas/ResponseFromMostTagToClient"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"success"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ResponseFromAward": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"awardMonth": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"status": {
+						"type": "number",
+						"format": "double"
+					},
+					"userId": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"awardMonth",
+					"createdAt",
+					"updatedAt",
+					"status",
+					"userId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ITsoaSuccessResponse_ResponseFromAward_": {
+				"properties": {
+					"resultType": {
+						"type": "string"
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"success": {
+						"$ref": "#/components/schemas/ResponseFromAward"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"success"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ResponseFromUpdateAward": {
+				"properties": {
+					"imageId": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"status": {
+						"type": "number",
+						"format": "double"
+					},
+					"awardId": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"imageId",
+					"createdAt",
+					"updatedAt",
+					"status",
+					"awardId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ITsoaSuccessResponse_ResponseFromUpdateAward-Array_": {
+				"properties": {
+					"resultType": {
+						"type": "string"
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"success": {
+						"items": {
+							"$ref": "#/components/schemas/ResponseFromUpdateAward"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"success"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ITsoaSuccessResponse_ResponseFromAward-Array_": {
+				"properties": {
+					"resultType": {
+						"type": "string"
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"success": {
+						"items": {
+							"$ref": "#/components/schemas/ResponseFromAward"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
 					"success"
 				],
 				"type": "object",
 				"additionalProperties": false
 			}
 		},
-		"securitySchemes": {}
+		"securitySchemes": {
+			"sessionAuth": {
+				"type": "apiKey",
+				"in": "cookie",
+				"name": "connect.sid"
+			}
+		}
 	},
 	"info": {
 		"title": "sweepic-server",
@@ -45,7 +507,7 @@
 		"contact": {}
 	},
 	"paths": {
-		"/tags/users/{userId}": {
+		"/tags/date": {
 			"get": {
 				"operationId": "GetTagListWithDate",
 				"responses": {
@@ -54,26 +516,110 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/Response"
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_ResponseTagListWithDate_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "VAL-001",
+												"reason": "Validation Error",
+												"data": {
+													"year": {
+														"message": "invalid float",
+														"value": "a"
+													}
+												}
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "TAG-001",
+												"reason": "태그가 없습니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SER-001",
+												"reason": "내부 서버 오류입니다.",
+												"data": {
+													"reason": "에러원인 메시지"
+												}
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "DB-001",
+												"reason": "DB 에러 입니다.",
+												"data": {
+													"reason": "에러원인 메시지"
+												}
+											},
+											"success": null
+										}
+									}
 								}
 							}
 						}
 					}
 				},
+				"description": "사용자가 날짜를 입력하면 해당 날짜에 찍은 사진들의 태그를 검색합니다.\r\n\r\ndate를 입력하지 않으면 해당 월에 찍은 사진들의 태그를 검색합니다.",
+				"summary": "날짜기반 태그 검색 API",
 				"tags": [
 					"Tag"
 				],
 				"security": [],
 				"parameters": [
 					{
-						"in": "path",
-						"name": "userId",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
+						"description": "년",
 						"in": "query",
 						"name": "year",
 						"required": true,
@@ -83,6 +629,7 @@
 						}
 					},
 					{
+						"description": "월",
 						"in": "query",
 						"name": "month",
 						"required": true,
@@ -92,6 +639,7 @@
 						}
 					},
 					{
+						"description": "일",
 						"in": "query",
 						"name": "date",
 						"required": false,
@@ -103,7 +651,131 @@
 				]
 			}
 		},
-		"/images/users/{userId}": {
+		"/tags/images/{mediaId}": {
+			"get": {
+				"operationId": "GetTagListFromImage",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_ResponseTagListFromImage_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "VAL-001",
+												"reason": "Validation Error",
+												"data": {
+													"mediaId": {
+														"message": "invalid float",
+														"value": "a"
+													}
+												}
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "TAG-001",
+												"reason": "태그가 없습니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SER-001",
+												"reason": "내부 서버 오류입니다.",
+												"data": {
+													"reason": "에러원인 메시지"
+												}
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "DB-001",
+												"reason": "DB 에러 입니다.",
+												"data": {
+													"reason": "에러원인 메시지"
+												}
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "사용자가 mediaId를 제공하면 해당 이미지와 연관된 태그들의 정보를 제공합니다.",
+				"summary": "이미지의 태그 조회",
+				"tags": [
+					"Tag"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "이미지의 고유 mediaId",
+						"in": "path",
+						"name": "mediaId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/images": {
 			"get": {
 				"operationId": "GetImageListFromTag",
 				"responses": {
@@ -112,26 +784,109 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/Response"
+									"$ref": "#/components/schemas/ITsoaSuccessResponse__id-string--mediaId-string_-Array_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "VAL-001",
+												"reason": "Validation Error",
+												"data": {
+													"tag": {
+														"message": "\"tag\" is required"
+													}
+												}
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "PHO-404",
+												"reason": "<인하대학교> 태그에 해당하는 사진이 존재하지 않습니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SER-001",
+												"reason": "내부 서버 오류입니다.",
+												"data": {
+													"reason": "에러원인 메시지"
+												}
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "DB-001",
+												"reason": "DB 에러 입니다.",
+												"data": {
+													"reason": "에러원인 메시지"
+												}
+											},
+											"success": null
+										}
+									}
 								}
 							}
 						}
 					}
 				},
+				"description": "사용자가 tag를 입력하면 해당 태그에 속하는 이미지들을 가져옵니다.",
+				"summary": "태그기반 이미지 검색",
 				"tags": [
 					"Image"
 				],
 				"security": [],
 				"parameters": [
 					{
-						"in": "path",
-						"name": "userId",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
+						"description": "태그 내용",
 						"in": "query",
 						"name": "tag",
 						"required": true,
@@ -141,9 +896,419 @@
 					}
 				]
 			}
+		},
+		"/user/history/most_tagged/get": {
+			"get": {
+				"operationId": "GetMostTagged",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_ResponseFromMostTagToClient-Array_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SRH-400",
+												"reason": "유저 정보가 없습니다. 다시 로그인 해주세요.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "HIS-404",
+												"reason": "조회를 요청한 데이터가 없습니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SER-001",
+												"reason": "내부 서버 오류입니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"History"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/user/history/award/create": {
+			"post": {
+				"operationId": "CreateNewAward",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_ResponseFromAward_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SRH-400",
+												"reason": "유저 정보가 없습니다. 다시 로그인 해주세요.",
+												"data": null
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "HIS-400",
+												"reason": "이미 해당 월의 어워드가 존재합니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "HIS-404",
+												"reason": "조회를 요청한 데이터가 없습니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SER-001",
+												"reason": "내부 서버 오류입니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Award"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/user/history/award/modify": {
+			"patch": {
+				"operationId": "ModifyAward",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_ResponseFromUpdateAward-Array_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SRH-400",
+												"reason": "유저 정보가 없습니다. 다시 로그인 해주세요.",
+												"data": null
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "HIS-400",
+												"reason": "어워드 사진 형식이 잘못되었습니다.",
+												"data": null
+											},
+											"success": null
+										}
+									},
+									"Example 3": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "HIS-400",
+												"reason": "어워드 업데이트를 실패했습니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "HIS-404",
+												"reason": "조회를 요청한 데이터가 없습니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SER-001",
+												"reason": "내부 서버 오류입니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Award"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "awardId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/user/history/award/get": {
+			"get": {
+				"operationId": "GetAward",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_ResponseFromAward-Array_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SRH-400",
+												"reason": "유저 정보가 없습니다. 다시 로그인 해주세요.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "HIS-404",
+												"reason": "조회를 요청한 데이터가 없습니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SER-001",
+												"reason": "내부 서버 오류입니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"/award"
+				],
+				"security": [],
+				"parameters": []
+			}
 		}
 	},
 	"servers": [
+		{
+			"url": "http://localhost:3000",
+			"description": "Sweepic local server"
+		},
 		{
 			"url": "http://3.37.137.212:3000",
 			"description": "Sweepic server"

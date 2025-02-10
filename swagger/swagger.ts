@@ -14,7 +14,16 @@ const doc = {
     description: 'Sweepic 프로젝트입니다.',
     version: '1.0.0',
   },
-  host: 'http://localhost:3000/',
+  servers: [
+    {
+      url: 'http://localhost:3000',
+      description: 'Sweepic local server',
+    },
+    {
+      url: 'http://3.37.137.212:3000',
+      description: 'Sweepic server',
+    },
+  ],
 };
 
 swaggerAutogen(options)(outputFile, routes, doc);

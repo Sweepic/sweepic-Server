@@ -4,16 +4,28 @@
   "controllerPathGlobs": ["src/controllers/*.controller.ts"],
   "spec": {
     "outputDirectory": "./swagger",
-    "host": "3.37.137.212:3000",
     "specVersion": 3,
+    "validate": true,
     "spec": {
       "servers": [
+        {
+          "url": "http://localhost:3000",
+          "description": "Sweepic local server"
+        },
         {
           "url": "http://3.37.137.212:3000",
           "description": "Sweepic server"
         }
       ]
-    }
+    },
+    "securityDefinitions": {
+      "sessionAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "connect.sid"
+      }
+    },
+    "security": [{"sessionAuth": []}]
   },
   "routes": {
     "routesDir": "./src/routers",

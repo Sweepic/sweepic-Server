@@ -1,14 +1,12 @@
 export interface BodyToLocationCreation {
-    userId: string;
-    title: string;
+    title: string | null;
     context: string;
     location: string;
     required: number;
 }
 
 export interface BodyToWeeklyCreation {
-    userId: string;
-    title: string;
+    title: string | null;
     context: string;
     challengeDate: Date;
     required: number;
@@ -16,7 +14,7 @@ export interface BodyToWeeklyCreation {
 
 export interface LocationChallengeCreation {
     userId: bigint;
-    title: string;
+    title: string | null;
     context: string;
     location: string;
     required: number;
@@ -24,7 +22,7 @@ export interface LocationChallengeCreation {
 
 export interface WeeklyChallengeCreation {
     userId: bigint;
-    title: string;
+    title: string | null;
     context: string;
     challengeDate: Date;
     required: number;

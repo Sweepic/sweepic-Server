@@ -5,7 +5,7 @@ declare global {
   namespace Express {
     export interface User extends UserModel {}
 
-    export interface MulterS3File extends Multer.File {
+    export interface MulterS3File extends Express.Multer.File {
       key: string; // multer-s3에서 추가된 location 속성
     }
 
