@@ -1,5 +1,10 @@
 import {prisma} from '../db.config.js';
-import {ChallengeAcceptError, ChallengeCompleteError} from '../errors.js';
+import {
+  ChallengeAcceptError, 
+  ChallengeCompleteError, 
+  ChallengeDeletionError, 
+  ChallengeUpdateError
+} from '../errors.js';
 import {
   ChallengeModify,
   LocationChallengeCreation,
@@ -10,21 +15,10 @@ import {Challenge, LocationChallenge} from '@prisma/client';
 export const newLocationChallenge = async (
   data: LocationChallengeCreation,
 ): Promise<Challenge | null> => {
-  const existingChallenge = await prisma.challenge.findFirst({
-    where: {
-      userId: data.userId,
-      title: data.title,
-    },
-  });
-
-  if (existingChallenge) {
-    return null;
-  }
-
   const newChal = await prisma.challenge.create({
     data: {
       userId: data.userId,
-      title: data.title,
+      title: `${data.location}에서의 사진 챌린지!`,
       context: data.context,
       requiredCount: data.required,
       remainingCount: data.required,
@@ -46,6 +40,14 @@ export const newLocationChallenge = async (
 export const updateChallenge = async (
   data: ChallengeModify,
 ): Promise<Challenge> => {
+  const isExistChallenge = await prisma.challenge.findFirst({
+    where: {id: data.id}
+  });
+
+  if(!isExistChallenge){
+    throw new ChallengeUpdateError({challengeId: data.id});
+  }
+
   const updated = await prisma.challenge.update({
     where: {id: data.id},
     data: {
@@ -58,6 +60,14 @@ export const updateChallenge = async (
 };
 
 export const deleteChallenge = async (data: bigint): Promise<bigint> => {
+  const isExistChallenge = await prisma.challenge.findFirst({
+    where: {id: data}
+  });
+
+  if(!isExistChallenge){
+    throw new ChallengeDeletionError({challengeId: data});
+  }
+  
   const deleted = await prisma.challenge.delete({
     where: {id: data},
   });

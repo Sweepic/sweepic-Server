@@ -108,11 +108,11 @@ export const bodyToLocationLogic = (photo: PhotoInfo[]): PhotoInfo[] => {
     return photo;
 };
 
-export const bodyToLocationCreation = (data: BodyToLocationCreation) => {
-    const {userId, title, context, location, required} = data;
+export const bodyToLocationCreation = (data: BodyToLocationCreation, userId: bigint) => {
+    const {title, context, location, required} = data;
     
     return {
-        userId: BigInt(userId),
+        userId: userId,
         title,
         context,
         location,
@@ -120,11 +120,11 @@ export const bodyToLocationCreation = (data: BodyToLocationCreation) => {
     };
 };
 
-export const bodyToWeeklyCreation = (data: BodyToWeeklyCreation) => {
-    const {userId, title, context, challengeDate, required} = data;
+export const bodyToWeeklyCreation = (data: BodyToWeeklyCreation, userId: bigint) => {
+    const {title, context, challengeDate, required} = data;
 
     return {
-        userId: BigInt(userId),
+        userId: userId,
         title,
         context,
         challengeDate,

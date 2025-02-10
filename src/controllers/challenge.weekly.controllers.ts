@@ -27,8 +27,6 @@ export const handleNewWeeklyChallenge = async (
                 schema: {
                     type: "object",
                     properties: {
-                        userId: { type: "string", description: "유저 Id" },
-                        title: { type: "string", description: "챌린지 제목" },
                         context: { type: "string", description: "챌린지 내용" },
                         challengeDate: { type: "string", format: "date-time", description: "챌린지 날짜" },
                         required: { type: "number", description: "챌린지 장수" }
@@ -69,13 +67,17 @@ export const handleNewWeeklyChallenge = async (
     };
     */
   try {
+    if(!req.user){
+      throw new DataValidationError({reason: '유저 정보가 없습니다. 다시 로그인 해주세요.'});
+    }
+
     if (!req.body) {
       throw new DataValidationError({
         reason: '날짜 챌린지를 생성할 데이터가 없습니다.',
       });
     }
 
-    const data: WeeklyChallengeCreation = bodyToWeeklyCreation(req.body);
+    const data: WeeklyChallengeCreation = bodyToWeeklyCreation(req.body, req.user.id);
     const result: ResponseFromChallenge =
       await serviceCreateNewWeeklyChallenge(data);
     res.status(StatusCodes.OK).success(result);

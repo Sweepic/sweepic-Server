@@ -14,7 +14,7 @@ import {
   responseFromChallenge,
   responseFromLocationChallenge,
 } from '../dtos/challenge.dtos.js';
-import {getHashedLocation} from '../utils/challenge.utils.js';
+import {getHashedLocation, getReverseGeocode} from '../utils/challenge.utils.js';
 import {
   LocationChallengeCreationError,
   LocationChallengeNotFoundError,
@@ -25,6 +25,7 @@ export const serviceCreateNewLocationChallenge = async (
   data: LocationChallengeCreation,
 ): Promise<ResponseFromChallenge> => {
   try {
+    data.location = await getReverseGeocode(data.location);
     const newChallenge: Challenge | null = await newLocationChallenge(data);
     if (newChallenge === null) {
       throw new LocationChallengeCreationError({
