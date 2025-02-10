@@ -1,30 +1,21 @@
-import {BodyToImage, ResponseFromImage} from '../models/image.model.js';
-import {responseFromImage} from '../dtos/image.dto.js';
-import {
-  updateStatusImage,
-  getImage,
-  deleteImage,
-} from '../repositories/trust.repositories.js';
+import * as trustRepository from '../repositories/trust.repositories.js';
 
-async function imageStatusUpdate(
-  image: BodyToImage,
-): Promise<ResponseFromImage> {
-  console.log('imageStatusUpdate 실행');
-  console.log('image: ', image);
+export const deactivateImages = async (mediaId: number): Promise <{mediaId: number; status: number}> => {
+    await trustRepository.updateImageStatus([mediaId], 0);
+    const [updatedImage] = await trustRepository.getImagesByIds([mediaId]);
+    return updatedImage;
+};
 
-  const newImageId = await updateStatusImage(image);
-  const imageData = await getImage(newImageId);
+export const restoreImages = async (mediaIds: number[]): Promise<{ mediaId: number; status: number }[]> => {
+    await trustRepository.updateImageStatus(mediaIds, 1);
+    return trustRepository.getImagesByIds(mediaIds);
+};
 
-  return responseFromImage(imageData);
-}
-
-async function imageDelete(userId: bigint): Promise<boolean> {
-  console.log('imageDelete 실행');
-  console.log('userId: ', userId);
-
-  const deleted = await deleteImage(userId);
-
-  return deleted;
-}
-
-export {imageStatusUpdate, imageDelete};
+export const deleteImages = async (mediaIds: number[]): Promise<boolean> => {
+   const images = await trustRepository.getImagesByIds(mediaIds);
+   if (!images.length || images.some(({ status }) => status ===1)){
+    return false;
+   }
+   await trustRepository.removeImages(mediaIds);
+   return true;
+};
