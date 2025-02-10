@@ -1,5 +1,9 @@
-import {RequestTagSearch} from '../dtos/tsoaImage.dto.js';
-import {selectImagesFromTag} from '../repositories/tsoaImage.repository.js';
+import {RequestImageData, RequestTagSearch} from '../dtos/tsoaImage.dto.js';
+import {
+  findImage,
+  insertImage,
+  selectImagesFromTag,
+} from '../repositories/tsoaImage.repository.js';
 import {PhotoDataNotFoundError} from '../errors.js';
 
 export const findImagesFromTag = async (
@@ -20,8 +24,20 @@ export const findImagesFromTag = async (
     });
   if (images.length === 0) {
     throw new PhotoDataNotFoundError({
-      reason: `<${  dto.tag  }> 태그에 해당하는 사진이 존재하지 않습니다.`,
+      reason: `<${dto.tag}> 태그에 해당하는 사진이 존재하지 않습니다.`,
     });
   }
   return images;
+};
+
+export const addImage = async (dto: RequestImageData): Promise<bigint> => {
+  const imageId = await findImage(dto.mediaId, dto.userId).catch(err => {
+    if (err.code === 'P2025') {
+      return insertImage(dto.mediaId, dto.createdAt, dto.userId);
+    } else {
+      throw err;
+    }
+  });
+
+  return imageId;
 };
