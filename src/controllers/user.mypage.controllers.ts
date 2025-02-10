@@ -14,42 +14,50 @@ export const getUser = async (
     #swagger.summary = '사용자 정보 가져오기 API'
     #swagger.description = '사용자 정보를 가져오는 API입니다.'
     #swagger.responses[200] = {
-      description: "사용자 정보 가져오기 성공",
-      schema: {
-        type: "object",
-        properties: {
-          resultType: { type: "string", example: "SUCCESS" },
-          error: { type: "object", nullable: true, example: null },
-          success: {
-            type: "object",
-            properties: {
-              id: { type: "integer", example: 1 },
-              email: { type: "string", example: "yein117@naver.com"},
-              name: { type: "string", example: "예인" },
-              goalCount: {type: "integer", example: 0},
-              createdAt: {type: "string", example: "2025-01-23T12:26:19.188Z"},
-              updatedAt: { type: "string", format: "date-time" }
+        description: "사용자 정보 가져오기 성공",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "SUCCESS" },
+                        error: { type: "object", nullable: true, example: null },
+                        success: {
+                            type: "object",
+                            properties: {
+                                id: { type: "integer", example: 1 },
+                                email: { type: "string", example: "yein117@naver.com"},
+                                name: { type: "string", example: "예인" },
+                                goalCount: { type: "integer", example: 0 },
+                                createdAt: { type: "string", example: "2025-01-23T12:26:19.188Z" },
+                                updatedAt: { type: "string", format: "date-time" }
+                            }
+                        }
+                    }
+                }
             }
+        }
+     }
+  #swagger.responses[401] = {
+          description: "잘못된 요청",
+          content: {
+              "application/json": {
+                  schema: {
+                      type: "object",
+                      properties: {
+                          resultType: { type: "string", example: "FAILURE" },
+                          error: {
+                              type: "object",
+                              properties: {
+                                  reason: { type: "string", example: "User_id를 찾을 수 없습니다" }
+                              }
+                          },
+                          success: { type: "object", nullable: true, example: null }
+                      }
+                  }
+              }
           }
-        }
       }
-    }
-    #swagger.responses[401] = {
-      description: "잘못된 요청",
-      schema: {
-        type: "object",
-        properties: {
-          resultType: { type: "string", example: "FAILURE" },
-          error: {
-            type: "object",
-            properties: {
-              reason: { type: "string", example: "User_id를 찾을 수 없습니다" }
-            }
-          },
-          success: { type: "object", nullable: true, example: null }
-        }
-      }
-    }
   */
   try {
     if (!req.user?.id) {
@@ -76,20 +84,24 @@ export const logOutUser = async (
       description: "사용자 로그아웃 성공",
     }
     #swagger.responses[401] = {
-      description: "잘못된 요청",
-      schema: {
-        type: "object",
-        properties: {
-          resultType: { type: "string", example: "FAILURE" },
-          error: {
-            type: "object",
-            properties: {
-              reason: { type: "string", example: "Session ID가 존재하지 않습니다" }
+        description: "잘못된 요청",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "FAILURE" },
+                        error: {
+                            type: "object",
+                            properties: {
+                                reason: { type: "string", example: "Session ID가 존재하지 않습니다" }
+                            }
+                        },
+                        success: { type: "object", nullable: true, example: null }
+                    }
+                }
             }
-          },
-          success: { type: "object", nullable: true, example: null }
         }
-      }
     }
   */
   try {
@@ -118,20 +130,24 @@ export const deleteUser = async (
       description: "회원탈퇴 성공",
     }
     #swagger.responses[401] = {
-      description: "잘못된 요청",
-      schema: {
-        type: "object",
-        properties: {
-          resultType: { type: "string", example: "FAILURE" },
-          error: {
-            type: "object",
-            properties: {
-              reason: { type: "string", example: "user를 찾을 수 없습니다" }
+        description: "잘못된 요청",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "FAILURE" },
+                        error: {
+                            type: "object",
+                            properties: {
+                                reason: { type: "string", example: "Session ID가 존재하지 않습니다" }
+                            }
+                        },
+                        success: { type: "object", nullable: true, example: null }
+                    }
+                }
             }
-          },
-          success: { type: "object", nullable: true, example: null }
         }
-      }
     }
   */
   try {
