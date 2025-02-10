@@ -8,10 +8,12 @@ import { TagsController } from './../controllers/tsoaTag.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ImagesController } from './../controllers/tsoaImage.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { MostTaggedController } from './../controllers/history.controller.js';
+import { MemoImageController } from './../controllers/tsoa.memo-image.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { AwardController } from './../controllers/history.controller.js';
+import { MemoFolderController } from './../controllers/tsoa.memo-folder.controller.js';
 import type { Request as ExRequest, Response as ExResponse, RequestHandler, Router } from 'express';
+import multer from 'multer';
+
 
 
 
@@ -45,7 +47,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ErrorDetails": {
         "dataType": "refAlias",
-        "type": {"dataType":"union","subSchemas":[{"dataType":"nestedObjectLiteral","nestedProperties":{"folderName":{"dataType":"string"},"userId":{"dataType":"string"},"folderId":{"dataType":"string"}}},{"dataType":"nestedObjectLiteral","nestedProperties":{"imageUrl":{"dataType":"string"},"imageId":{"dataType":"string"}}},{"dataType":"nestedObjectLiteral","nestedProperties":{"userId":{"dataType":"string"},"challengeId":{"dataType":"string"}}},{"dataType":"nestedObjectLiteral","nestedProperties":{"longitude":{"dataType":"double"},"latitude":{"dataType":"double"}}},{"dataType":"nestedObjectLiteral","nestedProperties":{"reason":{"dataType":"string"}}},{"dataType":"nestedObjectLiteral","nestedProperties":{"searchKeyword":{"dataType":"string"}}},{"ref":"FieldErrors"},{"dataType":"nestedObjectLiteral","nestedProperties":{"extension":{"dataType":"string"}}},{"dataType":"enum","enums":[null]}],"validators":{}},
+        "type": {"dataType":"union","subSchemas":[{"dataType":"nestedObjectLiteral","nestedProperties":{"folderName":{"dataType":"string"},"userId":{"dataType":"string"},"folderId":{"dataType":"string"}}},{"dataType":"nestedObjectLiteral","nestedProperties":{"imageUrl":{"dataType":"string"},"imageId":{"dataType":"string"}}},{"dataType":"nestedObjectLiteral","nestedProperties":{"userId":{"dataType":"string"},"challengeId":{"dataType":"string"}}},{"dataType":"nestedObjectLiteral","nestedProperties":{"longitude":{"dataType":"double"},"latitude":{"dataType":"double"}}},{"dataType":"nestedObjectLiteral","nestedProperties":{"reason":{"dataType":"string"}}},{"dataType":"nestedObjectLiteral","nestedProperties":{"searchKeyword":{"dataType":"string"}}},{"ref":"FieldErrors"},{"dataType":"nestedObjectLiteral","nestedProperties":{"extension":{"dataType":"string"}}},{"dataType":"nestedObjectLiteral","nestedProperties":{"imageId":{"dataType":"array","array":{"dataType":"string"}},"folderId":{"dataType":"string"}}},{"dataType":"enum","enums":[null]}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ITsoaErrorResponse": {
@@ -86,77 +88,138 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ResponseFromMostTagToClient": {
+    "MemoFolderImageResponseDto": {
         "dataType": "refObject",
         "properties": {
-            "_count": {"dataType":"nestedObjectLiteral","nestedProperties":{"_all":{"dataType":"double","required":true}},"required":true},
-            "tagCategoryId": {"dataType":"string","required":true},
-            "content": {"dataType":"string","required":true},
+            "folderId": {"dataType":"string","required":true},
+            "folderName": {"dataType":"string","required":true},
+            "imageId": {"dataType":"string","required":true},
+            "imageUrl": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ITsoaSuccessResponse_ResponseFromMostTagToClient-Array_": {
+    "ITsoaSuccessResponse_MemoFolderImageResponseDto_": {
         "dataType": "refObject",
         "properties": {
             "resultType": {"dataType":"string","required":true},
             "error": {"dataType":"enum","enums":[null],"required":true},
-            "success": {"dataType":"array","array":{"dataType":"refObject","ref":"ResponseFromMostTagToClient"},"required":true},
+            "success": {"ref":"MemoFolderImageResponseDto","required":true},
         },
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ResponseFromAward": {
+    "MemoTextImageListResponseDto": {
+        "dataType": "refObject",
+        "properties": {
+            "folderId": {"dataType":"string","required":true},
+            "folderName": {"dataType":"string","required":true},
+            "imageText": {"dataType":"string","required":true},
+            "images": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"imageUrl":{"dataType":"string","required":true},"imageId":{"dataType":"string","required":true}}}},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ITsoaSuccessResponse_MemoTextImageListResponseDto_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"string","required":true},
+            "error": {"dataType":"enum","enums":[null],"required":true},
+            "success": {"ref":"MemoTextImageListResponseDto","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BodyToMemoImagesToMove": {
+        "dataType": "refObject",
+        "properties": {
+            "targetFolderId": {"dataType":"string","required":true},
+            "imageId": {"dataType":"array","array":{"dataType":"string"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ResponseMessage": {
+        "dataType": "refObject",
+        "properties": {
+            "message": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ITsoaSuccessResponse_ResponseMessage_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"string","required":true},
+            "error": {"dataType":"enum","enums":[null],"required":true},
+            "success": {"ref":"ResponseMessage","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MemoFolderResponseDto": {
         "dataType": "refObject",
         "properties": {
             "id": {"dataType":"string","required":true},
-            "awardMonth": {"dataType":"datetime","required":true},
+            "folderName": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ITsoaSuccessResponse_MemoFolderResponseDto_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"string","required":true},
+            "error": {"dataType":"enum","enums":[null],"required":true},
+            "success": {"ref":"MemoFolderResponseDto","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BodyToMemoFolder": {
+        "dataType": "refObject",
+        "properties": {
+            "folderName": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MemoFolderListResponseDto": {
+        "dataType": "refObject",
+        "properties": {
+            "folderId": {"dataType":"string","required":true},
+            "folderName": {"dataType":"string","required":true},
+            "imageText": {"dataType":"string","required":true},
+            "imageCount": {"dataType":"double","required":true},
+            "firstImageId": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "firstImageUrl": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
             "createdAt": {"dataType":"datetime","required":true},
-            "updatedAt": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}],"required":true},
-            "status": {"dataType":"double","required":true},
-            "userId": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ITsoaSuccessResponse_ResponseFromAward_": {
+    "ITsoaSuccessResponse__data-MemoFolderListResponseDto-Array__": {
         "dataType": "refObject",
         "properties": {
             "resultType": {"dataType":"string","required":true},
             "error": {"dataType":"enum","enums":[null],"required":true},
-            "success": {"ref":"ResponseFromAward","required":true},
+            "success": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"array","array":{"dataType":"refObject","ref":"MemoFolderListResponseDto"},"required":true}},"required":true},
         },
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ResponseFromUpdateAward": {
+    "BodyToMemoImagesToDelete": {
         "dataType": "refObject",
         "properties": {
-            "imageId": {"dataType":"string","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "updatedAt": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}],"required":true},
-            "status": {"dataType":"double","required":true},
-            "awardId": {"dataType":"string","required":true},
+            "imageId": {"dataType":"array","array":{"dataType":"string"},"required":true},
         },
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ITsoaSuccessResponse_ResponseFromUpdateAward-Array_": {
+    "BodyToMemoTextToUpdate": {
         "dataType": "refObject",
         "properties": {
-            "resultType": {"dataType":"string","required":true},
-            "error": {"dataType":"enum","enums":[null],"required":true},
-            "success": {"dataType":"array","array":{"dataType":"refObject","ref":"ResponseFromUpdateAward"},"required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ITsoaSuccessResponse_ResponseFromAward-Array_": {
-        "dataType": "refObject",
-        "properties": {
-            "resultType": {"dataType":"string","required":true},
-            "error": {"dataType":"enum","enums":[null],"required":true},
-            "success": {"dataType":"array","array":{"dataType":"refObject","ref":"ResponseFromAward"},"required":true},
+            "memoText": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
@@ -169,13 +232,14 @@ const templateService = new ExpressTemplateService(models, {"noImplicitAdditiona
 
 
 
-export function RegisterRoutes(app: Router) {
+export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof multer>}) {
 
     // ###########################################################################################################
     //  NOTE: If you do not see routes for all of your controllers in this file, then you might not have informed tsoa of where to look
     //      Please look into the "controllerPathGlobs" config option described in the readme: https://github.com/lukeautry/tsoa
     // ###########################################################################################################
 
+    const upload = opts?.multer ||  multer({"limits":{"fileSize":8388608}});
 
     
         const argsTagsController_getTagListWithDate: Record<string, TsoaRoute.ParameterSchema> = {
@@ -273,25 +337,33 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsMostTaggedController_getMostTagged: Record<string, TsoaRoute.ParameterSchema> = {
+        const argsMemoImageController_handlerMemoImageAdd: Record<string, TsoaRoute.ParameterSchema> = {
                 req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                targetFolderId: {"in":"path","name":"folderId","required":true,"dataType":"string"},
+                image: {"in":"formData","name":"image","required":true,"dataType":"file"},
         };
-        app.get('/user/history/most_tagged/get',
-            ...(fetchMiddlewares<RequestHandler>(MostTaggedController)),
-            ...(fetchMiddlewares<RequestHandler>(MostTaggedController.prototype.getMostTagged)),
+        app.post('/memo/image-format/folders/:folderId',
+            upload.fields([
+                {
+                    name: "image",
+                    maxCount: 1
+                }
+            ]),
+            ...(fetchMiddlewares<RequestHandler>(MemoImageController)),
+            ...(fetchMiddlewares<RequestHandler>(MemoImageController.prototype.handlerMemoImageAdd)),
 
-            async function MostTaggedController_getMostTagged(request: ExRequest, response: ExResponse, next: any) {
+            async function MemoImageController_handlerMemoImageAdd(request: ExRequest, response: ExResponse, next: any) {
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsMostTaggedController_getMostTagged, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsMemoImageController_handlerMemoImageAdd, request, response });
 
-                const controller = new MostTaggedController();
+                const controller = new MemoImageController();
 
               await templateService.apiHandler({
-                methodName: 'getMostTagged',
+                methodName: 'handlerMemoImageAdd',
                 controller,
                 response,
                 next,
@@ -303,25 +375,27 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsAwardController_createNewAward: Record<string, TsoaRoute.ParameterSchema> = {
+        const argsMemoImageController_handlerMemoImageMove: Record<string, TsoaRoute.ParameterSchema> = {
                 req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                currentFolderId: {"in":"path","name":"folderId","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"BodyToMemoImagesToMove"},
         };
-        app.post('/user/history/award/create',
-            ...(fetchMiddlewares<RequestHandler>(AwardController)),
-            ...(fetchMiddlewares<RequestHandler>(AwardController.prototype.createNewAward)),
+        app.patch('/memo/folders/:folderId/images',
+            ...(fetchMiddlewares<RequestHandler>(MemoImageController)),
+            ...(fetchMiddlewares<RequestHandler>(MemoImageController.prototype.handlerMemoImageMove)),
 
-            async function AwardController_createNewAward(request: ExRequest, response: ExResponse, next: any) {
+            async function MemoImageController_handlerMemoImageMove(request: ExRequest, response: ExResponse, next: any) {
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsAwardController_createNewAward, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsMemoImageController_handlerMemoImageMove, request, response });
 
-                const controller = new AwardController();
+                const controller = new MemoImageController();
 
               await templateService.apiHandler({
-                methodName: 'createNewAward',
+                methodName: 'handlerMemoImageMove',
                 controller,
                 response,
                 next,
@@ -333,26 +407,26 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsAwardController_modifyAward: Record<string, TsoaRoute.ParameterSchema> = {
+        const argsMemoImageController_handlerMemoFolderDelete: Record<string, TsoaRoute.ParameterSchema> = {
                 req: {"in":"request","name":"req","required":true,"dataType":"object"},
-                awardId: {"in":"query","name":"awardId","required":true,"dataType":"string"},
+                targetFolderId: {"in":"path","name":"folderId","required":true,"dataType":"string"},
         };
-        app.patch('/user/history/award/modify',
-            ...(fetchMiddlewares<RequestHandler>(AwardController)),
-            ...(fetchMiddlewares<RequestHandler>(AwardController.prototype.modifyAward)),
+        app.delete('/memo/folders/:folderId',
+            ...(fetchMiddlewares<RequestHandler>(MemoImageController)),
+            ...(fetchMiddlewares<RequestHandler>(MemoImageController.prototype.handlerMemoFolderDelete)),
 
-            async function AwardController_modifyAward(request: ExRequest, response: ExResponse, next: any) {
+            async function MemoImageController_handlerMemoFolderDelete(request: ExRequest, response: ExResponse, next: any) {
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsAwardController_modifyAward, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsMemoImageController_handlerMemoFolderDelete, request, response });
 
-                const controller = new AwardController();
+                const controller = new MemoImageController();
 
               await templateService.apiHandler({
-                methodName: 'modifyAward',
+                methodName: 'handlerMemoFolderDelete',
                 controller,
                 response,
                 next,
@@ -364,25 +438,245 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsAwardController_getAward: Record<string, TsoaRoute.ParameterSchema> = {
+        const argsMemoFolderController_handlerMemoFolderImageAdd: Record<string, TsoaRoute.ParameterSchema> = {
                 req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                folderName: {"in":"formData","name":"folderName","required":true,"dataType":"string"},
         };
-        app.get('/user/history/award/get',
-            ...(fetchMiddlewares<RequestHandler>(AwardController)),
-            ...(fetchMiddlewares<RequestHandler>(AwardController.prototype.getAward)),
+        app.post('/memo/image-format/folders',
+            ...(fetchMiddlewares<RequestHandler>(MemoFolderController)),
+            ...(fetchMiddlewares<RequestHandler>(MemoFolderController.prototype.handlerMemoFolderImageAdd)),
 
-            async function AwardController_getAward(request: ExRequest, response: ExResponse, next: any) {
+            async function MemoFolderController_handlerMemoFolderImageAdd(request: ExRequest, response: ExResponse, next: any) {
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsAwardController_getAward, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsMemoFolderController_handlerMemoFolderImageAdd, request, response });
 
-                const controller = new AwardController();
+                const controller = new MemoFolderController();
 
               await templateService.apiHandler({
-                methodName: 'getAward',
+                methodName: 'handlerMemoFolderImageAdd',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMemoFolderController_handlerMemoFolderAdd: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                body: {"in":"body","name":"body","required":true,"ref":"BodyToMemoFolder"},
+        };
+        app.post('/memo/folders',
+            ...(fetchMiddlewares<RequestHandler>(MemoFolderController)),
+            ...(fetchMiddlewares<RequestHandler>(MemoFolderController.prototype.handlerMemoFolderAdd)),
+
+            async function MemoFolderController_handlerMemoFolderAdd(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMemoFolderController_handlerMemoFolderAdd, request, response });
+
+                const controller = new MemoFolderController();
+
+              await templateService.apiHandler({
+                methodName: 'handlerMemoFolderAdd',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMemoFolderController_handlerMemoFolderList: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+        };
+        app.get('/memo/list',
+            ...(fetchMiddlewares<RequestHandler>(MemoFolderController)),
+            ...(fetchMiddlewares<RequestHandler>(MemoFolderController.prototype.handlerMemoFolderList)),
+
+            async function MemoFolderController_handlerMemoFolderList(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMemoFolderController_handlerMemoFolderList, request, response });
+
+                const controller = new MemoFolderController();
+
+              await templateService.apiHandler({
+                methodName: 'handlerMemoFolderList',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMemoFolderController_handlerMemoSearch: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                keyword: {"in":"query","name":"keyword","required":true,"dataType":"string"},
+        };
+        app.get('/memo/search',
+            ...(fetchMiddlewares<RequestHandler>(MemoFolderController)),
+            ...(fetchMiddlewares<RequestHandler>(MemoFolderController.prototype.handlerMemoSearch)),
+
+            async function MemoFolderController_handlerMemoSearch(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMemoFolderController_handlerMemoSearch, request, response });
+
+                const controller = new MemoFolderController();
+
+              await templateService.apiHandler({
+                methodName: 'handlerMemoSearch',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMemoFolderController_handlerMemoImageDelete: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                folderIdParam: {"in":"path","name":"folderId","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"BodyToMemoImagesToDelete"},
+        };
+        app.post('/memo/folders/:folderId/images/delete',
+            ...(fetchMiddlewares<RequestHandler>(MemoFolderController)),
+            ...(fetchMiddlewares<RequestHandler>(MemoFolderController.prototype.handlerMemoImageDelete)),
+
+            async function MemoFolderController_handlerMemoImageDelete(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMemoFolderController_handlerMemoImageDelete, request, response });
+
+                const controller = new MemoFolderController();
+
+              await templateService.apiHandler({
+                methodName: 'handlerMemoImageDelete',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMemoFolderController_handlerMemoTextImageList: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                folderIdParam: {"in":"path","name":"folderId","required":true,"dataType":"string"},
+        };
+        app.get('/memo/folders/:folderId',
+            ...(fetchMiddlewares<RequestHandler>(MemoFolderController)),
+            ...(fetchMiddlewares<RequestHandler>(MemoFolderController.prototype.handlerMemoTextImageList)),
+
+            async function MemoFolderController_handlerMemoTextImageList(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMemoFolderController_handlerMemoTextImageList, request, response });
+
+                const controller = new MemoFolderController();
+
+              await templateService.apiHandler({
+                methodName: 'handlerMemoTextImageList',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMemoFolderController_handlerMemoFolderUpdate: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                folderIdParam: {"in":"path","name":"folderId","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"BodyToMemoFolder"},
+        };
+        app.patch('/memo/folders/:folderId',
+            ...(fetchMiddlewares<RequestHandler>(MemoFolderController)),
+            ...(fetchMiddlewares<RequestHandler>(MemoFolderController.prototype.handlerMemoFolderUpdate)),
+
+            async function MemoFolderController_handlerMemoFolderUpdate(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMemoFolderController_handlerMemoFolderUpdate, request, response });
+
+                const controller = new MemoFolderController();
+
+              await templateService.apiHandler({
+                methodName: 'handlerMemoFolderUpdate',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMemoFolderController_handlerMemoTextUpdate: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                folderIdParam: {"in":"path","name":"folderId","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"BodyToMemoTextToUpdate"},
+        };
+        app.patch('/memo/folders/:folderId/text',
+            ...(fetchMiddlewares<RequestHandler>(MemoFolderController)),
+            ...(fetchMiddlewares<RequestHandler>(MemoFolderController.prototype.handlerMemoTextUpdate)),
+
+            async function MemoFolderController_handlerMemoTextUpdate(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMemoFolderController_handlerMemoTextUpdate, request, response });
+
+                const controller = new MemoFolderController();
+
+              await templateService.apiHandler({
+                methodName: 'handlerMemoTextUpdate',
                 controller,
                 response,
                 next,

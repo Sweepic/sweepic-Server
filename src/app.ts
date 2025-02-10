@@ -28,7 +28,9 @@ import {authRouter} from './routers/auth.routers.js';
 import {userRouter} from './routers/user.router.js';
 import {tagRouter} from './routers/tag.router.js';
 import {myPageRouter} from './routers/mypage.routers.js';
+import {imageUploader} from './s3/image.uploader.js';
 import {trustRouter} from './routers/trust.router.js';
+
 dotenv.config();
 
 const app = express();
@@ -113,12 +115,12 @@ app.use(sessionAuthMiddleware);
 app.use('/onboarding', userRouter);
 app.use('/memo', memoFolderRouter);
 app.use('/challenge', challengeRouter);
-app.use('/user/mypage',myPageRouter);
+app.use('/user/mypage', myPageRouter);
 app.use('/tag', tagRouter);
 app.use('/trust',trustRouter);
 app.post('/image/ai', labelDetectionController);
 
-RegisterRoutes(app);
+RegisterRoutes(app, {multer: imageUploader});
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Sweepic');

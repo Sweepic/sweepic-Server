@@ -1707,7 +1707,7 @@
         }
       }
     },
-    "/memo/folders": {
+    "/memo/folders/not-tsoa": {
       "post": {
         "tags": [
           "memo-folder-controller"
@@ -1858,7 +1858,7 @@
         }
       }
     },
-    "/memo/folders/{folderId}": {
+    "/memo/folders/{folderId}/not-tsoa": {
       "get": {
         "tags": [
           "memo-folder-controller"
@@ -2310,7 +2310,7 @@
         }
       }
     },
-    "/memo/image-format/folders": {
+    "/memo/image-format/folders/not-tsoa": {
       "post": {
         "tags": [
           "memo-folder-controller"
@@ -2525,7 +2525,7 @@
         }
       }
     },
-    "/memo/image-format/folders/{folderId}": {
+    "/memo/image-format/folders/{folderId}/not-tsoa": {
       "post": {
         "tags": [
           "memo-image-controller"
@@ -2738,7 +2738,7 @@
         }
       }
     },
-    "/memo/list": {
+    "/memo/list/not-tsoa": {
       "get": {
         "tags": [
           "memo-folder-controller"
@@ -2808,7 +2808,7 @@
         }
       }
     },
-    "/memo/search": {
+    "/memo/search/not-tsoa": {
       "get": {
         "tags": [
           "memo-folder-controller"
@@ -2932,7 +2932,7 @@
         }
       }
     },
-    "/memo/folders/{folderId}/images/move": {
+    "/memo/folders/{folderId}/images/move/not-tsoa": {
       "patch": {
         "tags": [
           "memo-image-controller"
@@ -3145,7 +3145,7 @@
         }
       }
     },
-    "/memo/folders/{folderId}/text": {
+    "/memo/folders/{folderId}/text/not-tsoa": {
       "patch": {
         "tags": [
           "memo-folder-controller"
@@ -3281,8 +3281,8 @@
         }
       }
     },
-    "/memo/folders/{folderId}/images": {
-      "delete": {
+    "/memo/folders/{folderId}/images/delete/not-tsoa": {
+      "post": {
         "tags": [
           "memo-image-controller"
         ],
@@ -3839,19 +3839,9 @@
         }
       }
     },
-    "/challenge/get/{userId}": {
+    "/challenge/get": {
       "get": {
         "description": "",
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "default": {
             "description": ""
@@ -4313,6 +4303,811 @@
                     "description": "챌린지 장수"
                   }
                 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/challenge/getGeocode": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "hashedLocation",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/user/mypage/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/user/mypage/name": {
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "summary": "사용자 이름 변경 API",
+        "description": "로그인한 사용자의 이름을 변경하는 API입니다.",
+        "responses": {
+          "200": {
+            "description": "사용자 이름 변경 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "resultType": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "string"
+                            },
+                            "example": {
+                              "type": "string",
+                              "example": "SUCCESS"
+                            }
+                          }
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "object"
+                            },
+                            "nullable": {
+                              "type": "boolean",
+                              "example": true
+                            },
+                            "example": {}
+                          }
+                        },
+                        "success": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "object"
+                            },
+                            "properties": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "example": "integer"
+                                    },
+                                    "example": {
+                                      "type": "number",
+                                      "example": 1
+                                    }
+                                  }
+                                },
+                                "name": {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "example": "string"
+                                    },
+                                    "example": {
+                                      "type": "string",
+                                      "example": "John Doe"
+                                    }
+                                  }
+                                },
+                                "updatedAt": {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "example": "string"
+                                    },
+                                    "format": {
+                                      "type": "string",
+                                      "example": "date-time"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "resultType": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "string"
+                            },
+                            "example": {
+                              "type": "string",
+                              "example": "SUCCESS"
+                            }
+                          }
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "object"
+                            },
+                            "nullable": {
+                              "type": "boolean",
+                              "example": true
+                            },
+                            "example": {}
+                          }
+                        },
+                        "success": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "object"
+                            },
+                            "properties": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "example": "integer"
+                                    },
+                                    "example": {
+                                      "type": "number",
+                                      "example": 1
+                                    }
+                                  }
+                                },
+                                "name": {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "example": "string"
+                                    },
+                                    "example": {
+                                      "type": "string",
+                                      "example": "John Doe"
+                                    }
+                                  }
+                                },
+                                "updatedAt": {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "example": "string"
+                                    },
+                                    "format": {
+                                      "type": "string",
+                                      "example": "date-time"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "resultType": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "string"
+                            },
+                            "example": {
+                              "type": "string",
+                              "example": "FAILURE"
+                            }
+                          }
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "object"
+                            },
+                            "properties": {
+                              "type": "object",
+                              "properties": {
+                                "reason": {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "example": "string"
+                                    },
+                                    "example": {
+                                      "type": "string",
+                                      "example": "Name is required."
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "success": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "object"
+                            },
+                            "nullable": {
+                              "type": "boolean",
+                              "example": true
+                            },
+                            "example": {}
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "resultType": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "string"
+                            },
+                            "example": {
+                              "type": "string",
+                              "example": "FAILURE"
+                            }
+                          }
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "object"
+                            },
+                            "properties": {
+                              "type": "object",
+                              "properties": {
+                                "reason": {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "example": "string"
+                                    },
+                                    "example": {
+                                      "type": "string",
+                                      "example": "Name is required."
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "success": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "object"
+                            },
+                            "nullable": {
+                              "type": "boolean",
+                              "example": true
+                            },
+                            "example": {}
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "변경할 사용자 이름"
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/mypage/goal": {
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "summary": "사용자 목표 장수 변경 API",
+        "description": "로그인한 사용자의 목표 장수를 변경하는 API입니다.",
+        "responses": {
+          "200": {
+            "description": "목표 장수 변경 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "resultType": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "string"
+                            },
+                            "example": {
+                              "type": "string",
+                              "example": "SUCCESS"
+                            }
+                          }
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "object"
+                            },
+                            "nullable": {
+                              "type": "boolean",
+                              "example": true
+                            },
+                            "example": {}
+                          }
+                        },
+                        "success": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "object"
+                            },
+                            "properties": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "example": "integer"
+                                    },
+                                    "example": {
+                                      "type": "number",
+                                      "example": 1
+                                    }
+                                  }
+                                },
+                                "goalCount": {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "example": "integer"
+                                    },
+                                    "example": {
+                                      "type": "number",
+                                      "example": 5
+                                    }
+                                  }
+                                },
+                                "updatedAt": {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "example": "string"
+                                    },
+                                    "format": {
+                                      "type": "string",
+                                      "example": "date-time"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "resultType": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "string"
+                            },
+                            "example": {
+                              "type": "string",
+                              "example": "SUCCESS"
+                            }
+                          }
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "object"
+                            },
+                            "nullable": {
+                              "type": "boolean",
+                              "example": true
+                            },
+                            "example": {}
+                          }
+                        },
+                        "success": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "object"
+                            },
+                            "properties": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "example": "integer"
+                                    },
+                                    "example": {
+                                      "type": "number",
+                                      "example": 1
+                                    }
+                                  }
+                                },
+                                "goalCount": {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "example": "integer"
+                                    },
+                                    "example": {
+                                      "type": "number",
+                                      "example": 5
+                                    }
+                                  }
+                                },
+                                "updatedAt": {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "example": "string"
+                                    },
+                                    "format": {
+                                      "type": "string",
+                                      "example": "date-time"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "resultType": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "string"
+                            },
+                            "example": {
+                              "type": "string",
+                              "example": "FAILURE"
+                            }
+                          }
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "object"
+                            },
+                            "properties": {
+                              "type": "object",
+                              "properties": {
+                                "reason": {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "example": "string"
+                                    },
+                                    "example": {
+                                      "type": "string",
+                                      "example": "goal_count is required."
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "success": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "object"
+                            },
+                            "nullable": {
+                              "type": "boolean",
+                              "example": true
+                            },
+                            "example": {}
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "resultType": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "string"
+                            },
+                            "example": {
+                              "type": "string",
+                              "example": "FAILURE"
+                            }
+                          }
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "object"
+                            },
+                            "properties": {
+                              "type": "object",
+                              "properties": {
+                                "reason": {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "example": "string"
+                                    },
+                                    "example": {
+                                      "type": "string",
+                                      "example": "goal_count is required."
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "success": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "object"
+                            },
+                            "nullable": {
+                              "type": "boolean",
+                              "example": true
+                            },
+                            "example": {}
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "goalCount": {
+                    "type": "integer",
+                    "description": "변경할 목표 장수"
+                  }
+                },
+                "required": [
+                  "goalCount"
+                ]
               }
             }
           }
