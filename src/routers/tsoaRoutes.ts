@@ -441,15 +441,8 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         const argsMemoFolderController_handlerMemoFolderImageAdd: Record<string, TsoaRoute.ParameterSchema> = {
                 req: {"in":"request","name":"req","required":true,"dataType":"object"},
                 folderName: {"in":"formData","name":"folderName","required":true,"dataType":"string"},
-                image: {"in":"formData","name":"image","required":true,"dataType":"file"},
         };
         app.post('/memo/image-format/folders',
-            upload.fields([
-                {
-                    name: "image",
-                    maxCount: 1
-                }
-            ]),
             ...(fetchMiddlewares<RequestHandler>(MemoFolderController)),
             ...(fetchMiddlewares<RequestHandler>(MemoFolderController.prototype.handlerMemoFolderImageAdd)),
 

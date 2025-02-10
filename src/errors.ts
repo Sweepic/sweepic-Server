@@ -226,7 +226,7 @@ export class ChallengeCompleteError extends BaseError {
 
 // 챌린지 조회 관련 에러 (CHL)
 export class ChallengeNotFoundError extends BaseError {
-  constructor(details: {userId: bigint}) {
+  constructor(details: {userId: bigint; reason?: string}) {
     const errorDetails = {
       userId: details.userId.toString(),
     };
@@ -270,6 +270,34 @@ export class DateChallengeNotFoundError extends BaseError {
 export class NaverGeoCodeError extends BaseError {
   constructor(details: {reason: string}) {
     super(500, 'CHL-500', '네이버 API 호출에 문제가 있습니다.', details);
+  }
+}
+
+// 히스토리 관련 에러
+export class NoDataFoundError extends BaseError {
+  constructor(details: {reason: string}){
+    super(404, 'HIS-404', '조회를 요청한 데이터가 없습니다.', details);
+  }
+}
+
+// 어워드 중복 에러
+export class DuplicateAwardError extends BaseError {
+  constructor(details: {reason: string}){
+    super(400, 'HIS-400', '이미 해당 월의 어워드가 존재합니다.', details);
+  }
+}
+
+// 어워드 업데이트 에러
+export class AwardUpdateError extends BaseError {
+  constructor(details: {reason: string}){
+    super(400, 'HIS-400', '어워드 업데이트를 실패했습니다.', details);
+  }
+}
+
+// 어워드 사진 에러
+export class AwardImageError extends BaseError {
+  constructor(details: {reason: string}){
+    super(400, 'HIS-400', '어워드 사진 형식이 잘못되었습니다.', details);
   }
 }
 
