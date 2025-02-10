@@ -18,7 +18,6 @@ import {
   Tags,
   Example,
   Post,
-  UploadedFile,
 } from 'tsoa';
 import {
   ITsoaErrorResponse,
@@ -121,15 +120,14 @@ export class MemoImageController extends Controller {
   public async handlerMemoImageAdd(
     @Request() req: ExpressRequest,
     @Path('folderId') targetFolderId: string,
-    @UploadedFile() image: Express.MulterS3File,
   ): Promise<ITsoaSuccessResponse<MemoFolderImageResponseDto>> {
     try {
       const userId = BigInt(req.user!.id);
       const folderId = BigInt(targetFolderId);
-      if (!image) {
+      if (!req.file) {
         throw new PhotoDataNotFoundError({reason: '저장할 사진이 없습니다.'});
       }
-      const imageUrl = image.key;
+      const imageUrl = (req.file as Express.MulterS3File).key;
       const memoImage = await memoImageAdd(folderId, imageUrl, userId);
       return new TsoaSuccessResponse(memoImage);
     } catch (error) {
