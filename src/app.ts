@@ -21,7 +21,6 @@ import {ValidateError} from 'tsoa';
 import {labelDetectionController} from './controllers/tags-ai.controller.js';
 
 // routers
-import {memoFolderRouter} from './routers/memo.router.js';
 import {RegisterRoutes} from './routers/tsoaRoutes.js';
 import {challengeRouter} from './routers/challenge.router.js';
 import {authRouter} from './routers/auth.routers.js';
@@ -30,6 +29,7 @@ import {tagRouter} from './routers/tag.router.js';
 import {myPageRouter} from './routers/mypage.routers.js';
 import {imageUploader} from './s3/image.uploader.js';
 import {trustRouter} from './routers/trust.router.js';
+import upload from './ai/ai-upload.js';
 
 dotenv.config();
 
@@ -113,14 +113,17 @@ app.use(sessionAuthMiddleware);
 
 // 로그인 후
 app.use('/onboarding', userRouter);
-app.use('/memo', memoFolderRouter);
 app.use('/challenge', challengeRouter);
 app.use('/user/mypage', myPageRouter);
 app.use('/tag', tagRouter);
-app.use('/trust',trustRouter);
+app.use('/trust', trustRouter);
 app.post('/image/ai', labelDetectionController);
 
-RegisterRoutes(app, {multer: imageUploader});
+app.post('/memo/text-format/folders', upload.single('base64_image'));
+app.patch('/memo/text-format/folders/:folderId', upload.single('base64_image'));
+app.post('/memo/image-format/folders', imageUploader.single('image'));
+app.post('/memo/image-format/folders/:folderId', imageUploader.single('image'));
+RegisterRoutes(app);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Sweepic');

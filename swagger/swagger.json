@@ -668,6 +668,42 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ITsoaSuccessResponse__folder_id-string--image_text-string__": {
+				"properties": {
+					"resultType": {
+						"type": "string"
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"success": {
+						"properties": {
+							"image_text": {
+								"type": "string"
+							},
+							"folder_id": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"image_text",
+							"folder_id"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"success"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ResponseFromMostTagToClient": {
 				"properties": {
 					"_count": {
@@ -889,6 +925,16 @@
 		},
 		"contact": {}
 	},
+	"servers": [
+		{
+			"url": "http://localhost:3000",
+			"description": "Sweepic local server"
+		},
+		{
+			"url": "http://3.37.137.212:3000",
+			"description": "Sweepic server"
+		}
+	],
 	"paths": {
 		"/tags/date": {
 			"get": {
@@ -1406,150 +1452,6 @@
 				}
 			}
 		},
-		"/memo/image-format/folders/{folderId}": {
-			"post": {
-				"operationId": "HandlerMemoImageAdd",
-				"responses": {
-					"200": {
-						"description": "사진 저장 성공 응답",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ITsoaSuccessResponse_MemoFolderImageResponseDto_"
-								},
-								"examples": {
-									"Example 1": {
-										"value": {
-											"resultType": "SUCCESS",
-											"error": null,
-											"success": {
-												"folderId": "1",
-												"folderName": "string",
-												"imageId": "1",
-												"imageUrl": "string"
-											}
-										}
-									}
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "유효하지 않은 확장자 에러",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ITsoaErrorResponse"
-								},
-								"examples": {
-									"Example 1": {
-										"value": {
-											"resultType": "FAIL",
-											"error": {
-												"errorCode": "MEM-400",
-												"reason": "메모 사진 추가 중 오류가 발생했습니다.",
-												"data": {
-													"folderId": "1",
-													"imageUrl": "string"
-												}
-											},
-											"success": null
-										}
-									},
-									"Example 2": {
-										"value": {
-											"resultType": "FAIL",
-											"error": {
-												"errorCode": "PHO-400",
-												"reason": "사진 데이터가 유효하지 않습니다.",
-												"data": {
-													"extension": "string"
-												}
-											},
-											"success": null
-										}
-									}
-								}
-							}
-						}
-					},
-					"404": {
-						"description": "존재하지 않은 데이터 조회 에러",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ITsoaErrorResponse"
-								},
-								"examples": {
-									"Example 1": {
-										"value": {
-											"resultType": "FAIL",
-											"error": {
-												"errorCode": "FOL-404",
-												"reason": "해당 폴더를 찾을 수 없습니다.",
-												"data": {
-													"folderId": "1"
-												}
-											},
-											"success": null
-										}
-									},
-									"Example 2": {
-										"value": {
-											"resultType": "FAIL",
-											"error": {
-												"errorCode": "PHO-404",
-												"reason": "해당 사진 데이터가 없습니다.",
-												"data": {
-													"imageId": "1"
-												}
-											},
-											"success": null
-										}
-									}
-								}
-							}
-						}
-					}
-				},
-				"description": "특정 폴더에 사진을 저장하는 API입니다.",
-				"summary": "사진 저장 API",
-				"tags": [
-					"memo-image-controller"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"description": "폴더 ID",
-						"in": "path",
-						"name": "folderId",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"multipart/form-data": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"image": {
-										"type": "string",
-										"format": "binary"
-									}
-								},
-								"required": [
-									"image"
-								]
-							}
-						}
-					}
-				}
-			}
-		},
 		"/memo/folders/{folderId}/images": {
 			"patch": {
 				"operationId": "HandlerMemoImageMove",
@@ -1972,160 +1874,6 @@
 							"schema": {
 								"$ref": "#/components/schemas/BodyToMemoFolder",
 								"description": "폴더 이름 수정 내용"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/memo/image-format/folders": {
-			"post": {
-				"operationId": "HandlerMemoFolderImageAdd",
-				"responses": {
-					"200": {
-						"description": "폴더 생성 및 사진 저장 성공 응답",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ITsoaSuccessResponse_MemoFolderImageResponseDto_"
-								},
-								"examples": {
-									"Example 1": {
-										"value": {
-											"resultType": "SUCCESS",
-											"error": null,
-											"success": {
-												"folderId": "1",
-												"folderName": "string",
-												"imageId": "1",
-												"imageUrl": "string"
-											}
-										}
-									}
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "유효하지 않은 데이터 에러",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ITsoaErrorResponse"
-								},
-								"examples": {
-									"Example 1": {
-										"value": {
-											"resultType": "FAIL",
-											"success": null,
-											"error": {
-												"errorCode": "FOL-400",
-												"reason": "폴더 생성 중 오류가 발생했습니다.",
-												"data": {
-													"userId": "1",
-													"folderName": "string"
-												}
-											}
-										}
-									},
-									"Example 2": {
-										"value": {
-											"resultType": "FAIL",
-											"error": {
-												"errorCode": "PHO-400",
-												"reason": "사진 데이터가 유효하지 않습니다.",
-												"data": {
-													"reason": "저장할 사진이 없습니다."
-												}
-											},
-											"success": null
-										}
-									},
-									"Example 3": {
-										"value": {
-											"resultType": "FAIL",
-											"error": {
-												"errorCode": "MEM-400",
-												"reason": "메모 사진 추가 중 오류가 발생했습니다.",
-												"data": {
-													"folderId": "1",
-													"imageUrl": "string"
-												}
-											},
-											"success": null
-										}
-									},
-									"Example 4": {
-										"value": {
-											"resultType": "FAIL",
-											"error": {
-												"errorCode": "PHO-400",
-												"reason": "사진 데이터가 유효하지 않습니다.",
-												"data": {
-													"extension": "string"
-												}
-											},
-											"success": null
-										}
-									}
-								}
-							}
-						}
-					},
-					"409": {
-						"description": "중복 데이터 에러",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ITsoaErrorResponse"
-								},
-								"examples": {
-									"Example 1": {
-										"value": {
-											"resultType": "FAIL",
-											"success": null,
-											"error": {
-												"errorCode": "FOL-409",
-												"reason": "이미 존재하는 폴더 이름입니다.",
-												"data": {
-													"folderName": "string"
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				},
-				"description": "폴더 생성과 동시에 파일을 저장하는 API입니다.",
-				"summary": "폴더 생성 및 사진 저장 API",
-				"tags": [
-					"memo-folder-controller"
-				],
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"multipart/form-data": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"folderName": {
-										"type": "string",
-										"description": "생성할 폴더 이름"
-									},
-									"image": {
-										"type": "string",
-										"format": "binary",
-										"description": "파일 업로드"
-									}
-								},
-								"required": [
-									"folderName",
-									"image"
-								]
 							}
 						}
 					}
@@ -2954,16 +2702,654 @@
 				"security": [],
 				"parameters": []
 			}
-		}
-	},
-	"servers": [
-		{
-			"url": "http://localhost:3000",
-			"description": "Sweepic local server"
 		},
-		{
-			"url": "http://3.37.137.212:3000",
-			"description": "Sweepic server"
+		"/memo/image-format/folders": {
+			"post": {
+				"operationId": "HandlerMemoFolderImageAdd",
+				"responses": {
+					"200": {
+						"description": "폴더 생성 및 사진 저장 성공 응답",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_MemoFolderImageResponseDto_"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "SUCCESS",
+											"error": null,
+											"success": {
+												"folderId": "1",
+												"folderName": "string",
+												"imageId": "1",
+												"imageUrl": "string"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "유효하지 않은 데이터 에러",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"success": null,
+											"error": {
+												"errorCode": "FOL-400",
+												"reason": "폴더 생성 중 오류가 발생했습니다.",
+												"data": {
+													"userId": "1",
+													"folderName": "string"
+												}
+											}
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "PHO-400",
+												"reason": "사진 데이터가 유효하지 않습니다.",
+												"data": {
+													"reason": "저장할 사진이 없습니다."
+												}
+											},
+											"success": null
+										}
+									},
+									"Example 3": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "MEM-400",
+												"reason": "메모 사진 추가 중 오류가 발생했습니다.",
+												"data": {
+													"folderId": "1",
+													"imageUrl": "string"
+												}
+											},
+											"success": null
+										}
+									},
+									"Example 4": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "PHO-400",
+												"reason": "사진 데이터가 유효하지 않습니다.",
+												"data": {
+													"extension": "string"
+												}
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "중복 데이터 에러",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"success": null,
+											"error": {
+												"errorCode": "FOL-409",
+												"reason": "이미 존재하는 폴더 이름입니다.",
+												"data": {
+													"folderName": "string"
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "폴더 생성과 동시에 파일을 저장하는 API입니다.",
+				"summary": "폴더 생성 및 사진 저장 API",
+				"tags": [
+					"memo-folder-controller"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"required": [
+									"folderName"
+								],
+								"type": "object",
+								"properties": {
+									"folderName": {
+										"type": "string",
+										"description": "생성할 폴더 이름"
+									},
+									"image": {
+										"type": "string",
+										"format": "binary",
+										"description": "파일 업로드"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/memo/image-format/folders/{folderId}": {
+			"post": {
+				"operationId": "HandlerMemoImageAdd",
+				"responses": {
+					"200": {
+						"description": "사진 저장 성공 응답",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_MemoFolderImageResponseDto_"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "SUCCESS",
+											"error": null,
+											"success": {
+												"folderId": "1",
+												"folderName": "string",
+												"imageId": "1",
+												"imageUrl": "string"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "유효하지 않은 확장자 에러",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "MEM-400",
+												"reason": "메모 사진 추가 중 오류가 발생했습니다.",
+												"data": {
+													"folderId": "1",
+													"imageUrl": "string"
+												}
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "PHO-400",
+												"reason": "사진 데이터가 유효하지 않습니다.",
+												"data": {
+													"extension": "string"
+												}
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "존재하지 않은 데이터 조회 에러",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "FOL-404",
+												"reason": "해당 폴더를 찾을 수 없습니다.",
+												"data": {
+													"folderId": "1"
+												}
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "PHO-404",
+												"reason": "해당 사진 데이터가 없습니다.",
+												"data": {
+													"imageId": "1"
+												}
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "특정 폴더에 사진을 저장하는 API입니다.",
+				"summary": "사진 저장 API",
+				"tags": [
+					"memo-image-controller"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "폴더 ID",
+						"in": "path",
+						"name": "folderId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"image": {
+										"type": "string",
+										"format": "binary",
+										"description": "파일 업로드"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/memo/text-format/folders/{folderId}": {
+			"patch": {
+				"operationId": "UpdateFolderOCR",
+				"responses": {
+					"200": {
+						"description": "폴더 업데이트 및 텍스트 변환",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse__folder_id-string--image_text-string__"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "SUCCESS",
+											"error": null,
+											"success": {
+												"folder_id": "1",
+												"image_text": "이번 수업 시간은 사회 과학 시간이다."
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "잘못된 요청 데이터",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"success": null,
+											"error": {
+												"errorCode": "SRH-400",
+												"reason": "입력 데이터가 유효하지 않습니다.",
+												"data": {
+													"reason": "folder_ID가 필요합니다."
+												}
+											}
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"success": null,
+											"error": {
+												"errorCode": "SRH-400",
+												"reason": "입력 데이터가 유효하지 않습니다.",
+												"data": {
+													"reason": "base64_image가 필요합니다."
+												}
+											}
+										}
+									},
+									"Example 3": {
+										"value": {
+											"resultType": "FAIL",
+											"success": null,
+											"error": {
+												"errorCode": "SRH-400",
+												"reason": "입력 데이터가 유효하지 않습니다.",
+												"data": {
+													"reason": "user_id가 필요합니다."
+												}
+											}
+										}
+									},
+									"Example 4": {
+										"value": {
+											"resultType": "FAIL",
+											"success": null,
+											"error": {
+												"errorCode": "PHO-400",
+												"reason": "사진 데이터가 유효하지 않습니다.",
+												"data": {
+													"reason": "올바른 Base64 이미지 형식이 아닙니다."
+												}
+											}
+										}
+									},
+									"Example 5": {
+										"value": {
+											"resultType": "FAIL",
+											"success": null,
+											"error": {
+												"errorCode": "PHO-400",
+												"reason": "사진 데이터가 유효하지 않습니다.",
+												"data": {
+													"reason": "텍스트를 추출할 사진이 없습니다."
+												}
+											}
+										}
+									},
+									"Example 6": {
+										"value": {
+											"resultType": "FAIL",
+											"success": null,
+											"error": {
+												"errorCode": "PHO-400",
+												"reason": "사진 데이터가 유효하지 않습니다.",
+												"data": {
+													"reason": "이미지에서 텍스트를 찾지 못하였습니다."
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "존재하지 않은 데이터 조회 에러",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"success": null,
+											"error": {
+												"errorCode": "FOL-404",
+												"reason": "해당 폴더를 찾을 수 없습니다.",
+												"data": {
+													"folderId": "1"
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "기존 폴더에 이미지를 추가하고, OCR 텍스트를 업데이트하는 API입니다.",
+				"summary": "폴더 업데이트 및 OCR 수행",
+				"tags": [
+					"memo-ai"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "업데이트할 폴더의 ID",
+						"in": "path",
+						"name": "folderId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"base64_image": {
+										"type": "string",
+										"format": "binary",
+										"description": "OCR 처리를 위한 이미지 업로드"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/memo/text-format/folders": {
+			"post": {
+				"operationId": "CreateFolderOCR",
+				"responses": {
+					"200": {
+						"description": "폴더 생성 및 텍스트 변환",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse__folder_id-string--image_text-string__"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "SUCCESS",
+											"error": null,
+											"success": {
+												"folder_id": "1",
+												"image_text": "이번 수업 시간은 사회 과학 시간이다."
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "잘못된 요청 데이터",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"success": null,
+											"error": {
+												"errorCode": "SRH-400",
+												"reason": "입력 데이터가 유효하지 않습니다.",
+												"data": {
+													"reason": "base64_image, user_id, folder_name이 필요합니다."
+												}
+											}
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"success": null,
+											"error": {
+												"errorCode": "PHO-400",
+												"reason": "사진 데이터가 유효하지 않습니다.",
+												"data": {
+													"reason": "올바른 Base64 이미지 형식이 아닙니다."
+												}
+											}
+										}
+									},
+									"Example 3": {
+										"value": {
+											"resultType": "FAIL",
+											"success": null,
+											"error": {
+												"errorCode": "PHO-400",
+												"reason": "사진 데이터가 유효하지 않습니다.",
+												"data": {
+													"reason": "텍스트를 추출할 사진이 없습니다."
+												}
+											}
+										}
+									},
+									"Example 4": {
+										"value": {
+											"resultType": "FAIL",
+											"success": null,
+											"error": {
+												"errorCode": "PHO-400",
+												"reason": "사진 데이터가 유효하지 않습니다.",
+												"data": {
+													"reason": "이미지에서 텍스트를 찾지 못하였습니다."
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "존재하지 않은 데이터 조회 에러",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"success": null,
+											"error": {
+												"errorCode": "FOL-404",
+												"reason": "해당 폴더를 찾을 수 없습니다.",
+												"data": {
+													"folderId": "1"
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "중복 데이터 에러",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"success": null,
+											"error": {
+												"errorCode": "FOL-409",
+												"reason": "이미 존재하는 폴더 이름입니다.",
+												"data": {
+													"folderName": "string"
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "새로운 폴더를 생성하고, 이미지에서 OCR 텍스트를 추출하여 이미지와 텍스트를 저장하는 API입니다.",
+				"summary": "폴더 생성 및 OCR 수행",
+				"tags": [
+					"memo-ai"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"required": [
+									"folder_name"
+								],
+								"type": "object",
+								"properties": {
+									"folder_name": {
+										"type": "string",
+										"description": "생성할 폴더의 이름"
+									},
+									"base64_image": {
+										"type": "string",
+										"format": "binary",
+										"description": "OCR 처리를 위한 이미지 업로드"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 		}
-	]
+	}
 }

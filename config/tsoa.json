@@ -6,6 +6,7 @@
     "outputDirectory": "./swagger",
     "specVersion": 3,
     "validate": true,
+    "specMerging": "recursive",
     "spec": {
       "servers": [
         {
@@ -16,7 +17,93 @@
           "url": "http://3.37.137.212:3000",
           "description": "Sweepic server"
         }
-      ]
+      ],
+      "paths": {
+        "/memo/image-format/folders": {
+          "post": {
+            "requestBody": {
+              "required": true,
+              "content": {
+                "multipart/form-data": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "image": {
+                        "type": "string",
+                        "format": "binary",
+                        "description": "파일 업로드"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/memo/image-format/folders/{folderId}": {
+          "post": {
+            "requestBody": {
+              "required": true,
+              "content": {
+                "multipart/form-data": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "image": {
+                        "type": "string",
+                        "format": "binary",
+                        "description": "파일 업로드"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/memo/text-format/folders/{folderId}": {
+          "patch": {
+            "requestBody": {
+              "required": true,
+              "content": {
+                "multipart/form-data": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "base64_image": {
+                        "type": "string",
+                        "format": "binary",
+                        "description": "OCR 처리를 위한 이미지 업로드"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/memo/text-format/folders": {
+          "post": {
+            "requestBody": {
+              "required": true,
+              "content": {
+                "multipart/form-data": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "base64_image": {
+                        "type": "string",
+                        "format": "binary",
+                        "description": "OCR 처리를 위한 이미지 업로드"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "securityDefinitions": {
       "sessionAuth": {

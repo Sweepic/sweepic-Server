@@ -12,12 +12,14 @@ import { MemoImageController } from './../controllers/tsoa.memo-image.controller
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { MemoFolderController } from './../controllers/tsoa.memo-folder.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { MemoCreateFolderOCRController } from './../controllers/memo-updateFolderOCR.Controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { MemoCreateUpdateOCRController } from './../controllers/memo-createFolderOCR.Controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { MostTaggedController } from './../controllers/history.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AwardController } from './../controllers/history.controller.js';
 import type { Request as ExRequest, Response as ExResponse, RequestHandler, Router } from 'express';
-import multer from 'multer';
-
 
 
 
@@ -254,6 +256,16 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ITsoaSuccessResponse__folder_id-string--image_text-string__": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"string","required":true},
+            "error": {"dataType":"enum","enums":[null],"required":true},
+            "success": {"dataType":"nestedObjectLiteral","nestedProperties":{"image_text":{"dataType":"string","required":true},"folder_id":{"dataType":"string","required":true}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ResponseFromMostTagToClient": {
         "dataType": "refObject",
         "properties": {
@@ -337,14 +349,13 @@ const templateService = new ExpressTemplateService(models, {"noImplicitAdditiona
 
 
 
-export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof multer>}) {
+export function RegisterRoutes(app: Router) {
 
     // ###########################################################################################################
     //  NOTE: If you do not see routes for all of your controllers in this file, then you might not have informed tsoa of where to look
     //      Please look into the "controllerPathGlobs" config option described in the readme: https://github.com/lukeautry/tsoa
     // ###########################################################################################################
 
-    const upload = opts?.multer ||  multer({"limits":{"fileSize":8388608}});
 
     
         const argsTagsController_getTagListWithDate: Record<string, TsoaRoute.ParameterSchema> = {
@@ -476,15 +487,8 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         const argsMemoImageController_handlerMemoImageAdd: Record<string, TsoaRoute.ParameterSchema> = {
                 req: {"in":"request","name":"req","required":true,"dataType":"object"},
                 targetFolderId: {"in":"path","name":"folderId","required":true,"dataType":"string"},
-                image: {"in":"formData","name":"image","required":true,"dataType":"file"},
         };
         app.post('/memo/image-format/folders/:folderId',
-            upload.fields([
-                {
-                    name: "image",
-                    maxCount: 1
-                }
-            ]),
             ...(fetchMiddlewares<RequestHandler>(MemoImageController)),
             ...(fetchMiddlewares<RequestHandler>(MemoImageController.prototype.handlerMemoImageAdd)),
 
@@ -577,15 +581,8 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         const argsMemoFolderController_handlerMemoFolderImageAdd: Record<string, TsoaRoute.ParameterSchema> = {
                 req: {"in":"request","name":"req","required":true,"dataType":"object"},
                 folderName: {"in":"formData","name":"folderName","required":true,"dataType":"string"},
-                image: {"in":"formData","name":"image","required":true,"dataType":"file"},
         };
         app.post('/memo/image-format/folders',
-            upload.fields([
-                {
-                    name: "image",
-                    maxCount: 1
-                }
-            ]),
             ...(fetchMiddlewares<RequestHandler>(MemoFolderController)),
             ...(fetchMiddlewares<RequestHandler>(MemoFolderController.prototype.handlerMemoFolderImageAdd)),
 
@@ -820,6 +817,68 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
               await templateService.apiHandler({
                 methodName: 'handlerMemoTextUpdate',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMemoCreateFolderOCRController_updateFolderOCR: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                folderId: {"in":"path","name":"folderId","required":true,"dataType":"double"},
+        };
+        app.patch('/memo/text-format/folders/:folderId',
+            ...(fetchMiddlewares<RequestHandler>(MemoCreateFolderOCRController)),
+            ...(fetchMiddlewares<RequestHandler>(MemoCreateFolderOCRController.prototype.updateFolderOCR)),
+
+            async function MemoCreateFolderOCRController_updateFolderOCR(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMemoCreateFolderOCRController_updateFolderOCR, request, response });
+
+                const controller = new MemoCreateFolderOCRController();
+
+              await templateService.apiHandler({
+                methodName: 'updateFolderOCR',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMemoCreateUpdateOCRController_createFolderOCR: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                folderName: {"in":"formData","name":"folder_name","required":true,"dataType":"string"},
+        };
+        app.post('/memo/text-format/folders',
+            ...(fetchMiddlewares<RequestHandler>(MemoCreateUpdateOCRController)),
+            ...(fetchMiddlewares<RequestHandler>(MemoCreateUpdateOCRController.prototype.createFolderOCR)),
+
+            async function MemoCreateUpdateOCRController_createFolderOCR(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMemoCreateUpdateOCRController_createFolderOCR, request, response });
+
+                const controller = new MemoCreateUpdateOCRController();
+
+              await templateService.apiHandler({
+                methodName: 'createFolderOCR',
                 controller,
                 response,
                 next,

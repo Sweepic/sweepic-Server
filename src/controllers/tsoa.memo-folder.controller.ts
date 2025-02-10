@@ -30,7 +30,6 @@ import {
   Patch,
   Example,
   FormField,
-  UploadedFile,
 } from 'tsoa';
 import {
   BodyToMemoFolder,
@@ -144,14 +143,14 @@ export class MemoFolderController extends Controller {
   public async handlerMemoFolderImageAdd(
     @Request() req: ExpressRequest,
     @FormField() folderName: string,
-    @UploadedFile() image: Express.MulterS3File,
   ): Promise<ITsoaSuccessResponse<MemoFolderImageResponseDto>> {
     try {
       const userId = BigInt(req.user!.id);
-      if (!image) {
+
+      if (!req.file) {
         throw new PhotoValidationError({reason: '저장할 사진이 없습니다.'});
       }
-      const imageUrl = image.key;
+      const imageUrl = (req.file as Express.MulterS3File).key;
       const folderId = req.uploadDirectory;
       const memoFolderImage = await memoFolderImageCreate(
         userId,
