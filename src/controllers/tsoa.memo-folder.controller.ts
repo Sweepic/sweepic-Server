@@ -30,6 +30,7 @@ import {
   Patch,
   Example,
   FormField,
+  Middlewares,
 } from 'tsoa';
 import {
   BodyToMemoFolder,
@@ -46,6 +47,7 @@ import {
 } from '../models/tsoaResponse.js';
 import {BodyToMemoImagesToDelete} from '../models/memo-image.model.tsoa.js';
 import {Request as ExpressRequest, Express} from 'express';
+import {ImageUploadMiddleware} from '../s3/image.uploader.middleware.js';
 
 @Route('memo')
 export class MemoFolderController extends Controller {
@@ -60,6 +62,7 @@ export class MemoFolderController extends Controller {
    *
    */
   @Post('/image-format/folders')
+  @Middlewares(ImageUploadMiddleware)
   @Tags('memo-folder-controller')
   @Response<ITsoaErrorResponse>(
     StatusCodes.BAD_REQUEST,
