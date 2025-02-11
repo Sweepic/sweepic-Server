@@ -83,7 +83,7 @@ jobs:
       # 전송된 압축 배포파일을 압축풀기
       - name: Release Compressed File
         run: |
-          ssh sweepic-ec2 'sudo tar -xzvf /opt/app/dist.tar.gz'
+          ssh sweepic-ec2 'sudo tar -xzvf /opt/app/dist.tar.gz -C /opt/app'
           
 
       # 원격 서버에서 애플리케이션을 Systemd 서비스로 등록하는 과정
