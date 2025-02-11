@@ -34,12 +34,12 @@ jobs:
 
       - name: Generate Tsoa Routes
         run: |
-          yarn tsoa routes -c ./config/tsoa.json
+          yarn tsoa-routes
       
       - name: Generate Swagger document
         run: |
-          yarn tsx ./swagger/swagger.js
-          yarn tsoa spec -c ./config/tsoa.json
+          yarn swagger
+          yarn tsoa-swagger
 
       - name: Run build
         run: |
