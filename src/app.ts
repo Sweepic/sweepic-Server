@@ -19,6 +19,7 @@ import {sessionAuthMiddleware} from './auth.config.js';
 import cookieParser from 'cookie-parser';
 import {ValidateError} from 'tsoa';
 import {labelDetectionController} from './controllers/tags-ai.controller.js';
+import upload from './ai/ai-upload.js';
 
 // routers
 import {RegisterRoutes} from './routers/tsoaRoutes.js';
@@ -115,7 +116,7 @@ app.use('/challenge', challengeRouter);
 app.use('/user/mypage', myPageRouter);
 app.use('/tag', tagRouter);
 app.use('/trust', trustRouter);
-app.post('/image/ai', labelDetectionController);
+app.post('/image/ai', upload.single('base64_image'), labelDetectionController);
 
 RegisterRoutes(app);
 
