@@ -16,12 +16,14 @@ import {
   Response,
   Tags,
   Post,
+  Middlewares,
 } from 'tsoa';
 import {
   ITsoaErrorResponse,
   ITsoaSuccessResponse,
   TsoaSuccessResponse,
 } from '../models/tsoaResponse.js';
+import {uploadMiddleware} from '../ai/ai-upload.middleware.js';
 
 @Route('memo')
 export class MemoCreateUpdateOCRController extends Controller {
@@ -34,6 +36,7 @@ export class MemoCreateUpdateOCRController extends Controller {
    * @returns 성공 시 폴더를 생성하고 텍스트를 저장한 결과를 반환합니다.
    */
   @Post('/text-format/folders')
+  @Middlewares(uploadMiddleware)
   @Tags('memo-ai')
   @Response<ITsoaErrorResponse>(StatusCodes.BAD_REQUEST, '잘못된 요청 데이터', {
     resultType: 'FAIL',
