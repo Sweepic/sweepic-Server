@@ -12,9 +12,9 @@ import { MemoImageController } from './../controllers/tsoa.memo-image.controller
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { MemoFolderController } from './../controllers/tsoa.memo-folder.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { MemoCreateFolderOCRController } from '../controllers/memo-updateFolderOCR.controller.js';
+import { MemoCreateFolderOCRController } from './../controllers/memo-updateFolderOCR.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { MemoCreateUpdateOCRController } from '../controllers/memo-createFolderOCR.controller.js';
+import { MemoCreateUpdateOCRController } from './../controllers/memo-createFolderOCR.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { MostTaggedController } from './../controllers/history.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
