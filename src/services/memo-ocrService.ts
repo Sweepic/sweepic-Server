@@ -106,7 +106,10 @@ export const performOCR = async (base64_image: string): Promise<string> => {
     }
 
     return annotations[0].description || '텍스트를 찾을 수 없습니다';
-  } catch {
+  } catch (error) {
+    if (error instanceof PhotoDataNotFoundError) {
+      throw error;
+    }
     throw new OCRProcessError();
   }
 };
