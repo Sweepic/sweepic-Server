@@ -29,7 +29,7 @@ export interface WeeklyChallengeCreation {
 }
 
 export interface ChallengeModify {
-    id: bigint;
+    id: string;
     required: number;
     remaining: number;
 }

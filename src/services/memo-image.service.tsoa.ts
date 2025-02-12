@@ -2,7 +2,7 @@ import {
   responseFromMessage,
   responseFromMemoFolderImage,
   responseFromMemoTextImageList,
-} from '../dtos/memo-folder.dto.js';
+} from '../dtos/memo-folder.dto.tsoa.js';
 import {
   FolderNotChangeError,
   FolderNotFoundError,
@@ -14,29 +14,30 @@ import {
   ResponseMessage,
   MemoFolderImageResponseDto,
   MemoTextImageListResponseDto,
-} from '../models/memo-folder.model.js';
+} from '../models/memo-folder.model.tsoa.js';
 import {
   BodyToMemoImagesToDelete,
   BodyToMemoImagesToMove,
-} from '../models/memo-image.model.js';
+} from '../models/memo-image.model.tsoa.js';
 import {
   deleteMemoFolder,
   getMemoFolder,
   getMemoTextImageList,
-} from '../repositories/memo-folder.repository.js';
+} from '../repositories/memo-folder.repository.tsoa.js';
 import {
   addMemoImage,
   deleteMemoImages,
   getMemoImage,
   moveMemoImages,
-} from '../repositories/memo-image.repository.js';
+} from '../repositories/memo-image.repository.tsoa.js';
 
 export const memoImageAdd = async (
   folderId: bigint,
   imageUrl: string,
+  userId: bigint,
 ): Promise<MemoFolderImageResponseDto> => {
   const folder = await getMemoFolder(folderId);
-  if (folder === null) {
+  if (folder === null || folder.userId !== userId) {
     throw new FolderNotFoundError({folderId});
   }
   const addedMemoImageId = await addMemoImage(folderId, imageUrl);
@@ -67,14 +68,19 @@ export const memoImagesMove = async (
   folderId: bigint,
   body: BodyToMemoImagesToMove,
 ): Promise<MemoTextImageListResponseDto> => {
-  const checkTargetFolder = await getMemoFolder(body.targetFolderId);
-  if (checkTargetFolder === null) {
+  const currentFolder = await getMemoFolder(folderId);
+  if (currentFolder === null || currentFolder.userId !== userId) {
     throw new FolderNotFoundError({folderId});
   }
-  const memoImagesToMove = await moveMemoImages(userId, folderId, body);
-  if (folderId === body.targetFolderId) {
+  const checkTargetFolder = await getMemoFolder(BigInt(body.targetFolderId));
+  if (checkTargetFolder === null || checkTargetFolder.userId !== userId) {
+    throw new FolderNotFoundError({folderId: BigInt(body.targetFolderId)});
+  }
+  if (folderId === BigInt(body.targetFolderId)) {
     throw new FolderNotChangeError({folderId});
   }
+
+  const memoImagesToMove = await moveMemoImages(userId, folderId, body);
   if (
     typeof memoImagesToMove === 'bigint' ||
     typeof memoImagesToMove === 'number'
@@ -83,10 +89,13 @@ export const memoImagesMove = async (
   }
   const movedMemoImages = await getMemoTextImageList(
     userId,
-    body.targetFolderId,
+    BigInt(body.targetFolderId),
   );
   if (movedMemoImages === null) {
-    throw new MemoImageMoveError({folderId, imageId: body.imageId});
+    throw new MemoImageMoveError({
+      folderId,
+      imageId: body.imageId.map(imgId => BigInt(imgId)),
+    });
   }
   return responseFromMemoTextImageList(movedMemoImages);
 };
@@ -96,6 +105,10 @@ export const memoImageDelete = async (
   folderId: bigint,
   body: BodyToMemoImagesToDelete,
 ): Promise<MemoTextImageListResponseDto> => {
+  const folder = await getMemoFolder(folderId);
+  if (folder === null || folder.userId !== userId) {
+    throw new FolderNotFoundError({folderId});
+  }
   const memoImagesToDelete = await deleteMemoImages(userId, folderId, body);
   if (
     typeof memoImagesToDelete === 'bigint' ||

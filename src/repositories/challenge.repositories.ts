@@ -41,15 +41,15 @@ export const updateChallenge = async (
   data: ChallengeModify,
 ): Promise<Challenge> => {
   const isExistChallenge = await prisma.challenge.findFirst({
-    where: {id: data.id}
+    where: {id: BigInt(data.id)}
   });
 
   if(!isExistChallenge){
-    throw new ChallengeUpdateError({challengeId: data.id});
+    throw new ChallengeUpdateError({challengeId: BigInt(data.id)});
   }
 
   const updated = await prisma.challenge.update({
-    where: {id: data.id},
+    where: {id: BigInt(data.id)},
     data: {
       requiredCount: data.required,
       remainingCount: data.remaining,
