@@ -5,6 +5,7 @@ import {
 } from '../dtos/challenge.dtos.js';
 import {
   ChallengeModify,
+  ResponseFromChallenge,
   ResponseFromGetByUserId,
   ResponseFromGetByUserIdReform,
   ResponseFromUpdateChallenge,
@@ -31,7 +32,7 @@ export const serviceUpdateChallenge = async (
     const updatedChallenge: Challenge | null = await updateChallenge(data);
 
     if (updatedChallenge === null) {
-      throw new ChallengeUpdateError({challengeId: data.id});
+      throw new ChallengeUpdateError({challengeId: BigInt(data.id)});
     }
 
     return responseFromChallenge(updatedChallenge);
@@ -54,7 +55,7 @@ export const serviceDeleteChallenge = async (data: bigint): Promise<void> => {
 
 export const serviceAcceptChallenge = async (
   data: bigint,
-): Promise<Challenge> => {
+): Promise<ResponseFromChallenge> => {
   try {
     const accepted: Challenge | null = await acceptChallenge(data);
 
@@ -65,7 +66,7 @@ export const serviceAcceptChallenge = async (
       });
     }
 
-    return accepted;
+    return responseFromChallenge(accepted);
   } catch (error) {
     throw error;
   }
@@ -73,7 +74,7 @@ export const serviceAcceptChallenge = async (
 
 export const serviceCompleteChallenge = async (
   data: bigint,
-): Promise<Challenge> => {
+): Promise<ResponseFromChallenge> => {
   try {
     const completed: Challenge | null = await completeChallenge(data);
 
@@ -84,7 +85,7 @@ export const serviceCompleteChallenge = async (
       });
     }
 
-    return completed;
+    return responseFromChallenge(completed);
   } catch (error) {
     throw error;
   }

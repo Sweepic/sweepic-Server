@@ -85,7 +85,7 @@ export const serviceLocationLogic = async (
 
     hashPosition.forEach(
       (value: number, key: string) => {
-        if (value > 0 && value < 5) {
+        if (value > 5 && value < 10) {
           challengePics = data.filter(
             (photo: PhotoInfo) => photo.location === key,
           );

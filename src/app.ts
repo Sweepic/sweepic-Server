@@ -19,16 +19,15 @@ import {sessionAuthMiddleware} from './auth.config.js';
 import cookieParser from 'cookie-parser';
 import {ValidateError} from 'tsoa';
 import {labelDetectionController} from './controllers/tags-ai.controller.js';
-import upload from './ai/ai-upload.js';
 
 // routers
 import {RegisterRoutes} from './routers/tsoaRoutes.js';
-import {challengeRouter} from './routers/challenge.router.js';
 import {authRouter} from './routers/auth.routers.js';
 import {userRouter} from './routers/user.router.js';
 import {tagRouter} from './routers/tag.router.js';
 import {myPageRouter} from './routers/mypage.routers.js';
 import {trustRouter} from './routers/trust.router.js';
+import upload from './ai/ai-upload.js';
 
 dotenv.config();
 
@@ -112,7 +111,7 @@ app.use(sessionAuthMiddleware);
 
 // 로그인 후
 app.use('/onboarding', userRouter);
-app.use('/challenge', challengeRouter);
+//app.use('/challenge', challengeRouter);
 app.use('/user/mypage', myPageRouter);
 app.use('/tag', tagRouter);
 app.use('/trust', trustRouter);
