@@ -1,40 +1,42 @@
 import {Request as ExpressRequest} from 'express';
 import {processOCRAndSave} from '../services/memo-ocrService.js';
+import {StatusCodes} from 'http-status-codes';
 import {
   DataValidationError,
   PhotoDataNotFoundError,
   PhotoValidationError,
 } from '../errors.js';
 import {
+  Controller,
+  Example,
+  FormField,
+  Request,
+  Route,
+  SuccessResponse,
+  Response,
+  Tags,
+  Post,
+  Middlewares,
+} from 'tsoa';
+import {
   ITsoaErrorResponse,
   ITsoaSuccessResponse,
   TsoaSuccessResponse,
 } from '../models/tsoaResponse.js';
-import {
-  Controller,
-  Route,
-  Request,
-  Path,
-  Tags,
-  Response,
-  SuccessResponse,
-  Example,
-  Patch,
-} from 'tsoa';
-import {StatusCodes} from 'http-status-codes';
+import {uploadMiddleware} from '../ai/ai-upload.middleware.js';
 
 @Route('memo')
-export class MemoCreateFolderOCRController extends Controller {
+export class MemoCreateUpdateOCRController extends Controller {
   /**
-   * 기존 폴더에 이미지를 추가하고, OCR 텍스트를 업데이트하는 API입니다.
+   * 새로운 폴더를 생성하고, 이미지에서 OCR 텍스트를 추출하여 이미지와 텍스트를 저장하는 API입니다.
    *
-   * @summary 폴더 업데이트 및 OCR 수행
+   * @summary 폴더 생성 및 OCR 수행
    * @param req
-   * @param base64Image OCR 처리를 위한 이미지 URL
-   * @param folderId 업데이트할 폴더의 ID
-   * @returns 성공 시 특정 폴더에 텍스트를 저장한 결과를 반환합니다.
+   * @param folderName 생성할 폴더의 이름
+   * @returns 성공 시 폴더를 생성하고 텍스트를 저장한 결과를 반환합니다.
    */
-  @Patch('/text-format/folders/:folderId')
+  @Post('/text-format/folders')
+  @Middlewares(uploadMiddleware)
   @Tags('memo-ai')
   @Response<ITsoaErrorResponse>(StatusCodes.BAD_REQUEST, '잘못된 요청 데이터', {
     resultType: 'FAIL',
@@ -42,25 +44,7 @@ export class MemoCreateFolderOCRController extends Controller {
     error: {
       errorCode: 'SRH-400',
       reason: '입력 데이터가 유효하지 않습니다.',
-      data: {reason: 'folder_ID가 필요합니다.'},
-    },
-  })
-  @Response<ITsoaErrorResponse>(StatusCodes.BAD_REQUEST, '잘못된 요청 데이터', {
-    resultType: 'FAIL',
-    success: null,
-    error: {
-      errorCode: 'SRH-400',
-      reason: '입력 데이터가 유효하지 않습니다.',
-      data: {reason: 'base64_image가 필요합니다.'},
-    },
-  })
-  @Response<ITsoaErrorResponse>(StatusCodes.BAD_REQUEST, '잘못된 요청 데이터', {
-    resultType: 'FAIL',
-    success: null,
-    error: {
-      errorCode: 'SRH-400',
-      reason: '입력 데이터가 유효하지 않습니다.',
-      data: {reason: 'user_id가 필요합니다.'},
+      data: {reason: 'base64_image, user_id, folder_name이 필요합니다.'},
     },
   })
   @Response<ITsoaErrorResponse>(StatusCodes.BAD_REQUEST, '잘못된 요청 데이터', {
@@ -103,7 +87,16 @@ export class MemoCreateFolderOCRController extends Controller {
       },
     },
   )
-  @SuccessResponse(StatusCodes.OK, '폴더 업데이트 및 텍스트 변환')
+  @Response<ITsoaErrorResponse>(StatusCodes.CONFLICT, '중복 데이터 에러', {
+    resultType: 'FAIL',
+    success: null,
+    error: {
+      errorCode: 'FOL-409',
+      reason: '이미 존재하는 폴더 이름입니다.',
+      data: {folderName: 'string'},
+    },
+  })
+  @SuccessResponse(StatusCodes.OK, '폴더 생성 및 텍스트 변환')
   @Example({
     resultType: 'SUCCESS',
     error: null,
@@ -112,9 +105,9 @@ export class MemoCreateFolderOCRController extends Controller {
       image_text: '이번 수업 시간은 사회 과학 시간이다.',
     },
   })
-  public async updateFolderOCR(
+  public async createFolderOCR(
     @Request() req: ExpressRequest,
-    @Path('folderId') folderId: number,
+    @FormField('folder_name') folderName: string,
   ): Promise<ITsoaSuccessResponse<{folder_id: string; image_text: string}>> {
     try {
       if (!req.file) {
@@ -123,41 +116,34 @@ export class MemoCreateFolderOCRController extends Controller {
         });
       }
 
-      // 파일이 존재하는 경우 base64 변환
+      //파일 업로드가 있는 경우 base64 변환
       const base64_image = `data:image/png;base64,${req.file.buffer.toString('base64')}`;
 
-      //const {folderId} = req.params; // URL 매개변수에서 folderId 가져오기
       const user_id = BigInt(req.user!.id);
+      const folder_name = folderName;
 
+      // 유효성 검사-데이터가 하나라도 빠지지 않도록
       // 유효성 검사
-      if (!folderId) {
+      if (!base64_image || !user_id || !folder_name) {
         throw new DataValidationError({
-          reason: 'folder_ID가 필요합니다.',
+          reason: 'base64_image, user_id, folder_name이 필요합니다.',
         });
       }
-
-      if (!base64_image) {
-        throw new DataValidationError({
-          reason: 'base64_image가 필요합니다.',
-        });
-      }
-
-      if (!user_id) {
-        throw new DataValidationError({reason: 'user_id가 필요합니다.'});
-      }
-      //bae64 이미지 형태 검증
+      //base64 이미지 검증 - 올바른 형태인지
       if (!isValidBase64(base64_image)) {
         throw new PhotoValidationError({
           reason: '올바른 Base64 이미지 형식이 아닙니다.',
         });
       }
 
+      // 서비스 호출
       const result = await processOCRAndSave({
-        folder_id: Number(folderId),
         base64_image,
         user_id,
+        folder_name,
       });
 
+      // 성공 응답
       return new TsoaSuccessResponse({
         folder_id: result.folder_id,
         image_text: result.image_text,
@@ -167,9 +153,8 @@ export class MemoCreateFolderOCRController extends Controller {
     }
   }
 }
-
 const isValidBase64 = (base64String: string): boolean => {
-  // MIME 타입 검증 (jpeg, png, jpg 허용)
+  // base64 문자열 검증 함수
   const base64Regex = /^data:image\/(jpeg|png|jpg);base64,[A-Za-z0-9+/=]+$/;
   return base64Regex.test(base64String);
 };

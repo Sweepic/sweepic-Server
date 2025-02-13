@@ -19,6 +19,7 @@ import {sessionAuthMiddleware} from './auth.config.js';
 import cookieParser from 'cookie-parser';
 import {ValidateError} from 'tsoa';
 import {labelDetectionController} from './controllers/tags-ai.controller.js';
+import upload from './ai/ai-upload.js';
 
 // routers
 import {RegisterRoutes} from './routers/tsoaRoutes.js';
@@ -27,7 +28,6 @@ import {authRouter} from './routers/auth.routers.js';
 import {userRouter} from './routers/user.router.js';
 import {tagRouter} from './routers/tag.router.js';
 import {myPageRouter} from './routers/mypage.routers.js';
-import {imageUploader} from './s3/image.uploader.js';
 import {trustRouter} from './routers/trust.router.js';
 import upload from './ai/ai-upload.js';
 
@@ -117,12 +117,8 @@ app.use('/onboarding', userRouter);
 app.use('/user/mypage', myPageRouter);
 app.use('/tag', tagRouter);
 app.use('/trust', trustRouter);
-app.post('/image/ai', labelDetectionController);
+app.post('/image/ai', upload.single('base64_image'), labelDetectionController);
 
-app.post('/memo/text-format/folders', upload.single('base64_image'));
-app.patch('/memo/text-format/folders/:folderId', upload.single('base64_image'));
-app.post('/memo/image-format/folders', imageUploader.single('image'));
-app.post('/memo/image-format/folders/:folderId', imageUploader.single('image'));
 RegisterRoutes(app);
 
 app.get('/', (req: Request, res: Response) => {

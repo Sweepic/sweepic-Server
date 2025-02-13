@@ -34,21 +34,21 @@ jobs:
 
       - name: Generate Tsoa Routes
         run: |
-          yarn tsoa routes -c ./config/tsoa.json
+          yarn tsoa-routes
       
       - name: Generate Swagger document
         run: |
-          yarn tsx ./swagger/swagger.js
-          yarn tsoa spec -c ./config/tsoa.json
-
-      - name: Generate Tsoa Routes
-        run: |
-          yarn tsoa routes -c ./config/tsoa.json
+          yarn swagger
+          yarn tsoa-swagger
 
       - name: Run build
         run: |
           yarn prisma generate
           yarn build
+
+      - name: Compress dist folder
+        run: |
+          tar -czvf dist.tar.gz ./dist
 
       # SSH 설정
       - name: Configure SSH
@@ -73,12 +73,18 @@ jobs:
           EC2_HOST: ${{ secrets.EC2_HOST }}
           EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
 
-      # 프로젝트 폴더의 모든 파일을 EC2 서버로 전송
+      # 프로젝트 폴더의 압축 파일을 EC2 서버로 전송
       - name: Copy Workspace
         run: |
           ssh sweepic-ec2 'sudo mkdir -p /opt/app'
           ssh sweepic-ec2 'sudo chown ubuntu:ubuntu /opt/app'
-          scp -r ./dist sweepic-ec2:/opt/app
+          scp dist.tar.gz sweepic-ec2:/opt/app
+
+      # 전송된 압축 배포파일을 압축풀기
+      - name: Release Compressed File
+        run: |
+          ssh sweepic-ec2 'sudo tar -xzvf /opt/app/dist.tar.gz -C /opt/app'
+          
 
       # 원격 서버에서 애플리케이션을 Systemd 서비스로 등록하는 과정
       - name: Copy systemd service file

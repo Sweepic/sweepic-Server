@@ -18,6 +18,7 @@ import {
   Tags,
   Example,
   Post,
+  Middlewares,
 } from 'tsoa';
 import {
   ITsoaErrorResponse,
@@ -32,6 +33,7 @@ import {
 import {StatusCodes} from 'http-status-codes';
 import {BodyToMemoImagesToMove} from '../models/memo-image.model.tsoa.js';
 import {PhotoDataNotFoundError} from '../errors.js';
+import {ImageUploadMiddleware} from '../s3/image.uploader.middleware.js';
 
 @Route('memo')
 export class MemoImageController extends Controller {
@@ -44,6 +46,7 @@ export class MemoImageController extends Controller {
    * @returns 성공 시 사진 저장 결과를 반환합니다.
    */
   @Post('/image-format/folders/:folderId')
+  @Middlewares(ImageUploadMiddleware)
   @Tags('memo-image-controller')
   @Response<ITsoaErrorResponse>(
     StatusCodes.BAD_REQUEST,
