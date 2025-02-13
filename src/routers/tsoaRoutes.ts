@@ -578,37 +578,6 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsMemoFolderController_handlerMemoFolderImageAdd: Record<string, TsoaRoute.ParameterSchema> = {
-                req: {"in":"request","name":"req","required":true,"dataType":"object"},
-                folderName: {"in":"formData","name":"folderName","required":true,"dataType":"string"},
-        };
-        app.post('/memo/image-format/folders',
-            ...(fetchMiddlewares<RequestHandler>(MemoFolderController)),
-            ...(fetchMiddlewares<RequestHandler>(MemoFolderController.prototype.handlerMemoFolderImageAdd)),
-
-            async function MemoFolderController_handlerMemoFolderImageAdd(request: ExRequest, response: ExResponse, next: any) {
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsMemoFolderController_handlerMemoFolderImageAdd, request, response });
-
-                const controller = new MemoFolderController();
-
-              await templateService.apiHandler({
-                methodName: 'handlerMemoFolderImageAdd',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: 200,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsMemoFolderController_handlerMemoFolderAdd: Record<string, TsoaRoute.ParameterSchema> = {
                 req: {"in":"request","name":"req","required":true,"dataType":"object"},
                 body: {"in":"body","name":"body","required":true,"ref":"BodyToMemoFolder"},
