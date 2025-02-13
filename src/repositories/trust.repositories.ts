@@ -1,25 +1,38 @@
 import {prisma} from '../db.config.js';
 
-export const updateImageStatus = async (mediaIds: number[], status: number): Promise<void> => {
+export const updateImageStatus = async (imageIds: number[], status: number): Promise<void> => {
     await prisma.image.updateMany({
-        where: { mediaId: { in: mediaIds } },
+        where: { id: { in: imageIds } },
         data: { status }
     });
 };
 
-export const removeImages = async (mediaIds: number[]): Promise<void> => {
+export const removeImages = async (imageIds: number[]): Promise<void> => {
     await prisma.image.deleteMany({
-        where: { mediaId: { in: mediaIds }, status: 0 }
+        where: { id: { in: imageIds }, status: 0 }
     });
 };
 
-export const getImagesByIds = async (mediaIds: number[]): Promise<{ mediaId: number; status: number }[]> => {
+export const getImagesByIds = async (imageIds: number[]): Promise<{ imageId: number; status: number }[]> => {
   const images = await prisma.image.findMany({
-      where: { mediaId: { in: mediaIds } },
-      select: { mediaId: true, status: true }
+      where: { id: { in: imageIds } },
+      select: { id: true, status: true }
   });
-  return images.map(({ mediaId, status }) => ({
-    mediaId: Number(mediaId), // 변환 적용
+  return images.map(({ id, status }) => ({
+    imageId: Number(id), // 변환 적용
     status
   }));
 };
+
+export const getTrashedImages = async (userId: number): Promise<{ imageId: number; mediaId: number }[]> => {
+    const images = await prisma.image.findMany({
+        where: { userId, status: 0 },
+        select: { id: true, mediaId: true }
+    });
+  
+    return images.map(({ id, mediaId }) => ({
+      imageId: Number(id),
+      mediaId: Number(mediaId),
+    }));
+  };
+  
