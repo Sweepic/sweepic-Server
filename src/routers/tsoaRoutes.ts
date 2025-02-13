@@ -20,6 +20,10 @@ import { MostTaggedController } from './../controllers/history.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AwardController } from './../controllers/history.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { DateChallengeController } from './../controllers/challenge.weekly.controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { LocationController } from './../controllers/challenge.location.controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ChallengeController } from './../controllers/challenge.controller.js';
 import type { Request as ExRequest, Response as ExResponse, RequestHandler, Router } from 'express';
 
@@ -343,6 +347,86 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ResponseFromChallenge": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "userId": {"dataType":"string","required":true},
+            "title": {"dataType":"string","required":true},
+            "context": {"dataType":"string","required":true},
+            "requiredCount": {"dataType":"double","required":true},
+            "remainingCount": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "updatedAt": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}],"required":true},
+            "acceptedAt": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}],"required":true},
+            "completedAt": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}],"required":true},
+            "status": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ITsoaSuccessResponse_ResponseFromChallenge_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"string","required":true},
+            "error": {"dataType":"enum","enums":[null],"required":true},
+            "success": {"ref":"ResponseFromChallenge","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ResponseFromLocationChallenge": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "userId": {"dataType":"string","required":true},
+            "title": {"dataType":"string","required":true},
+            "context": {"dataType":"string","required":true},
+            "location": {"dataType":"string","required":true},
+            "requiredCount": {"dataType":"double","required":true},
+            "remainingCount": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "updatedAt": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}],"required":true},
+            "acceptedAt": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}],"required":true},
+            "completedAt": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}],"required":true},
+            "status": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ITsoaSuccessResponse_ResponseFromLocationChallenge_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"string","required":true},
+            "error": {"dataType":"enum","enums":[null],"required":true},
+            "success": {"ref":"ResponseFromLocationChallenge","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PhotoInfo": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "displayName": {"dataType":"string","required":true},
+            "longitude": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "latitude": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "location": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "timestamp": {"dataType":"datetime","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ITsoaSuccessResponse_PhotoInfo-Array_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"string","required":true},
+            "error": {"dataType":"enum","enums":[null],"required":true},
+            "success": {"dataType":"array","array":{"dataType":"refObject","ref":"PhotoInfo"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ResponseFromUpdateChallenge": {
         "dataType": "refObject",
         "properties": {
@@ -372,34 +456,6 @@ const models: TsoaRoute.Models = {
             "resultType": {"dataType":"string","required":true},
             "error": {"dataType":"enum","enums":[null],"required":true},
             "success": {"dataType":"string","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ResponseFromChallenge": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"string","required":true},
-            "userId": {"dataType":"string","required":true},
-            "title": {"dataType":"string","required":true},
-            "context": {"dataType":"string","required":true},
-            "requiredCount": {"dataType":"double","required":true},
-            "remainingCount": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "updatedAt": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}],"required":true},
-            "acceptedAt": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}],"required":true},
-            "completedAt": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}],"required":true},
-            "status": {"dataType":"double","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ITsoaSuccessResponse_ResponseFromChallenge_": {
-        "dataType": "refObject",
-        "properties": {
-            "resultType": {"dataType":"string","required":true},
-            "error": {"dataType":"enum","enums":[null],"required":true},
-            "success": {"ref":"ResponseFromChallenge","required":true},
         },
         "additionalProperties": false,
     },
@@ -1094,6 +1150,161 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getAward',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsDateChallengeController_handleNewWeeklyChallenge: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"required":{"dataType":"double","required":true},"challengeDate":{"dataType":"datetime","required":true},"context":{"dataType":"string","required":true}}},
+        };
+        app.post('/challenge/weekly_challenge/create',
+            ...(fetchMiddlewares<RequestHandler>(DateChallengeController)),
+            ...(fetchMiddlewares<RequestHandler>(DateChallengeController.prototype.handleNewWeeklyChallenge)),
+
+            async function DateChallengeController_handleNewWeeklyChallenge(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsDateChallengeController_handleNewWeeklyChallenge, request, response });
+
+                const controller = new DateChallengeController();
+
+              await templateService.apiHandler({
+                methodName: 'handleNewWeeklyChallenge',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsDateChallengeController_handleGetWeeklyChallenge: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                challengeId: {"in":"path","name":"id","required":true,"dataType":"string"},
+        };
+        app.get('/challenge/weekly_challenge/get/:id',
+            ...(fetchMiddlewares<RequestHandler>(DateChallengeController)),
+            ...(fetchMiddlewares<RequestHandler>(DateChallengeController.prototype.handleGetWeeklyChallenge)),
+
+            async function DateChallengeController_handleGetWeeklyChallenge(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsDateChallengeController_handleGetWeeklyChallenge, request, response });
+
+                const controller = new DateChallengeController();
+
+              await templateService.apiHandler({
+                methodName: 'handleGetWeeklyChallenge',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsLocationController_handleNewLocationChallenge: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"required":{"dataType":"double","required":true},"location":{"dataType":"string","required":true},"context":{"dataType":"string","required":true}}},
+        };
+        app.post('/challenge/location_challenge/create',
+            ...(fetchMiddlewares<RequestHandler>(LocationController)),
+            ...(fetchMiddlewares<RequestHandler>(LocationController.prototype.handleNewLocationChallenge)),
+
+            async function LocationController_handleNewLocationChallenge(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsLocationController_handleNewLocationChallenge, request, response });
+
+                const controller = new LocationController();
+
+              await templateService.apiHandler({
+                methodName: 'handleNewLocationChallenge',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsLocationController_handleGetLocationChallenge: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                challengeId: {"in":"path","name":"id","required":true,"dataType":"string"},
+        };
+        app.get('/challenge/location_challenge/get/:id',
+            ...(fetchMiddlewares<RequestHandler>(LocationController)),
+            ...(fetchMiddlewares<RequestHandler>(LocationController.prototype.handleGetLocationChallenge)),
+
+            async function LocationController_handleGetLocationChallenge(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsLocationController_handleGetLocationChallenge, request, response });
+
+                const controller = new LocationController();
+
+              await templateService.apiHandler({
+                methodName: 'handleGetLocationChallenge',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsLocationController_handleLocationLogic: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                body: {"in":"body","name":"body","required":true,"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"timestamp":{"dataType":"datetime","required":true},"latitude":{"dataType":"double","required":true},"longitude":{"dataType":"double","required":true},"displayName":{"dataType":"string","required":true},"id":{"dataType":"string","required":true}}}},
+        };
+        app.post('/challenge/location_logic/test',
+            ...(fetchMiddlewares<RequestHandler>(LocationController)),
+            ...(fetchMiddlewares<RequestHandler>(LocationController.prototype.handleLocationLogic)),
+
+            async function LocationController_handleLocationLogic(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsLocationController_handleLocationLogic, request, response });
+
+                const controller = new LocationController();
+
+              await templateService.apiHandler({
+                methodName: 'handleLocationLogic',
                 controller,
                 response,
                 next,

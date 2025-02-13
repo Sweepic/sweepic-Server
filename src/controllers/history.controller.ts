@@ -69,7 +69,7 @@ export class MostTaggedController extends Controller{
           },
           success: null,
         },
-      )
+    )
     public async getMostTagged(
         @Request() req: ExpressRequest,
     ): Promise<ITsoaSuccessResponse<ResponseFromMostTagToClient[]>> {
@@ -300,7 +300,7 @@ export class AwardController extends Controller{
      * @returns 어워드
      */
     @Get('/history/award/get')
-    @Tags('/award')
+    @Tags('Award')
     @SuccessResponse('200', 'OK')
     @Response<ITsoaErrorResponse>(
         StatusCodes.NOT_FOUND, 

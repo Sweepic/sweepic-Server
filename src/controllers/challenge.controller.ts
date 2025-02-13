@@ -10,7 +10,8 @@ import {
   Delete,
   Path,
   Get,
-  Query
+  Query,
+  Response
 } from 'tsoa';
 import {
   serviceAcceptChallenge,
@@ -25,7 +26,7 @@ import {
 } from '../utils/challenge.utils.js';
 import {ResponseFromChallenge, ResponseFromGetByUserIdReform, ResponseFromUpdateChallenge} from '../models/challenge.entities.js';
 import {BaseError, DataValidationError, ServerError} from '../errors.js';
-import { ITsoaSuccessResponse, TsoaSuccessResponse } from '../models/tsoaResponse.js';
+import { ITsoaErrorResponse, ITsoaSuccessResponse, TsoaSuccessResponse } from '../models/tsoaResponse.js';
 
 
 @Route('challenge')
@@ -40,6 +41,45 @@ export class ChallengeController extends Controller{
   @Patch('/update')
   @Tags('challenge controller')
   @SuccessResponse(StatusCodes.OK, '챌린지 업데이터 성공 응답')
+  @Response<ITsoaErrorResponse>(
+    StatusCodes.BAD_REQUEST, 
+    'Not Found', 
+    {
+      resultType: 'FAIL',
+      error: {
+        errorCode: 'SRH-400',
+        reason: '업데이트 내용이 없습니다.',
+        data: null,
+      },
+      success: null,
+    },
+  )
+  @Response<ITsoaErrorResponse>(
+    StatusCodes.BAD_REQUEST, 
+    'Not Found', 
+    {
+      resultType: 'FAIL',
+      error: {
+        errorCode: 'CHL-400',
+        reason: '챌린지 업데이트 실패',
+        data: null,
+      },
+      success: null,
+    },
+  )
+  @Response<ITsoaErrorResponse>(
+    StatusCodes.INTERNAL_SERVER_ERROR,
+    'Internal Server Error',
+    {
+      resultType: 'FAIL',
+      error: {
+        errorCode: 'SER-001',
+        reason: '내부 서버 오류입니다.',
+        data: null,
+      },
+      success: null,
+    },
+  )
   public async handleUpdateChallenge (
     @Request() req: ExpressRequest,
     @Body() body: {
@@ -77,6 +117,45 @@ export class ChallengeController extends Controller{
   @Delete('/delete/:id')
   @Tags('challenge controller')
   @SuccessResponse(StatusCodes.OK, '챌린지 삭제 성공 응답')
+  @Response<ITsoaErrorResponse>(
+    StatusCodes.BAD_REQUEST, 
+    'Not Found', 
+    {
+      resultType: 'FAIL',
+      error: {
+        errorCode: 'SRH-400',
+        reason: '삭제할 챌린지의 id를 입력해주세요.',
+        data: null,
+      },
+      success: null,
+    },
+  )
+  @Response<ITsoaErrorResponse>(
+    StatusCodes.BAD_REQUEST, 
+    'Not Found', 
+    {
+      resultType: 'FAIL',
+      error: {
+        errorCode: 'CHL-400',
+        reason: '챌린지 삭제 실패',
+        data: null,
+      },
+      success: null,
+    },
+  )
+  @Response<ITsoaErrorResponse>(
+    StatusCodes.INTERNAL_SERVER_ERROR,
+    'Internal Server Error',
+    {
+      resultType: 'FAIL',
+      error: {
+        errorCode: 'SER-001',
+        reason: '내부 서버 오류입니다.',
+        data: null,
+      },
+      success: null,
+    },
+  )
   public async handleRemoveChallenge(
     @Request() req: ExpressRequest,
     @Path('id') deleteId: string
@@ -105,7 +184,7 @@ export class ChallengeController extends Controller{
    * parameter에 id값을 적으면 challenge의 status가 2로 변합니다.
    * 1 = 생성된 챌린지, 2 = 수락된 챌린지, 3 = 완료된 챌린지
    * 
-   * @success 챌린지 수락 API
+   * @summary 챌린지 수락 API
    * @param req 
    * @param acceptId 수락할 챌린지의 ID
    * @returns 챌린지 정보
@@ -113,6 +192,45 @@ export class ChallengeController extends Controller{
   @Patch('/accept/:id')
   @Tags('challenge controller')
   @SuccessResponse(StatusCodes.OK, '챌린지 수락 성공 응답')
+  @Response<ITsoaErrorResponse>(
+    StatusCodes.BAD_REQUEST, 
+    'Not Found', 
+    {
+      resultType: 'FAIL',
+      error: {
+        errorCode: 'SRH-400',
+        reason: '입력된 id가 없습니다.',
+        data: null,
+      },
+      success: null,
+    },
+  )
+  @Response<ITsoaErrorResponse>(
+    StatusCodes.BAD_REQUEST, 
+    'Not Found', 
+    {
+      resultType: 'FAIL',
+      error: {
+        errorCode: 'CHL-400',
+        reason: '챌린지를 수락할 수 없습니다.',
+        data: null,
+      },
+      success: null,
+    },
+  )
+  @Response<ITsoaErrorResponse>(
+    StatusCodes.INTERNAL_SERVER_ERROR,
+    'Internal Server Error',
+    {
+      resultType: 'FAIL',
+      error: {
+        errorCode: 'SER-001',
+        reason: '내부 서버 오류입니다.',
+        data: null,
+      },
+      success: null,
+    },
+  )
   public async handleAcceptChallenge(
     @Request() req: ExpressRequest,
     @Path('id') acceptId: string
@@ -145,8 +263,47 @@ export class ChallengeController extends Controller{
    * @returns 챌린지 정보
    */
   @Patch('/complete/:id')
-  @Tags('challenge controllers')
+  @Tags('challenge controller')
   @SuccessResponse(StatusCodes.OK, '챌린지 완료 성공 응답')
+  @Response<ITsoaErrorResponse>(
+    StatusCodes.BAD_REQUEST, 
+    'Not Found', 
+    {
+      resultType: 'FAIL',
+      error: {
+        errorCode: 'SRH-400',
+        reason: '입력된 id가 없습니다.',
+        data: null,
+      },
+      success: null,
+    },
+  )
+  @Response<ITsoaErrorResponse>(
+    StatusCodes.BAD_REQUEST, 
+    'Not Found', 
+    {
+      resultType: 'FAIL',
+      error: {
+        errorCode: 'CHL-400',
+        reason: '해당 챌린지를 완료할 수 없습니다.',
+        data: null,
+      },
+      success: null,
+    },
+  )
+  @Response<ITsoaErrorResponse>(
+    StatusCodes.INTERNAL_SERVER_ERROR,
+    'Internal Server Error',
+    {
+      resultType: 'FAIL',
+      error: {
+        errorCode: 'SER-001',
+        reason: '내부 서버 오류입니다.',
+        data: null,
+      },
+      success: null,
+    },
+  )
   public async handleCompleteChallenge(
     @Request() req: ExpressRequest,
     @Path('id') completeId: string
@@ -180,6 +337,45 @@ export class ChallengeController extends Controller{
   @Get('/get')
   @Tags('challenge controller')
   @SuccessResponse(StatusCodes.OK, '유저 챌린지 조회 성공')
+  @Response<ITsoaErrorResponse>(
+    StatusCodes.BAD_REQUEST, 
+    'Not Found', 
+    {
+      resultType: 'FAIL',
+      error: {
+        errorCode: 'SRH-400',
+        reason: 'req.user 정보가 없습니다.',
+        data: null,
+      },
+      success: null,
+    },
+  )
+  @Response<ITsoaErrorResponse>(
+    StatusCodes.BAD_REQUEST, 
+    'Not Found', 
+    {
+      resultType: 'FAIL',
+      error: {
+        errorCode: 'CHL-400',
+        reason: '해당 유저의 챌린지를 찾을 수 없습니다.',
+        data: null,
+      },
+      success: null,
+    },
+  )
+  @Response<ITsoaErrorResponse>(
+    StatusCodes.INTERNAL_SERVER_ERROR,
+    'Internal Server Error',
+    {
+      resultType: 'FAIL',
+      error: {
+        errorCode: 'SER-001',
+        reason: '내부 서버 오류입니다.',
+        data: null,
+      },
+      success: null,
+    },
+  )
   public async handleGetByUserId(
     @Request() req: ExpressRequest
   ): Promise<ITsoaSuccessResponse<ResponseFromGetByUserIdReform[]>>{
@@ -205,12 +401,52 @@ export class ChallengeController extends Controller{
   /**
    * 지오해쉬 값을 입력하면 주소로 변환해줍니다.
    * 
+   * @summary 주소 변환 API
    * @param hashedLocation 해쉬된 위치 정보
    * @returns 주소 정보
    */
   @Get('getGeoCode')
   @Tags('challenge controller')
   @SuccessResponse(StatusCodes.OK, '네이버 API 성공 응답')
+  @Response<ITsoaErrorResponse>(
+    StatusCodes.BAD_REQUEST, 
+    'Not Found', 
+    {
+      resultType: 'FAIL',
+      error: {
+        errorCode: 'SRH-400',
+        reason: 'query문이 비었습니다. hashedLocation을 입력하세요.',
+        data: null,
+      },
+      success: null,
+    },
+  )
+  @Response<ITsoaErrorResponse>(
+    StatusCodes.BAD_REQUEST, 
+    'Not Found', 
+    {
+      resultType: 'FAIL',
+      error: {
+        errorCode: 'CHL-500',
+        reason: '네이버 API 호출에 문제가 있습니다.',
+        data: null,
+      },
+      success: null,
+    },
+  )
+  @Response<ITsoaErrorResponse>(
+    StatusCodes.INTERNAL_SERVER_ERROR,
+    'Internal Server Error',
+    {
+      resultType: 'FAIL',
+      error: {
+        errorCode: 'SER-001',
+        reason: '내부 서버 오류입니다.',
+        data: null,
+      },
+      success: null,
+    },
+  )
   public async naverController(
     @Query() hashedLocation: string
   ): Promise<ITsoaSuccessResponse<string>>{

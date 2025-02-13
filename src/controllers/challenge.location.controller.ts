@@ -1,4 +1,4 @@
-import {Response, Request, NextFunction} from 'express';
+import {Request as ExpressRequest} from 'express';
 import {
   serviceCreateNewLocationChallenge,
   serviceGetLocationChallenge,
@@ -7,214 +7,270 @@ import {
 import {StatusCodes} from 'http-status-codes';
 import {
   LocationChallengeCreation,
+  PhotoInfo,
   ResponseFromChallenge,
+  ResponseFromLocationChallenge,
 } from '../models/challenge.entities.js';
 import {bodyToLocationCreation} from '../dtos/challenge.dtos.js';
-import {DataValidationError} from '../errors.js';
+import {BaseError, DataValidationError, ServerError} from '../errors.js';
+import { 
+  Controller,
+  Post,
+  Route,
+  SuccessResponse,
+  Tags,
+  Request,
+  Body,
+  Get,
+  Path,
+  Response
+} from 'tsoa';
+import { ITsoaErrorResponse, ITsoaSuccessResponse, TsoaSuccessResponse } from '../models/tsoaResponse.js';
 
-export const handleNewLocationChallenge = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
-  /*
-    #swagger.tags = ['challenge-location-controller']
-    #swagger.summary = '위치 기반 챌린지 생성 API';
-    #swagger.description = '위치 기반 챌린지를 생성하는 API입니다.'
-    #swagger.requestBody = {
-        required: true,
-        content: {
-            "application/json": {
-                schema: {
-                    type: "object",
-                    properties: {
-                        context: { type: "string", description: "챌린지 내용" },
-                        location: { type: "string", description: "챌린지 위치" },
-                        required: { type: "number", description: "챌린지 장수" }
-                    }
-                }
-            }
-        }
-    };
-    #swagger.responses[200] = {
-        description: "위치 챌린지 생성 성공 응답",
-        content: {
-            "application/json": {
-                schema: {
-                    type: "object",
-                    properties: {
-                        resultType: { type: "string", example: "SUCCESS" },
-                        error: { type: "object", nullable: true, example: null },
-                        success: {
-                            type: "object", 
-                            properties: {
-                                id: { type: "string", example: "1" },
-                                title: { type: "string", example: "challenge-title" },
-                                context: { type: "string", example: "challenge-context" },
-                                requiredCount: { type: "number", example: 10 },
-                                remainingCount: { type: "number", example: 10 },
-                                userId: { type: "string", example: "1" },
-                                createdAt: { type: "string", format: "date-time", example: "2025-01-20T18:19:47.415Z" },
-                                updatedAt: { type: "string", format: "date-time", example: "2025-01-20T18:19:47.415Z" },
-                                acceptedAt: { type: "string", format: "date-time", example: "2025-01-20T18:19:47.415Z" },
-                                completedAt: { type: "string", format: "date-time", example: "2025-01-20T18:19:47.415Z" },
-                                status: { type: "number", example: 1 }
-                            }
-                        }   
-                    }
-                }
-            }
-        }
-    };
-    */
-  try {
+@Route('challenge')
+export class LocationController extends Controller{
+  /**
+   * 위치 챌린지를 생성하는 API 입니다.
+   * 
+   * @summary 위치 챌린지 생성 API
+   * @param req 
+   * @param body 챌린지 생성에 필요한 정보
+   * @returns 챌린지 정보
+   */
+  @Post('/location_challenge/create')
+  @Tags('location challenge controller')
+  @SuccessResponse(StatusCodes.OK, '위치 챌린지 성공 응답')
+  @Response<ITsoaErrorResponse>(
+    StatusCodes.BAD_REQUEST, 
+    'Not Found', 
+    {
+      resultType: 'FAIL',
+      error: {
+        errorCode: 'SRH-400',
+        reason: '입력 데이터가 유효하지 않습니다.',
+        data: null,
+      },
+      success: null,
+    },
+  )
+  @Response<ITsoaErrorResponse>(
+    StatusCodes.BAD_REQUEST, 
+    'Not Found', 
+    {
+      resultType: 'FAIL',
+      error: {
+        errorCode: 'CHL-400',
+        reason: '위치 기반 챌린지 생성 중 오류가 발생했습니다.',
+        data: null,
+      },
+      success: null,
+    },
+  )
+  @Response<ITsoaErrorResponse>(
+    StatusCodes.INTERNAL_SERVER_ERROR,
+    'Internal Server Error',
+    {
+      resultType: 'FAIL',
+      error: {
+        errorCode: 'SER-001',
+        reason: '내부 서버 오류입니다.',
+        data: null,
+      },
+      success: null,
+    },
+  )
+  public async handleNewLocationChallenge(
+    @Request() req: ExpressRequest,
+    @Body() body: {
+      context: string,
+      location: string,
+      required: number
+    }
+  ): Promise<ITsoaSuccessResponse<ResponseFromChallenge>>{
     if(!req.user){
       throw new DataValidationError({reason: '유저 정보가 없습니다. 다시 로그인 해주세요.'});
     }
 
-    if (!req.body) {
-      throw new DataValidationError({
-        reason: '위치 챌린지를 생성할 데이터가 없습니다.',
-      });
-    }
+    const data: LocationChallengeCreation = bodyToLocationCreation(body, req.user.id);
+    const result: ResponseFromChallenge = await serviceCreateNewLocationChallenge(data)
+    .then(r => {
+      return r;
+    })
+    .catch(err => {
+      if (!(err instanceof BaseError)) {
+        throw new ServerError();
+      } else {
+        throw err;
+      }
+    });
 
-    const data: LocationChallengeCreation = bodyToLocationCreation(req.body, req.user.id);
-    const result: ResponseFromChallenge =
-      await serviceCreateNewLocationChallenge(data);
-    res.status(StatusCodes.OK).success(result);
-  } catch (error) {
-    next(error);
+    return new TsoaSuccessResponse(result);
   }
-};
 
-export const handleGetLocationChallenge = async (
-  req: Request<{id: string}>,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
-  /*
-    #swagger.tags = ['challenge-location-controller']
-    #swagger.summary = '위치 기반 챌린지 불러오기 API';
-    #swagger.description = '위치 기반 챌린지를 불러오는 API입니다.'
-    #swagger.parameters['id'] = {
-        in: 'path',
-        required: true,
-        description: "챌린지 ID 입력",
-        '@schema': {
-            type: "string",
-        }
-    };
-    #swagger.requestBody = {
-        required: false
-    };
-    #swagger.responses[200] = {
-        description: "위치 챌린지 불러오기 성공 응답",
-        content: {
-            "application/json": {
-                schema: {
-                    type: "object",
-                    properties: {
-                        resultType: { type: "string", example: "SUCCESS" },
-                        error: { type: "object", nullable: true, example: null },
-                        success: {
-                            type: "object", 
-                            properties: {
-                                id: { type: "string", example: "1" },
-                                title: { type: "string", example: "challenge-title" },
-                                context: { type: "string", example: "challenge-context" },
-                                location: { type: "string", example: "challenge-location" },
-                                requiredCount: { type: "number", example: 10 },
-                                remainingCount: { type: "number", example: 10 },
-                                userId: { type: "string", example: "1" },
-                                createdAt: { type: "string", format: "date-time", example: "2025-01-20T18:19:47.415Z" },
-                                updatedAt: { type: "string", format: "date-time", example: "2025-01-20T18:19:47.415Z" },
-                                acceptedAt: { type: "string", format: "date-time", example: "2025-01-20T18:19:47.415Z" },
-                                completedAt: { type: "string", format: "date-time", example: "2025-01-20T18:19:47.415Z" },
-                                status: { type: "number", example: 1 }
-                            }
-                        }   
-                    }
-                }
-            }
-        }
-    };
-    */
-  try {
-    if (!req.params.id) {
+  /**
+   * 위치 챌린지를 id로 조회하는 API입니다.
+   * 
+   * @summary 위치 챌린지 조회 API
+   * @param req 
+   * @param challengeId 챌린지 ID
+   * @returns 챌린지 정보
+   */
+  @Get('/location_challenge/get/:id')
+  @Tags('location challenge controller')
+  @SuccessResponse(StatusCodes.OK, '위치 챌린지 조회 성공 응답')
+  @Response<ITsoaErrorResponse>(
+    StatusCodes.BAD_REQUEST, 
+    'Not Found', 
+    {
+      resultType: 'FAIL',
+      error: {
+        errorCode: 'SRH-400',
+        reason: '입력 데이터가 유효하지 않습니다.',
+        data: null,
+      },
+      success: null,
+    },
+  )
+  @Response<ITsoaErrorResponse>(
+    StatusCodes.BAD_REQUEST, 
+    'Not Found', 
+    {
+      resultType: 'FAIL',
+      error: {
+        errorCode: 'CHL-404',
+        reason: '해당 위치 기반 챌린지를 찾을 수 없습니다.',
+        data: null,
+      },
+      success: null,
+    },
+  )
+  @Response<ITsoaErrorResponse>(
+    StatusCodes.INTERNAL_SERVER_ERROR,
+    'Internal Server Error',
+    {
+      resultType: 'FAIL',
+      error: {
+        errorCode: 'SER-001',
+        reason: '내부 서버 오류입니다.',
+        data: null,
+      },
+      success: null,
+    },
+  )
+  public async handleGetLocationChallenge(
+    @Request() req: ExpressRequest,
+    @Path('id') challengeId: string
+  ): Promise<ITsoaSuccessResponse<ResponseFromLocationChallenge>>{
+    if(!challengeId){
       throw new DataValidationError({
         reason: '올바른 parameter 값이 필요합니다.',
       });
     }
 
-    const result = await serviceGetLocationChallenge(BigInt(req.params.id));
-    res.status(StatusCodes.OK).success(result);
-  } catch (error) {
-    next(error);
-  }
-};
+    const result: ResponseFromLocationChallenge = await serviceGetLocationChallenge(BigInt(challengeId))
+    .then(r => {
+      return r;
+    })
+    .catch(err => {
+      if (!(err instanceof BaseError)) {
+        throw new ServerError();
+      } else {
+        throw err;
+      }
+    });
 
-export const handleLocationLogic = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
-  /*
-    #swagger.tags = ['challenge-location-controller']
-    #swagger.summary = '위치 기반 챌린지 사진 판별 API';
-    #swagger.description = '위치 기반 챌린지를 위한 사진을 골라내는 API입니다.'
-    #swagger.requestBody = {
-        required: true,
-        content: {
-            "application/json": {
-                schema: {
-                    type: "array",
-                    items: {
-                        type: "object",
-                        properties: {
-                            id: { type: "string", description: "사진 ID" },
-                            displayName: { type: "string", description: "사진 이름" },
-                            latitude: { type: "number", description: "사진 위도" },
-                            longitude: { type: "number", description: "사진 경도" },
-                            timestamp: { type: "string", format: "date-time", description: "사진 날짜" }
-                        }
-                    }
-                }
-            }
-        }
-    };
-    #swagger.responses[200] = {
-        description: "사진 위치 판별 응답",
-        content: {
-            "application/json": {
-                schema: {
-                    type: "object",
-                    properties: {
-                        resultType: { type: "string", example: "SUCCESS" },
-                        error: { type: "object", nullable: true, example: null },
-                        success: {
-                            type: "array",
-                            items: {
-                                type: "object",
-                                properties: {
-                                    id: { type: "string", example: "100000001" },
-                                    displayName: { type: "string", example: "20250116_123456.jpg" },
-                                    latitude: { type: "number", example: 37.123456 },
-                                    longitude: { type: "number", example: 127.123456 },
-                                    timestamp: { type: "string", format: "date-time", example: "2025-01-16T12:34:56Z" },
-                                    location: { type: "string", example: "wydg0y"}
-                                }
-                            }
-                        }   
-                    }
-                }
-            }
-        }
-    };
-    */
-  try {
-    const result = await serviceLocationLogic(req.body);
-    res.status(StatusCodes.OK).success(result);
-  } catch (error) {
-    next(error);
+    return new TsoaSuccessResponse(result);
   }
-};
+
+  /**
+   * 사진들의 위치 챌린지 조건을 판별하는 로직입니다.
+   * 
+   * @summary 위치 챌린지 판별 API
+   * @param req 
+   * @param body 사진 데이터 정보
+   * @returns 사진 데이터 정보
+   */
+ @Post('/location_logic/test')
+ @Tags('location challenge controller')
+ @SuccessResponse(StatusCodes.OK, '위치 챌린지 판별 응답')
+ @Response<ITsoaErrorResponse>(
+  StatusCodes.BAD_REQUEST, 
+  'Not Found', 
+  {
+    resultType: 'FAIL',
+    error: {
+      errorCode: 'SRH-400',
+      reason: '입력 데이터가 유효하지 않습니다.',
+      data: null,
+    },
+    success: null,
+  },
+)
+@Response<ITsoaErrorResponse>(
+  StatusCodes.BAD_REQUEST, 
+  'Not Found', 
+  {
+    resultType: 'FAIL',
+    error: {
+      errorCode: 'PHO-404',
+      reason: '해당 사진 데이터가 없습니다.',
+      data: null,
+    },
+    success: null,
+  },
+)
+@Response<ITsoaErrorResponse>(
+  StatusCodes.BAD_REQUEST, 
+  'Not Found', 
+  {
+    resultType: 'FAIL',
+    error: {
+      errorCode: 'PHO-400',
+      reason: '사진 데이터가 유효하지 않습니다.',
+      data: null,
+    },
+    success: null,
+  },
+)
+@Response<ITsoaErrorResponse>(
+  StatusCodes.INTERNAL_SERVER_ERROR,
+  'Internal Server Error',
+  {
+    resultType: 'FAIL',
+    error: {
+      errorCode: 'SER-001',
+      reason: '내부 서버 오류입니다.',
+      data: null,
+    },
+    success: null,
+  },
+)
+ public async handleLocationLogic(
+  @Request() req: ExpressRequest,
+  @Body() body: {
+    id: string,
+    displayName: string,
+    longitude: number,
+    latitude: number,
+    timestamp: Date
+  }[]
+ ): Promise<ITsoaSuccessResponse<PhotoInfo[]>>{
+  if(!body){
+    throw new DataValidationError({reason: '사진 데이터가 없습니다.'});
+  }
+
+  const result: PhotoInfo[] = await serviceLocationLogic(body)
+  .then(r => {
+    return r;
+  })
+  .catch(err => {
+    if (!(err instanceof BaseError)) {
+      throw new ServerError();
+    } else {
+      throw err;
+    }
+  });
+
+  return new TsoaSuccessResponse(result);
+ }
+}
