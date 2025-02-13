@@ -2703,27 +2703,6 @@
 				"parameters": []
 			}
 		},
-		"/memo/image-format/folders": {
-			"post": {
-				"requestBody": {
-					"required": true,
-					"content": {
-						"multipart/form-data": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"image": {
-										"type": "string",
-										"format": "binary",
-										"description": "파일 업로드"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
 		"/memo/image-format/folders/{folderId}": {
 			"post": {
 				"operationId": "HandlerMemoImageAdd",

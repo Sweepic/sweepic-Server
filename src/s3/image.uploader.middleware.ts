@@ -2,7 +2,6 @@ import {Request, Response, NextFunction} from 'express';
 import {imageUploader} from './image.uploader.js';
 import {getMemoFolder} from 'src/repositories/memo-folder.repository.tsoa.js';
 import {DataValidationError, FolderNotFoundError} from 'src/errors.js';
-import console from 'console';
 export const ImageUploadMiddleware = async (
   req: Request,
   res: Response,
@@ -16,7 +15,6 @@ export const ImageUploadMiddleware = async (
   }
   try {
     const folderId = req.params.folderId;
-    console.log(req.params);
     const checkFolder = await getMemoFolder(BigInt(folderId));
 
     if (!checkFolder || checkFolder.userId !== userId) {
