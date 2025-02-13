@@ -7,14 +7,13 @@ import {
   listMemoFolder,
   listMemoTextImage,
   memoFolderCreate,
-  memoFolderImageCreate,
   memoFolderUpdate,
   memoSearch,
   memoTextUpdate,
 } from '../services/memo-folder.service.tsoa.js';
 import {memoImageDelete} from '../services/memo-image.service.tsoa.js';
 import {bodyToMemoImagesToDelete} from '../dtos/memo-image.dto.tsoa.js';
-import {DataValidationError, PhotoValidationError} from '../errors.js';
+import {DataValidationError} from '../errors.js';
 import {
   Response,
   Body,
@@ -29,8 +28,6 @@ import {
   Path,
   Patch,
   Example,
-  FormField,
-  Middlewares,
 } from 'tsoa';
 import {
   BodyToMemoFolder,
@@ -38,7 +35,6 @@ import {
   MemoFolderListResponseDto,
   MemoFolderResponseDto,
   MemoTextImageListResponseDto,
-  MemoFolderImageResponseDto,
 } from '../models/memo-folder.model.tsoa.js';
 import {
   ITsoaErrorResponse,
@@ -46,126 +42,125 @@ import {
   TsoaSuccessResponse,
 } from '../models/tsoaResponse.js';
 import {BodyToMemoImagesToDelete} from '../models/memo-image.model.tsoa.js';
-import {Request as ExpressRequest, Express} from 'express';
-import {ImageUploadMiddleware} from '../s3/image.uploader.middleware.js';
+import {Request as ExpressRequest} from 'express';
 
 @Route('memo')
 export class MemoFolderController extends Controller {
-  /**
-   * 폴더 생성과 동시에 파일을 저장하는 API입니다.
-   *
-   * @summary 폴더 생성 및 사진 저장 API
-   * @param req
-   * @param folderName 생성할 폴더 이름
-   * @param image 파일 업로드
-   * @returns 성공 시 폴더 생성 및 사진 저장 결과를 반환합니다.
-   *
-   */
-  @Post('/image-format/folders')
-  @Middlewares(ImageUploadMiddleware)
-  @Tags('memo-folder-controller')
-  @Response<ITsoaErrorResponse>(
-    StatusCodes.BAD_REQUEST,
-    '유효하지 않은 데이터 에러',
-    {
-      resultType: 'FAIL',
-      success: null,
-      error: {
-        errorCode: 'FOL-400',
-        reason: '폴더 생성 중 오류가 발생했습니다.',
-        data: {userId: '1', folderName: 'string'},
-      },
-    },
-  )
-  @Response<ITsoaErrorResponse>(
-    StatusCodes.BAD_REQUEST,
-    '유효하지 않은 데이터 에러',
-    {
-      resultType: 'FAIL',
-      error: {
-        errorCode: 'PHO-400',
-        reason: '사진 데이터가 유효하지 않습니다.',
-        data: {
-          reason: '저장할 사진이 없습니다.',
-        },
-      },
-      success: null,
-    },
-  )
-  @Response<ITsoaErrorResponse>(
-    StatusCodes.BAD_REQUEST,
-    '유효하지 않은 데이터 에러',
-    {
-      resultType: 'FAIL',
-      error: {
-        errorCode: 'MEM-400',
-        reason: '메모 사진 추가 중 오류가 발생했습니다.',
-        data: {
-          folderId: '1',
-          imageUrl: 'string',
-        },
-      },
-      success: null,
-    },
-  )
-  @Response<ITsoaErrorResponse>(
-    StatusCodes.BAD_REQUEST,
-    '유효하지 않은 데이터 에러',
-    {
-      resultType: 'FAIL',
-      error: {
-        errorCode: 'PHO-400',
-        reason: '사진 데이터가 유효하지 않습니다.',
-        data: {
-          extension: 'string',
-        },
-      },
-      success: null,
-    },
-  )
-  @Response<ITsoaErrorResponse>(StatusCodes.CONFLICT, '중복 데이터 에러', {
-    resultType: 'FAIL',
-    success: null,
-    error: {
-      errorCode: 'FOL-409',
-      reason: '이미 존재하는 폴더 이름입니다.',
-      data: {folderName: 'string'},
-    },
-  })
-  @SuccessResponse(StatusCodes.OK, '폴더 생성 및 사진 저장 성공 응답')
-  @Example({
-    resultType: 'SUCCESS',
-    error: null,
-    success: {
-      folderId: '1',
-      folderName: 'string',
-      imageId: '1',
-      imageUrl: 'string',
-    },
-  })
-  public async handlerMemoFolderImageAdd(
-    @Request() req: ExpressRequest,
-    @FormField() folderName: string,
-  ): Promise<ITsoaSuccessResponse<MemoFolderImageResponseDto>> {
-    try {
-      const userId = BigInt(req.user!.id);
+  // /**
+  //  * 폴더 생성과 동시에 파일을 저장하는 API입니다.
+  //  *
+  //  * @summary 폴더 생성 및 사진 저장 API
+  //  * @param req
+  //  * @param folderName 생성할 폴더 이름
+  //  * @param image 파일 업로드
+  //  * @returns 성공 시 폴더 생성 및 사진 저장 결과를 반환합니다.
+  //  *
+  //  */
+  // @Post('/image-format/folders')
+  // @Middlewares(ImageUploadMiddleware)
+  // @Tags('memo-folder-controller')
+  // @Response<ITsoaErrorResponse>(
+  //   StatusCodes.BAD_REQUEST,
+  //   '유효하지 않은 데이터 에러',
+  //   {
+  //     resultType: 'FAIL',
+  //     success: null,
+  //     error: {
+  //       errorCode: 'FOL-400',
+  //       reason: '폴더 생성 중 오류가 발생했습니다.',
+  //       data: {userId: '1', folderName: 'string'},
+  //     },
+  //   },
+  // )
+  // @Response<ITsoaErrorResponse>(
+  //   StatusCodes.BAD_REQUEST,
+  //   '유효하지 않은 데이터 에러',
+  //   {
+  //     resultType: 'FAIL',
+  //     error: {
+  //       errorCode: 'PHO-400',
+  //       reason: '사진 데이터가 유효하지 않습니다.',
+  //       data: {
+  //         reason: '저장할 사진이 없습니다.',
+  //       },
+  //     },
+  //     success: null,
+  //   },
+  // )
+  // @Response<ITsoaErrorResponse>(
+  //   StatusCodes.BAD_REQUEST,
+  //   '유효하지 않은 데이터 에러',
+  //   {
+  //     resultType: 'FAIL',
+  //     error: {
+  //       errorCode: 'MEM-400',
+  //       reason: '메모 사진 추가 중 오류가 발생했습니다.',
+  //       data: {
+  //         folderId: '1',
+  //         imageUrl: 'string',
+  //       },
+  //     },
+  //     success: null,
+  //   },
+  // )
+  // @Response<ITsoaErrorResponse>(
+  //   StatusCodes.BAD_REQUEST,
+  //   '유효하지 않은 데이터 에러',
+  //   {
+  //     resultType: 'FAIL',
+  //     error: {
+  //       errorCode: 'PHO-400',
+  //       reason: '사진 데이터가 유효하지 않습니다.',
+  //       data: {
+  //         extension: 'string',
+  //       },
+  //     },
+  //     success: null,
+  //   },
+  // )
+  // @Response<ITsoaErrorResponse>(StatusCodes.CONFLICT, '중복 데이터 에러', {
+  //   resultType: 'FAIL',
+  //   success: null,
+  //   error: {
+  //     errorCode: 'FOL-409',
+  //     reason: '이미 존재하는 폴더 이름입니다.',
+  //     data: {folderName: 'string'},
+  //   },
+  // })
+  // @SuccessResponse(StatusCodes.OK, '폴더 생성 및 사진 저장 성공 응답')
+  // @Example({
+  //   resultType: 'SUCCESS',
+  //   error: null,
+  //   success: {
+  //     folderId: '1',
+  //     folderName: 'string',
+  //     imageId: '1',
+  //     imageUrl: 'string',
+  //   },
+  // })
+  // public async handlerMemoFolderImageAdd(
+  //   @Request() req: ExpressRequest,
+  //   @FormField() folderName: string,
+  // ): Promise<ITsoaSuccessResponse<MemoFolderImageResponseDto>> {
+  //   try {
+  //     const userId = BigInt(req.user!.id);
 
-      if (!req.file) {
-        throw new PhotoValidationError({reason: '저장할 사진이 없습니다.'});
-      }
-      const imageUrl = (req.file as Express.MulterS3File).key;
-      const folderId = req.uploadDirectory;
-      const memoFolderImage = await memoFolderImageCreate(
-        userId,
-        folderId,
-        imageUrl,
-        folderName,
-      );
-      return new TsoaSuccessResponse(memoFolderImage);
-    } catch (error) {
-      throw error;
-    }
-  }
+  //     if (!req.file) {
+  //       throw new PhotoValidationError({reason: '저장할 사진이 없습니다.'});
+  //     }
+  //     const imageUrl = (req.file as Express.MulterS3File).key;
+  //     const folderId = req.uploadDirectory;
+  //     const memoFolderImage = await memoFolderImageCreate(
+  //       userId,
+  //       folderId,
+  //       imageUrl,
+  //       folderName,
+  //     );
+  //     return new TsoaSuccessResponse(memoFolderImage);
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
 
   /**
    * 폴더를 생성하는 API입니다.
