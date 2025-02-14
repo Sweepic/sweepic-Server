@@ -7,22 +7,48 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"ResponseTagListWithDate": {
+			"ResponseUser": {
 				"properties": {
-					"tags": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
+					"id": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"goalCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"status": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
-					"tags"
+					"id",
+					"email",
+					"name",
+					"goalCount",
+					"createdAt",
+					"updatedAt",
+					"status"
 				],
 				"type": "object",
 				"additionalProperties": false
 			},
-			"ITsoaSuccessResponse_ResponseTagListWithDate_": {
+			"ITsoaSuccessResponse_ResponseUser_": {
 				"properties": {
 					"resultType": {
 						"type": "string"
@@ -35,7 +61,7 @@
 						"nullable": true
 					},
 					"success": {
-						"$ref": "#/components/schemas/ResponseTagListWithDate"
+						"$ref": "#/components/schemas/ResponseUser"
 					}
 				},
 				"required": [
@@ -197,6 +223,69 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ITsoaSuccessResponse_string_": {
+				"properties": {
+					"resultType": {
+						"type": "string"
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"success": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"success"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ResponseTagListWithDate": {
+				"properties": {
+					"tags": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"tags"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ITsoaSuccessResponse_ResponseTagListWithDate_": {
+				"properties": {
+					"resultType": {
+						"type": "string"
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"success": {
+						"$ref": "#/components/schemas/ResponseTagListWithDate"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"success"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ResponseTagListFromImage": {
 				"properties": {
 					"tags": {
@@ -250,6 +339,152 @@
 					},
 					"success": {
 						"$ref": "#/components/schemas/ResponseTagListFromImage"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"success"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ResponseCreationTags": {
+				"properties": {
+					"tags": {
+						"items": {
+							"properties": {
+								"tagId": {
+									"type": "string"
+								},
+								"imageId": {
+									"type": "string"
+								},
+								"status": {
+									"type": "number",
+									"format": "double"
+								},
+								"updatedAt": {
+									"type": "string",
+									"format": "date-time",
+									"nullable": true
+								},
+								"createdAt": {
+									"type": "string",
+									"format": "date-time"
+								},
+								"id": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"tagId",
+								"imageId",
+								"status",
+								"updatedAt",
+								"createdAt",
+								"id"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"tags"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ITsoaSuccessResponse_ResponseCreationTags_": {
+				"properties": {
+					"resultType": {
+						"type": "string"
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"success": {
+						"$ref": "#/components/schemas/ResponseCreationTags"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"success"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"RequestBodyCreationTags": {
+				"properties": {
+					"tags": {
+						"items": {
+							"properties": {
+								"tagCategoryId": {
+									"type": "string"
+								},
+								"content": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"tagCategoryId",
+								"content"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"tags"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ITsoaSuccessResponse__labels_58__description-string--score-number_-Array__": {
+				"properties": {
+					"resultType": {
+						"type": "string"
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"success": {
+						"properties": {
+							"labels": {
+								"items": {
+									"properties": {
+										"score": {
+											"type": "number",
+											"format": "double"
+										},
+										"description": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"score",
+										"description"
+									],
+									"type": "object"
+								},
+								"type": "array"
+							}
+						},
+						"required": [
+							"labels"
+						],
+						"type": "object"
 					}
 				},
 				"required": [
@@ -936,6 +1171,485 @@
 		}
 	],
 	"paths": {
+		"/onboarding/name": {
+			"patch": {
+				"operationId": "UpdateUserName",
+				"responses": {
+					"201": {
+						"description": "CREATED",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_ResponseUser_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "VAL-001",
+												"reason": "Validation Error",
+												"data": {
+													"name": {
+														"message": "name is required",
+														"value": null
+													}
+												}
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "DB-001",
+												"reason": "DB 에러 입니다.",
+												"data": {
+													"reason": "에러원인 메시지"
+												}
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SER-001",
+												"reason": "내부 서버 오류입니다.",
+												"data": {
+													"reason": "에러원인 메시지"
+												}
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "로그인한 사용자의 이름을 변경하는 API입니다.",
+				"summary": "사용자 이름 변경 API",
+				"tags": [
+					"User"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"name": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"name"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/onboarding/goal": {
+			"patch": {
+				"operationId": "UpdateUserGoalCount",
+				"responses": {
+					"201": {
+						"description": "CREATED",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_ResponseUser_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "VAL-001",
+												"reason": "Validation Error",
+												"data": {
+													"goalCount": {
+														"message": "goalCount is required",
+														"value": null
+													}
+												}
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "VAL-001",
+												"reason": "Validation Error",
+												"data": {
+													"goalCount": {
+														"message": "goalCount is unsigned Integer",
+														"value": -8
+													}
+												}
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "DB-001",
+												"reason": "DB 에러 입니다.",
+												"data": {
+													"reason": "에러원인 메시지"
+												}
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SER-001",
+												"reason": "내부 서버 오류입니다.",
+												"data": {
+													"reason": "에러원인 메시지"
+												}
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "로그인한 사용자의 목표 장수를 변경하는 API입니다.",
+				"summary": "사용자 목표 장수 변경 API",
+				"tags": [
+					"User"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "변경할 목표 장수",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"goalCount": {
+										"type": "number",
+										"format": "double"
+									}
+								},
+								"required": [
+									"goalCount"
+								],
+								"type": "object",
+								"description": "변경할 목표 장수"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/user/mypage": {
+			"get": {
+				"operationId": "GetUser",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_ResponseUser_"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "USR-404",
+												"reason": "사용자를 찾을수 없습니다",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SER-001",
+												"reason": "내부 서버 오류입니다.",
+												"data": {
+													"reason": "에러원인 메시지"
+												}
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "DB-001",
+												"reason": "DB 에러 입니다.",
+												"data": {
+													"reason": "에러원인 메시지"
+												}
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "사용자 정보를 가져오는 API 입니다.",
+				"summary": "사용자 정보 가져오기",
+				"tags": [
+					"User"
+				],
+				"security": [],
+				"parameters": []
+			},
+			"patch": {
+				"operationId": "DeleteUser",
+				"responses": {
+					"204": {
+						"description": "회원 탈퇴",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_string_"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "AUT-401",
+												"reason": "인증 실패",
+												"data": {
+													"reason": "user를 찾을 수 없습니다."
+												}
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "DB-001",
+												"reason": "DB 에러 입니다.",
+												"data": {
+													"reason": "에러원인 메시지"
+												}
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "사용자 상태를 비활성화하는 API 입니다.",
+				"summary": "회원탈퇴",
+				"tags": [
+					"User"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/user/mypage/logout": {
+			"patch": {
+				"operationId": "LogOut",
+				"responses": {
+					"204": {
+						"description": "LOGOUT",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_string_"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "AUT-401",
+												"reason": "인증 실패",
+												"data": {
+													"reason": "Session ID가 존재하지 않습니다"
+												}
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SER-001",
+												"reason": "내부 서버 오류입니다.",
+												"data": {
+													"reason": "에러원인 메시지"
+												}
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "DB-001",
+												"reason": "DB 에러 입니다.",
+												"data": {
+													"reason": "에러원인 메시지"
+												}
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "사용자 로그아웃 API 입니다.",
+				"summary": "사용자 로그아웃 API",
+				"tags": [
+					"User"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
 		"/tags/date": {
 			"get": {
 				"operationId": "GetTagListWithDate",
@@ -1202,6 +1916,55 @@
 						}
 					}
 				]
+			}
+		},
+		"/tags/images/{imageId}": {
+			"post": {
+				"operationId": "PostTag",
+				"responses": {
+					"201": {
+						"description": "CREATED",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_ResponseCreationTags_"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error"
+					}
+				},
+				"description": "태그를 생성하는 API 입니다.",
+				"summary": "태그 생성",
+				"tags": [
+					"Tag"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "이미지ID",
+						"in": "path",
+						"name": "imageId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "생성할 태그들",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RequestBodyCreationTags",
+								"description": "생성할 태그들"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/images": {
@@ -3165,7 +3928,7 @@
 							"schema": {
 								"type": "object",
 								"properties": {
-									"base64_image": {
+									"image": {
 										"type": "string",
 										"format": "binary",
 										"description": "OCR 처리를 위한 이미지 업로드"
@@ -3339,10 +4102,154 @@
 										"type": "string",
 										"description": "생성할 폴더의 이름"
 									},
-									"base64_image": {
+									"image": {
 										"type": "string",
 										"format": "binary",
 										"description": "OCR 처리를 위한 이미지 업로드"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/tags/ai": {
+			"post": {
+				"operationId": "GetLableFromImage",
+				"responses": {
+					"201": {
+						"description": "CREATED",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse__labels_58__description-string--score-number_-Array__"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "PHO-400",
+												"reason": "사진 데이터가 유효하지 않습니다.",
+												"data": {
+													"reason": "올바른 Base64 이미지 형식이 아닙니다."
+												}
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "PHO-404",
+												"reason": "해당 사진 데이터가 없습니다.",
+												"data": {
+													"reason": "라벨링을 추출 할 사진이 없습니다."
+												}
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "LBL-405",
+												"reason": "이미지에서 라벨을 감지하지 못했습니다.",
+												"data": {
+													"reason": "해당 이미지는 정보가 부족합니다."
+												}
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "LBL-500",
+												"reason": "라벨링 처리 중 오류가 발생했습니다.",
+												"data": {
+													"reason": "라벨링 처리 중 오류가 발생했습니다."
+												}
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SER-001",
+												"reason": "내부 서버 오류입니다.",
+												"data": {
+													"reason": "에러원인 메시지"
+												}
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "이미지를 분석하여 태그 추천 라벨을 생성합니다.",
+				"summary": "이미지 분석 태그생성 API",
+				"tags": [
+					"Tag"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"required": [
+									"image"
+								],
+								"type": "object",
+								"properties": {
+									"image": {
+										"type": "string",
+										"format": "binary",
+										"description": "태그라벨 자동생성을 위한 이미지 업로드"
 									}
 								}
 							}

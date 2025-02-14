@@ -18,16 +18,12 @@ import {BaseError} from './errors.js';
 import {sessionAuthMiddleware} from './auth.config.js';
 import cookieParser from 'cookie-parser';
 import {ValidateError} from 'tsoa';
-import {labelDetectionController} from './controllers/tags-ai.controller.js';
-import upload from './ai/ai-upload.js';
 
 // routers
 import {RegisterRoutes} from './routers/tsoaRoutes.js';
 import {challengeRouter} from './routers/challenge.router.js';
 import {authRouter} from './routers/auth.routers.js';
-import {userRouter} from './routers/user.router.js';
-import {tagRouter} from './routers/tag.router.js';
-import {myPageRouter} from './routers/mypage.routers.js';
+//import {tagRouter} from './routers/tag.router.js';
 import {trustRouter} from './routers/trust.router.js';
 
 dotenv.config();
@@ -111,12 +107,8 @@ app.use('/oauth2', authRouter);
 app.use(sessionAuthMiddleware);
 
 // 로그인 후
-app.use('/onboarding', userRouter);
 app.use('/challenge', challengeRouter);
-app.use('/user/mypage', myPageRouter);
-app.use('/tag', tagRouter);
 app.use('/trust', trustRouter);
-app.post('/image/ai', upload.single('base64_image'), labelDetectionController);
 
 RegisterRoutes(app);
 
