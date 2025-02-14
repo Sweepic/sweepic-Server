@@ -60,8 +60,8 @@ export const responseFromGetAward = (
     return awards.map((value: ResponseFromAwardImage) => {
         const {id, userId, awardMonth, createdAt, updatedAt, status, images } = value;
 
-        const ims: {imageId: string}[] = images.map((value: {imageId: bigint}) => {
-            return {imageId: value.imageId.toString()}
+        const ims: {imageId: string}[] = images.map((value: {image: {mediaId: bigint}}) => {
+            return {imageId: value.image.mediaId.toString()};
         });
 
         return {

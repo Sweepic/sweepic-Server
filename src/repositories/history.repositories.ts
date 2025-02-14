@@ -145,8 +145,12 @@ export const getUserAwards = async (userId: bigint): Promise<ResponseFromAwardIm
     const userAwards: ResponseFromAwardImage[] = await prisma.award.findMany({
         include: {
             images: {
-                select: {
-                    imageId: true
+                include: {
+                    image: {
+                        select: {
+                            mediaId: true
+                        }
+                    }
                 }
             }
         },

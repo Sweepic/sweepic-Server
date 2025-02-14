@@ -40,5 +40,8 @@ export interface ResponseFromAwardImage{
     userId: bigint,
     images: {
         imageId: bigint
+        image: {
+            mediaId: bigint
+        }
     }[]
 }
