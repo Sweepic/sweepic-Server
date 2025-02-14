@@ -16,6 +16,8 @@ import { MemoImageController } from './../controllers/tsoa.memo-image.controller
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { MemoFolderController } from './../controllers/tsoa.memo-folder.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { TrustController } from './../controllers/trash.controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { MemoCreateFolderOCRController } from './../controllers/memo-updateFolderOCR.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { MemoCreateUpdateOCRController } from './../controllers/memo-createFolderOCR.controller.js';
@@ -520,16 +522,6 @@ const models: TsoaRoute.Models = {
             "resultType": {"dataType":"string","required":true},
             "error": {"dataType":"enum","enums":[null],"required":true},
             "success": {"ref":"ResponseFromUpdateChallenge","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ITsoaSuccessResponse_string_": {
-        "dataType": "refObject",
-        "properties": {
-            "resultType": {"dataType":"string","required":true},
-            "error": {"dataType":"enum","enums":[null],"required":true},
-            "success": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
@@ -1227,6 +1219,98 @@ export function RegisterRoutes(app: Router) {
                 next,
                 validatedArgs,
                 successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsTrustController_deactivateImage: Record<string, TsoaRoute.ParameterSchema> = {
+                imageId: {"in":"path","name":"imageId","required":true,"dataType":"string"},
+        };
+        app.patch('/trash/images/:imageId',
+            ...(fetchMiddlewares<RequestHandler>(TrustController)),
+            ...(fetchMiddlewares<RequestHandler>(TrustController.prototype.deactivateImage)),
+
+            async function TrustController_deactivateImage(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsTrustController_deactivateImage, request, response });
+
+                const controller = new TrustController();
+
+              await templateService.apiHandler({
+                methodName: 'deactivateImage',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 201,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsTrustController_restoreImages: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"mediaIdList":{"dataType":"array","array":{"dataType":"string"},"required":true}}},
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+        };
+        app.patch('/trash/active',
+            ...(fetchMiddlewares<RequestHandler>(TrustController)),
+            ...(fetchMiddlewares<RequestHandler>(TrustController.prototype.restoreImages)),
+
+            async function TrustController_restoreImages(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsTrustController_restoreImages, request, response });
+
+                const controller = new TrustController();
+
+              await templateService.apiHandler({
+                methodName: 'restoreImages',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 201,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsTrustController_deleteImages: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"mediaIdList":{"dataType":"array","array":{"dataType":"string"},"required":true}}},
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+        };
+        app.delete('/trash/images',
+            ...(fetchMiddlewares<RequestHandler>(TrustController)),
+            ...(fetchMiddlewares<RequestHandler>(TrustController.prototype.deleteImages)),
+
+            async function TrustController_deleteImages(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsTrustController_deleteImages, request, response });
+
+                const controller = new TrustController();
+
+              await templateService.apiHandler({
+                methodName: 'deleteImages',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 204,
               });
             } catch (err) {
                 return next(err);

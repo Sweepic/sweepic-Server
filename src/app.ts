@@ -22,7 +22,6 @@ import {ValidateError} from 'tsoa';
 // routers
 import {RegisterRoutes} from './routers/tsoaRoutes.js';
 import {authRouter} from './routers/auth.routers.js';
-import {trustRouter} from './routers/trust.router.js';
 
 dotenv.config();
 
@@ -105,8 +104,6 @@ app.use('/oauth2', authRouter);
 app.use(sessionAuthMiddleware);
 
 // 로그인 후
-app.use('/trust', trustRouter);
-
 RegisterRoutes(app);
 
 app.get('/', (req: Request, res: Response) => {
@@ -137,7 +134,7 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
       resultType: 'FAIL',
       error: {
         errorCode: 'VAL-001',
-        reason: 'Validation Error',
+        reason: err.message,
         data: err.fields,
       },
       success: null,

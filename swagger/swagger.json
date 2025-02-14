@@ -1443,30 +1443,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"ITsoaSuccessResponse_string_": {
-				"properties": {
-					"resultType": {
-						"type": "string"
-					},
-					"error": {
-						"type": "number",
-						"enum": [
-							null
-						],
-						"nullable": true
-					},
-					"success": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"resultType",
-					"error",
-					"success"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"ResponseFromGetByUserIdReform": {
 				"properties": {
 					"id": {
@@ -2739,7 +2715,7 @@
 				"description": "특정 폴더의 사진을 이동하는 API입니다.",
 				"summary": "사진 이동 API",
 				"tags": [
-					"memo-image-controller"
+					"Memo-image"
 				],
 				"security": [],
 				"parameters": [
@@ -2821,7 +2797,7 @@
 				"description": "특정 폴더의 사진을 삭제하는 API입니다.",
 				"summary": "폴더 삭제 API",
 				"tags": [
-					"memo-folder-controller"
+					"Memo-folder"
 				],
 				"security": [],
 				"parameters": [
@@ -2897,7 +2873,7 @@
 				"description": "특정 폴더의 모든 메모(텍스트 및 사진)을 조회하는 API입니다.",
 				"summary": "특정 폴더의 메모 조회 API",
 				"tags": [
-					"memo-folder-controller"
+					"Memo-folder"
 				],
 				"security": [],
 				"parameters": [
@@ -3036,7 +3012,7 @@
 				"description": "특정 폴더의 이름을 수정하는 API입니다.",
 				"summary": "메모 폴더 이름 수정 API",
 				"tags": [
-					"memo-folder-controller"
+					"Memo-folder"
 				],
 				"security": [],
 				"parameters": [
@@ -3145,7 +3121,7 @@
 				"description": "폴더를 생성하는 API입니다.",
 				"summary": "폴더 생성 API",
 				"tags": [
-					"memo-folder-controller"
+					"Memo-folder"
 				],
 				"security": [],
 				"parameters": [],
@@ -3202,7 +3178,7 @@
 				"description": "모든 메모를 조회하는 API입니다.",
 				"summary": "모든 메모 조회 API",
 				"tags": [
-					"memo-folder-controller"
+					"Memo-folder"
 				],
 				"security": [],
 				"parameters": []
@@ -3272,7 +3248,7 @@
 				"description": "메모를 검색 및 조회하는 API입니다.",
 				"summary": "메모 검색 API",
 				"tags": [
-					"memo-folder-controller"
+					"Memo-folder"
 				],
 				"security": [],
 				"parameters": [
@@ -3363,7 +3339,7 @@
 				"description": "특정 폴더의 사진을 삭제하는 API입니다.",
 				"summary": "사진 삭제 API",
 				"tags": [
-					"memo-image-controller"
+					"Memo-image"
 				],
 				"security": [],
 				"parameters": [
@@ -3453,7 +3429,7 @@
 				"description": "특정 폴더의 메모 텍스트를 수정하는 API입니다.",
 				"summary": "특정 폴더의 메모 텍스트 수정 API",
 				"tags": [
-					"memo-folder-controller"
+					"Memo-folder"
 				],
 				"security": [],
 				"parameters": [
@@ -3475,6 +3451,304 @@
 							"schema": {
 								"$ref": "#/components/schemas/BodyToMemoTextToUpdate",
 								"description": "메모 텍스트 수정 내용"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/trash/images/{imageId}": {
+			"patch": {
+				"operationId": "DeactivateImage",
+				"responses": {
+					"201": {
+						"description": "CREATED",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_string_"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "DB-001",
+												"reason": "DB 에러 입니다.",
+												"data": {
+													"reason": "에러원인 메시지"
+												}
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SER-001",
+												"reason": "내부 서버 오류입니다.",
+												"data": {
+													"reason": "에러원인 메시지"
+												}
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "휴지통에 넣고싶은 imageId를 입력하시면 해당 이미지는 비활성화 됩니다.",
+				"summary": "휴지통에 이미지 넣기",
+				"tags": [
+					"Trash"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "버릴 이미지ID",
+						"in": "path",
+						"name": "imageId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/trash/active": {
+			"patch": {
+				"operationId": "RestoreImages",
+				"responses": {
+					"201": {
+						"description": "CREATED",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_string_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "VAL-001",
+												"reason": "잘못된 요청입니다.",
+												"data": {
+													"mediaIdList": {
+														"message": "하나이상의 복구할 사진을 선택해주세요.",
+														"value": []
+													}
+												}
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "DB-001",
+												"reason": "DB 에러 입니다.",
+												"data": {
+													"reason": "에러원인 메시지"
+												}
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SER-001",
+												"reason": "내부 서버 오류입니다.",
+												"data": {
+													"reason": "에러원인 메시지"
+												}
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "휴지통에서 선택된 이미지들을 복원하는 API 입니다.",
+				"summary": "휴지통 복원 API",
+				"tags": [
+					"Trash"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "복구하고 싶은 이미지들의 mediaId",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"mediaIdList": {
+										"items": {
+											"type": "string"
+										},
+										"type": "array"
+									}
+								},
+								"required": [
+									"mediaIdList"
+								],
+								"type": "object",
+								"description": "복구하고 싶은 이미지들의 mediaId"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/trash/images": {
+			"delete": {
+				"operationId": "DeleteImages",
+				"responses": {
+					"204": {
+						"description": "DELETED",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_string_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "VAL-001",
+												"reason": "잘못된 요청입니다.",
+												"data": {
+													"mediaIdList": {
+														"message": "하나이상의 복구할 사진을 선택해주세요.",
+														"value": []
+													}
+												}
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "DB-001",
+												"reason": "DB 에러 입니다.",
+												"data": {
+													"reason": "에러원인 메시지"
+												}
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SER-001",
+												"reason": "내부 서버 오류입니다.",
+												"data": {
+													"reason": "에러원인 메시지"
+												}
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "저장된 이미지들의 데이터를 삭제하는 API 입니다.",
+				"summary": "이미지데이터 삭제 API",
+				"tags": [
+					"Trash"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "삭제하고싶은 이미지들의 mediaId",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"mediaIdList": {
+										"items": {
+											"type": "string"
+										},
+										"type": "array"
+									}
+								},
+								"required": [
+									"mediaIdList"
+								],
+								"type": "object",
+								"description": "삭제하고싶은 이미지들의 mediaId"
 							}
 						}
 					}
@@ -3985,7 +4259,7 @@
 				"description": "날짜 챌린지를 생성하는 API 입니다.",
 				"summary": "날짜 챌린지 생성 API",
 				"tags": [
-					"date challenge controller"
+					"Date-challenge"
 				],
 				"security": [],
 				"parameters": [],
@@ -4096,7 +4370,7 @@
 				"description": "날짜 챌린지 조회 API입니다.",
 				"summary": "날짜 챌린지 조회 API",
 				"tags": [
-					"date challenge controller"
+					"Date-challenge"
 				],
 				"security": [],
 				"parameters": [
@@ -4187,7 +4461,7 @@
 				"description": "위치 챌린지를 생성하는 API 입니다.",
 				"summary": "위치 챌린지 생성 API",
 				"tags": [
-					"location challenge controller"
+					"Location-challenge"
 				],
 				"security": [],
 				"parameters": [],
@@ -4297,7 +4571,7 @@
 				"description": "위치 챌린지를 id로 조회하는 API입니다.",
 				"summary": "위치 챌린지 조회 API",
 				"tags": [
-					"location challenge controller"
+					"Location-challenge"
 				],
 				"security": [],
 				"parameters": [
@@ -4399,7 +4673,7 @@
 				"description": "사진들의 위치 챌린지 조건을 판별하는 로직입니다.",
 				"summary": "위치 챌린지 판별 API",
 				"tags": [
-					"location challenge controller"
+					"Location-challenge"
 				],
 				"security": [],
 				"parameters": [],
@@ -4522,7 +4796,7 @@
 				"description": "챌린지의 남은 장수와 목표 장수를 수정하는 API입니다.",
 				"summary": "챌린지 수정 API",
 				"tags": [
-					"challenge controller"
+					"Challenge"
 				],
 				"security": [],
 				"parameters": [],
@@ -4633,7 +4907,7 @@
 				"description": "챌린지를 삭제하는 API입니다.",
 				"summary": "챌린지 삭제 API",
 				"tags": [
-					"challenge controller"
+					"Challenge"
 				],
 				"security": [],
 				"parameters": [
@@ -4724,7 +4998,7 @@
 				"description": "챌린지를 수락하는 API입니다.\r\nparameter에 id값을 적으면 challenge의 status가 2로 변합니다.\r\n1 = 생성된 챌린지, 2 = 수락된 챌린지, 3 = 완료된 챌린지",
 				"summary": "챌린지 수락 API",
 				"tags": [
-					"challenge controller"
+					"Challenge"
 				],
 				"security": [],
 				"parameters": [
@@ -4815,7 +5089,7 @@
 				"description": "챌린지를 완료하는 API입니다.",
 				"summary": "챌린지 완료 API",
 				"tags": [
-					"challenge controller"
+					"Challenge"
 				],
 				"security": [],
 				"parameters": [
@@ -4906,7 +5180,7 @@
 				"description": "로그인 되어 있는 유저의 모든 챌린지들을 불러옵니다.",
 				"summary": "유저 챌린지 조회",
 				"tags": [
-					"challenge controller"
+					"Challenge"
 				],
 				"security": [],
 				"parameters": []
@@ -4987,7 +5261,7 @@
 				"description": "지오해쉬 값을 입력하면 주소로 변환해줍니다.",
 				"summary": "주소 변환 API",
 				"tags": [
-					"challenge controller"
+					"Challenge"
 				],
 				"security": [],
 				"parameters": [
@@ -5112,7 +5386,7 @@
 				"description": "특정 폴더에 사진을 저장하는 API입니다.",
 				"summary": "사진 저장 API",
 				"tags": [
-					"memo-image-controller"
+					"Memo-image"
 				],
 				"security": [],
 				"parameters": [
@@ -5290,7 +5564,7 @@
 				"description": "기존 폴더에 이미지를 추가하고, OCR 텍스트를 업데이트하는 API입니다.",
 				"summary": "폴더 업데이트 및 OCR 수행",
 				"tags": [
-					"memo-ai"
+					"Memo-AI"
 				],
 				"security": [],
 				"parameters": [
@@ -5468,7 +5742,7 @@
 				"description": "새로운 폴더를 생성하고, 이미지에서 OCR 텍스트를 추출하여 이미지와 텍스트를 저장하는 API입니다.",
 				"summary": "폴더 생성 및 OCR 수행",
 				"tags": [
-					"memo-ai"
+					"Memo-AI"
 				],
 				"security": [],
 				"parameters": [],
