@@ -19,12 +19,12 @@ export const handleImageStatus = async (
                 schema: {
                     type: "object",
                     properties: {
-                        mediaId: { 
+                        imageId: { 
                             type: "integer", 
-                            description: "특정 이미지의 mediaId" 
+                            description: "특정 이미지의 imageId" 
                         }
                     },
-                    required: ["mediaId"]
+                    required: ["imageId"]
                 }
             }
         }
@@ -41,7 +41,7 @@ export const handleImageStatus = async (
                         success: {
                             type: "object",
                             properties: {
-                                mediaId: { type: "integer", example: 100001 },
+                                imageId: { type: "integer", example: 100001 },
                                 status: { type: "integer", example: 0 }
                             }
                         }
@@ -52,17 +52,18 @@ export const handleImageStatus = async (
     }
 
     #swagger.responses[500] = {
-        description: "잘못된 요청 (mediaId가 올바르지 않음)",
+        description: "잘못된 요청 (imageId가 올바르지 않음)",
         content: {
             "application/json": {
                 schema: {
                     type: "object",
                     properties: {
-                        resultType: { type: "string", example: "FAILURE" },
+                        resultType: { type: "string", example: "FAIL" },
                         error: {
                             type: "object",
                             properties: {
-                                reason: { type: "string", example: "mediaId가 올바르지 않습니다" }
+                                errorcode: { type: "string", example: "SRH-404"},
+                                reason: { type: "string", example: "imageId가 올바르지 않습니다" }
                             }
                         },
                         success: { type: "object", nullable: true, example: null }
@@ -73,17 +74,18 @@ export const handleImageStatus = async (
     }
 
     #swagger.responses[500] = {
-        description: "해당 mediaId에 대한 데이터를 찾을 수 없음",
+        description: "해당 imageId에 대한 데이터를 찾을 수 없음",
         content: {
             "application/json": {
                 schema: {
                     type: "object",
                     properties: {
-                        resultType: { type: "string", example: "FAILURE" },
+                        resultType: { type: "string", example: "FAIL" },
                         error: {
                             type: "object",
                             properties: {
-                                reason: { type: "string", example: "해당 mediaId에 대한 이미지가 존재하지 않습니다" }
+                                errorcode: { type: "string", example: "SRH-404"},
+                                reason: { type: "string", example: "해당 imageId에에 대한 이미지가 존재하지 않습니다" }
                             }
                         },
                         success: { type: "object", nullable: true, example: null }
@@ -94,21 +96,21 @@ export const handleImageStatus = async (
     }
   */
   try {
-    const {mediaId} = req.body;
-    const parsedMediaId = parseInt(mediaId);
+    const {imageId} = req.body;
+    const parsedMediaId = parseInt(imageId);
     if (isNaN(parsedMediaId)) {
       throw new SearchNoResultsError({
-        searchKeyword: 'mediaId가 올바르지 않습니다',
+        searchKeyword: 'imageId가 올바르지 않습니다',
       });
     }
-    const updatedImage = await trustService.deactivateImages(mediaId);
+    const updatedImage = await trustService.deactivateImages(imageId);
     if (!updatedImage) {
       throw new SearchNoResultsError({
-        searchKeyword: '해당 mediaId에 대한 이미지가 존재하지 않습니다',
+        searchKeyword: '해당 imageId에 대한 이미지가 존재하지 않습니다',
       });
     }
     const result = {
-      mediaId: updatedImage.mediaId,
+      imageId: updatedImage.imageId,
       status: updatedImage.status,
     };
     res.status(StatusCodes.OK).success(result);
@@ -133,13 +135,13 @@ export const handleImageRestore = async (
               schema: {
                   type: "object",
                   properties: {
-                      mediaIds: { 
+                      imageIds: { 
                           type: "array",
                           items: { type: "integer" },
-                          description: "복구할 이미지의 mediaId 리스트"
+                          description: "복구할 이미지의 imageId 리스트"
                       }
                   },
-                  required: ["mediaIds"]
+                  required: ["imageIds"]
               }
           }
       }
@@ -159,7 +161,7 @@ export const handleImageRestore = async (
                           items: {
                               type: "object",
                               properties: {
-                                  mediaId: { type: "integer", example: 10000001 },
+                                  imageId: { type: "integer", example: 10000001 },
                                   status: { type: "integer", example: 1 }
                               }
                           }
@@ -169,18 +171,19 @@ export const handleImageRestore = async (
           }
       }
   }
-  #swagger.responses[500] = {
-      description: "잘못된 요청 (mediaId가 올바르지 않음)",
+  #swagger.responses[404] = {
+      description: "잘못된 요청 (imageId가 올바르지 않음)",
       content: {
           "application/json": {
               schema: {
                   type: "object",
                   properties: {
-                      resultType: { type: "string", example: "FAILURE" },
+                      resultType: { type: "string", example: "FAIL" },
                       error: {
                           type: "object",
                           properties: {
-                              reason: { type: "string", example: "mediaId가 올바르지 않습니다" }
+                              errorcode: { type: "string", example: "SRH-404"},
+                              reason: { type: "string", example: "imageId가 올바르지 않습니다" }
                           }
                       },
                       success: { type: "object", nullable: true, example: null }
@@ -189,18 +192,19 @@ export const handleImageRestore = async (
           }
       }
   }
-  #swagger.responses[500] = {
-      description: "해당 mediaId에 대한 데이터를 찾을 수 없음",
+  #swagger.responses[404] = {
+      description: "해당 imageId에 대한 데이터를 찾을 수 없음",
       content: {
           "application/json": {
               schema: {
                   type: "object",
                   properties: {
-                      resultType: { type: "string", example: "FAILURE" },
+                      resultType: { type: "string", example: "FAIL" },
                       error: {
                           type: "object",
                           properties: {
-                              reason: { type: "string", example: "해당 mediaId에 대한 이미지가 존재하지 않습니다" }
+                              errorcode: { type: "string", example: "SRH-404"},
+                              reason: { type: "string", example: "해당 imageIds에 대한 이미지가 존재하지 않습니다" }
                           }
                       },
                       success: { type: "object", nullable: true, example: null }
@@ -211,20 +215,20 @@ export const handleImageRestore = async (
   }
 */
   try {
-    const {mediaIds} = req.body;
-    if (!Array.isArray(mediaIds)) {
+    const {imageIds} = req.body;
+    if (!Array.isArray(imageIds)) {
       throw new SearchNoResultsError({
-        searchKeyword: 'mediaIds가 올바르지 않습니다',
+        searchKeyword: 'imageIds가 올바르지 않습니다',
       });
     }
-    const restoredImages = await trustService.restoreImages(mediaIds);
+    const restoredImages = await trustService.restoreImages(imageIds);
     if (!restoredImages.length) {
       throw new SearchNoResultsError({
-        searchKeyword: '해당 mediaIds에 대한 이미지가 존재하지 않습니다',
+        searchKeyword: '해당 imageIds에 대한 이미지가 존재하지 않습니다',
       });
     }
     const result = restoredImages.map(image => ({
-      mediaId: image.mediaId,
+      imageId: image.imageId,
       status: image.status,
     }));
     res.status(StatusCodes.OK).success(result);
@@ -288,7 +292,7 @@ export const handleImageDelete = async (
                 schema: { 
                     type: "object", 
                     properties: { 
-                        resultType: { type: "string", example: "FAILURE" }, 
+                        resultType: { type: "string", example: "FAIL" }, 
                         error: { 
                             type: "object", 
                             properties: { 
@@ -304,10 +308,11 @@ export const handleImageDelete = async (
                         summary: "유효하지 않은 imageIds",
                         description: "전송된 imageIds 값이 배열이 아니거나 올바른 숫자가 아닐 때 발생합니다.",
                         value: {
-                            resultType: "FAILURE",
+                            resultType: "FAIL",
                             error: { 
                                 errorCode: "SRH-404",
-                                reason: "imageIds가 올바르지 않습니다",                            },
+                                reason: "imageIds가 올바르지 않습니다",                            
+                                },
                             success: null
                         }
                     }
@@ -323,7 +328,7 @@ export const handleImageDelete = async (
                 schema: { 
                     type: "object", 
                     properties: { 
-                        resultType: { type: "string", example: "FAILURE" }, 
+                        resultType: { type: "string", example: "FAIL" }, 
                         error: { 
                             type: "object", 
                             properties: { 
@@ -338,7 +343,7 @@ export const handleImageDelete = async (
                         summary: "삭제할 이미지가 존재하지 않음",
                         description: "전달된 imageIds 중 일부 또는 전체가 존재하지 않는 경우 발생합니다.",
                         value: {
-                            resultType: "FAILURE",
+                            resultType: "FAIL",
                             error: { 
                                 errorCode: "SRH-400",
                                 reason: "해당 사진이 휴지통에 존재하지 않습니다",
@@ -353,13 +358,13 @@ export const handleImageDelete = async (
     */
 
   try {
-    const {mediaIds} = req.body;
-    if (!Array.isArray(mediaIds)) {
+    const {imageIds} = req.body;
+    if (!Array.isArray(imageIds)) {
       throw new SearchNoResultsError({
-        searchKeyword: 'mediaIds가 올바르지 않습니다',
+        searchKeyword: 'imageIds가 올바르지 않습니다',
       });
     }
-    const deleteable = await trustService.deleteImages(mediaIds);
+    const deleteable = await trustService.deleteImages(imageIds);
     if (!deleteable) {
       throw new DataValidationError({
         reason: '해당 사진이 휴지통에 존재하지 않습니다',
@@ -370,3 +375,97 @@ export const handleImageDelete = async (
     next(error);
   }
 };
+
+export const handleImage = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    /*
+      #swagger.tags = ['Trust']
+      #swagger.summary = '휴지통에 있는 이미지 목록 조회 API'
+      #swagger.description = '로그인한 사용자의 휴지통에 있는 이미지 정보를 가져오는 API입니다.'
+      #swagger.responses[200] = {
+          description: "휴지통 조회 성공",
+          content: {
+              "application/json": {
+                  schema: {
+                      type: "object",
+                      properties: {
+                          resultType: { type: "string", example: "SUCCESS" },
+                          error: { type: "object", nullable: true, example: null },
+                          success: {
+                              type: "array",
+                              items: {
+                                  type: "object",
+                                  properties: {
+                                      imageId: { type: "integer", example: 100001 },
+                                      mediaId: { type: "integer", example: 500002 }
+                                  }
+                              }
+                          }
+                      }
+                  }
+              }
+          }
+      }
+      #swagger.responses[404] = {
+            description: "해당 user_id 가 존재하지 않습니다",
+            content: {
+                "application/json": {
+                    schema: {
+                        type: "object",
+                        properties: {
+                            resultType: { type: "string", example: "FAIL" },
+                            error: {
+                                type: "object",
+                                properties: {
+                                    errorCode: { type: "string", example: "SRH-400" },
+                                    reason: { type: "string", example: "해당 user_id 가 존재하지 않습니다" }
+                                }
+                            },
+                            success: { type: "object", nullable: true, example: null }
+                        }
+                    }
+                }
+            }
+        }
+      #swagger.responses[404] = {
+          description: "휴지통에 이미지 없음",
+          content: {
+              "application/json": {
+                  schema: {
+                      type: "object",
+                      properties: {
+                          resultType: { type: "string", example: "FAIL" },
+                          error: {
+                              type: "object",
+                              properties: {
+                                  errorCode: { type: "string", example: "SRH-400" },
+                                  reason: { type: "string", example: "해당 사진이 휴지통에 존재하지 않습니다" }
+                              }
+                          },
+                          success: { type: "object", nullable: true, example: null }
+                      }
+                  }
+              }
+          }
+      }
+    */
+    try {
+      const userId = Number(req.user?.id);
+      if (!userId) {
+        throw new DataValidationError({reason: 'user_id가 존재하지 않습니다'});
+      }
+      const images = await trustService.getTrashedImages(userId);
+  
+      if (!images.length) {
+        throw new DataValidationError({
+            reason: '해당 사진이 휴지통에 존재하지 않습니다',
+          });
+      }
+      res.status(StatusCodes.OK).success(images);
+    } catch (error) {
+      next(error);
+    }
+  };
