@@ -906,6 +906,427 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"ResponseFromChallenge": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"userId": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"context": {
+						"type": "string"
+					},
+					"requiredCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"remainingCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"acceptedAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"completedAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"status": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"id",
+					"userId",
+					"title",
+					"context",
+					"requiredCount",
+					"remainingCount",
+					"createdAt",
+					"updatedAt",
+					"acceptedAt",
+					"completedAt",
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ITsoaSuccessResponse_ResponseFromChallenge_": {
+				"properties": {
+					"resultType": {
+						"type": "string"
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"success": {
+						"$ref": "#/components/schemas/ResponseFromChallenge"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"success"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ResponseFromLocationChallenge": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"userId": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"context": {
+						"type": "string"
+					},
+					"location": {
+						"type": "string"
+					},
+					"requiredCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"remainingCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"acceptedAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"completedAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"status": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"id",
+					"userId",
+					"title",
+					"context",
+					"location",
+					"requiredCount",
+					"remainingCount",
+					"createdAt",
+					"updatedAt",
+					"acceptedAt",
+					"completedAt",
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ITsoaSuccessResponse_ResponseFromLocationChallenge_": {
+				"properties": {
+					"resultType": {
+						"type": "string"
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"success": {
+						"$ref": "#/components/schemas/ResponseFromLocationChallenge"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"success"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PhotoInfo": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"displayName": {
+						"type": "string"
+					},
+					"longitude": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"latitude": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"location": {
+						"type": "string",
+						"nullable": true
+					},
+					"timestamp": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"id",
+					"displayName",
+					"longitude",
+					"latitude",
+					"timestamp"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ITsoaSuccessResponse_PhotoInfo-Array_": {
+				"properties": {
+					"resultType": {
+						"type": "string"
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"success": {
+						"items": {
+							"$ref": "#/components/schemas/PhotoInfo"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"success"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ResponseFromUpdateChallenge": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"userId": {
+						"type": "string"
+					},
+					"requiredCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"remainingCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"status": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"id",
+					"userId",
+					"requiredCount",
+					"remainingCount",
+					"updatedAt",
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ITsoaSuccessResponse_ResponseFromUpdateChallenge_": {
+				"properties": {
+					"resultType": {
+						"type": "string"
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"success": {
+						"$ref": "#/components/schemas/ResponseFromUpdateChallenge"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"success"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ITsoaSuccessResponse_string_": {
+				"properties": {
+					"resultType": {
+						"type": "string"
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"success": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"success"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ResponseFromGetByUserIdReform": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"userId": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"context": {
+						"type": "string"
+					},
+					"challengeLocation": {
+						"type": "string"
+					},
+					"challengeDate": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"requiredCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"remainingCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"acceptedAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"completedAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"status": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"id",
+					"userId",
+					"title",
+					"context",
+					"requiredCount",
+					"remainingCount",
+					"createdAt",
+					"updatedAt",
+					"acceptedAt",
+					"completedAt",
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ITsoaSuccessResponse_ResponseFromGetByUserIdReform-Array_": {
+				"properties": {
+					"resultType": {
+						"type": "string"
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"success": {
+						"items": {
+							"$ref": "#/components/schemas/ResponseFromGetByUserIdReform"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"success"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {
@@ -2381,6 +2802,8 @@
 						}
 					}
 				},
+				"description": "사용자의 사진들의 카테고리별로 가장 많은 태그를 조회합니다.",
+				"summary": "인기 태그 조회 API",
 				"tags": [
 					"History"
 				],
@@ -2483,6 +2906,8 @@
 						}
 					}
 				},
+				"description": "사용자의 어워드를 생성합니다.\r\n같은 달에 어워드가 이미 존재하는 경우 생성되지 않습니다.",
+				"summary": "어워드 생성 API",
 				"tags": [
 					"Award"
 				],
@@ -2596,6 +3021,8 @@
 						}
 					}
 				},
+				"description": "유저의 어워드에 사진을 등록합니다.\r\n총 5장의 사진만 등록 가능하며 원래 있던 사진들은 삭제하고 다시 등록합니다.\r\n배열에 이미지의 mediaId를 입력합니다.",
+				"summary": "어워드 수정 API",
 				"tags": [
 					"Award"
 				],
@@ -2609,7 +3036,22 @@
 							"type": "string"
 						}
 					}
-				]
+				],
+				"requestBody": {
+					"description": "이미지 id의 배열",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"items": {
+									"type": "string"
+								},
+								"type": "array",
+								"description": "이미지 id의 배열"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/user/history/award/get": {
@@ -2696,43 +3138,31 @@
 						}
 					}
 				},
+				"description": "사용자의 어워드의 목록을 출력합니다.",
+				"summary": "어워드 조회 API",
 				"tags": [
-					"/award"
+					"Award"
 				],
 				"security": [],
 				"parameters": []
 			}
 		},
-		"/memo/image-format/folders": {
+		"/challenge/weekly_challenge/create": {
 			"post": {
-				"operationId": "HandlerMemoFolderImageAdd",
+				"operationId": "HandleNewWeeklyChallenge",
 				"responses": {
 					"200": {
-						"description": "폴더 생성 및 사진 저장 성공 응답",
+						"description": "날짜 챌린지 생성 성공 응답",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ITsoaSuccessResponse_MemoFolderImageResponseDto_"
-								},
-								"examples": {
-									"Example 1": {
-										"value": {
-											"resultType": "SUCCESS",
-											"error": null,
-											"success": {
-												"folderId": "1",
-												"folderName": "string",
-												"imageId": "1",
-												"imageUrl": "string"
-											}
-										}
-									}
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_ResponseFromChallenge_"
 								}
 							}
 						}
 					},
 					"400": {
-						"description": "유효하지 않은 데이터 에러",
+						"description": "Not Found",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -2742,26 +3172,424 @@
 									"Example 1": {
 										"value": {
 											"resultType": "FAIL",
-											"success": null,
 											"error": {
-												"errorCode": "FOL-400",
-												"reason": "폴더 생성 중 오류가 발생했습니다.",
-												"data": {
-													"userId": "1",
-													"folderName": "string"
-												}
-											}
+												"errorCode": "SRH-400",
+												"reason": "입력 데이터가 유효하지 않습니다.",
+												"data": null
+											},
+											"success": null
 										}
 									},
 									"Example 2": {
 										"value": {
 											"resultType": "FAIL",
 											"error": {
-												"errorCode": "PHO-400",
-												"reason": "사진 데이터가 유효하지 않습니다.",
-												"data": {
-													"reason": "저장할 사진이 없습니다."
-												}
+												"errorCode": "CHL-400",
+												"reason": "날짜 기반 챌린지 생성 중 오류가 발생했습니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SER-001",
+												"reason": "내부 서버 오류입니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "날짜 챌린지를 생성하는 API 입니다.",
+				"summary": "날짜 챌린지 생성 API",
+				"tags": [
+					"date challenge controller"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "챌린지 생성 정보",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"required": {
+										"type": "number",
+										"format": "double"
+									},
+									"challengeDate": {
+										"type": "string",
+										"format": "date-time"
+									},
+									"context": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"required",
+									"challengeDate",
+									"context"
+								],
+								"type": "object",
+								"description": "챌린지 생성 정보"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/challenge/weekly_challenge/get/{id}": {
+			"get": {
+				"operationId": "HandleGetWeeklyChallenge",
+				"responses": {
+					"200": {
+						"description": "날짜 챌린지 조회 성공 응답",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_ResponseFromChallenge_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SRH-400",
+												"reason": "입력 데이터가 유효하지 않습니다.",
+												"data": null
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "CHL-400",
+												"reason": "해당 날짜 기반 챌린지를 찾을 수 없습니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SER-001",
+												"reason": "내부 서버 오류입니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "날짜 챌린지 조회 API입니다.",
+				"summary": "날짜 챌린지 조회 API",
+				"tags": [
+					"date challenge controller"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "챌린지 ID",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/challenge/location_challenge/create": {
+			"post": {
+				"operationId": "HandleNewLocationChallenge",
+				"responses": {
+					"200": {
+						"description": "위치 챌린지 성공 응답",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_ResponseFromChallenge_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SRH-400",
+												"reason": "입력 데이터가 유효하지 않습니다.",
+												"data": null
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "CHL-400",
+												"reason": "위치 기반 챌린지 생성 중 오류가 발생했습니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SER-001",
+												"reason": "내부 서버 오류입니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "위치 챌린지를 생성하는 API 입니다.",
+				"summary": "위치 챌린지 생성 API",
+				"tags": [
+					"location challenge controller"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "챌린지 생성에 필요한 정보",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"required": {
+										"type": "number",
+										"format": "double"
+									},
+									"location": {
+										"type": "string"
+									},
+									"context": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"required",
+									"location",
+									"context"
+								],
+								"type": "object",
+								"description": "챌린지 생성에 필요한 정보"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/challenge/location_challenge/get/{id}": {
+			"get": {
+				"operationId": "HandleGetLocationChallenge",
+				"responses": {
+					"200": {
+						"description": "위치 챌린지 조회 성공 응답",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_ResponseFromLocationChallenge_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SRH-400",
+												"reason": "입력 데이터가 유효하지 않습니다.",
+												"data": null
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "CHL-404",
+												"reason": "해당 위치 기반 챌린지를 찾을 수 없습니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SER-001",
+												"reason": "내부 서버 오류입니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "위치 챌린지를 id로 조회하는 API입니다.",
+				"summary": "위치 챌린지 조회 API",
+				"tags": [
+					"location challenge controller"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "챌린지 ID",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/challenge/location_logic/test": {
+			"post": {
+				"operationId": "HandleLocationLogic",
+				"responses": {
+					"200": {
+						"description": "위치 챌린지 판별 응답",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_PhotoInfo-Array_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SRH-400",
+												"reason": "입력 데이터가 유효하지 않습니다.",
+												"data": null
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "PHO-404",
+												"reason": "해당 사진 데이터가 없습니다.",
+												"data": null
 											},
 											"success": null
 										}
@@ -2770,25 +3598,9 @@
 										"value": {
 											"resultType": "FAIL",
 											"error": {
-												"errorCode": "MEM-400",
-												"reason": "메모 사진 추가 중 오류가 발생했습니다.",
-												"data": {
-													"folderId": "1",
-													"imageUrl": "string"
-												}
-											},
-											"success": null
-										}
-									},
-									"Example 4": {
-										"value": {
-											"resultType": "FAIL",
-											"error": {
 												"errorCode": "PHO-400",
 												"reason": "사진 데이터가 유효하지 않습니다.",
-												"data": {
-													"extension": "string"
-												}
+												"data": null
 											},
 											"success": null
 										}
@@ -2797,8 +3609,8 @@
 							}
 						}
 					},
-					"409": {
-						"description": "중복 데이터 에러",
+					"500": {
+						"description": "Internal Server Error",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -2808,14 +3620,12 @@
 									"Example 1": {
 										"value": {
 											"resultType": "FAIL",
-											"success": null,
 											"error": {
-												"errorCode": "FOL-409",
-												"reason": "이미 존재하는 폴더 이름입니다.",
-												"data": {
-													"folderName": "string"
-												}
-											}
+												"errorCode": "SER-001",
+												"reason": "내부 서버 오류입니다.",
+												"data": null
+											},
+											"success": null
 										}
 									}
 								}
@@ -2823,37 +3633,611 @@
 						}
 					}
 				},
-				"description": "폴더 생성과 동시에 파일을 저장하는 API입니다.",
-				"summary": "폴더 생성 및 사진 저장 API",
+				"description": "사진들의 위치 챌린지 조건을 판별하는 로직입니다.",
+				"summary": "위치 챌린지 판별 API",
 				"tags": [
-					"memo-folder-controller"
+					"location challenge controller"
 				],
 				"security": [],
 				"parameters": [],
 				"requestBody": {
+					"description": "사진 데이터 정보",
 					"required": true,
 					"content": {
-						"multipart/form-data": {
+						"application/json": {
 							"schema": {
-								"required": [
-									"folderName"
-								],
-								"type": "object",
-								"properties": {
-									"folderName": {
-										"type": "string",
-										"description": "생성할 폴더 이름"
+								"items": {
+									"properties": {
+										"timestamp": {
+											"type": "string",
+											"format": "date-time"
+										},
+										"latitude": {
+											"type": "number",
+											"format": "double"
+										},
+										"longitude": {
+											"type": "number",
+											"format": "double"
+										},
+										"displayName": {
+											"type": "string"
+										},
+										"id": {
+											"type": "string"
+										}
 									},
-									"image": {
-										"type": "string",
-										"format": "binary",
-										"description": "파일 업로드"
+									"required": [
+										"timestamp",
+										"latitude",
+										"longitude",
+										"displayName",
+										"id"
+									],
+									"type": "object"
+								},
+								"type": "array",
+								"description": "사진 데이터 정보"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/challenge/update": {
+			"patch": {
+				"operationId": "HandleUpdateChallenge",
+				"responses": {
+					"200": {
+						"description": "챌린지 업데이터 성공 응답",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_ResponseFromUpdateChallenge_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SRH-400",
+												"reason": "업데이트 내용이 없습니다.",
+												"data": null
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "CHL-400",
+												"reason": "챌린지 업데이트 실패",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SER-001",
+												"reason": "내부 서버 오류입니다.",
+												"data": null
+											},
+											"success": null
+										}
 									}
 								}
 							}
 						}
 					}
+				},
+				"description": "챌린지의 남은 장수와 목표 장수를 수정하는 API입니다.",
+				"summary": "챌린지 수정 API",
+				"tags": [
+					"challenge controller"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "챌린지 id, 남은 장수, 목표 장수",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"remaining": {
+										"type": "number",
+										"format": "double"
+									},
+									"required": {
+										"type": "number",
+										"format": "double"
+									},
+									"id": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"remaining",
+									"required",
+									"id"
+								],
+								"type": "object",
+								"description": "챌린지 id, 남은 장수, 목표 장수"
+							}
+						}
+					}
 				}
+			}
+		},
+		"/challenge/delete/{id}": {
+			"delete": {
+				"operationId": "HandleRemoveChallenge",
+				"responses": {
+					"200": {
+						"description": "챌린지 삭제 성공 응답",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_string_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SRH-400",
+												"reason": "삭제할 챌린지의 id를 입력해주세요.",
+												"data": null
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "CHL-400",
+												"reason": "챌린지 삭제 실패",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SER-001",
+												"reason": "내부 서버 오류입니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "챌린지를 삭제하는 API입니다.",
+				"summary": "챌린지 삭제 API",
+				"tags": [
+					"challenge controller"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "삭제할 챌린지 ID",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/challenge/accept/{id}": {
+			"patch": {
+				"operationId": "HandleAcceptChallenge",
+				"responses": {
+					"200": {
+						"description": "챌린지 수락 성공 응답",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_ResponseFromChallenge_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SRH-400",
+												"reason": "입력된 id가 없습니다.",
+												"data": null
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "CHL-400",
+												"reason": "챌린지를 수락할 수 없습니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SER-001",
+												"reason": "내부 서버 오류입니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "챌린지를 수락하는 API입니다.\r\nparameter에 id값을 적으면 challenge의 status가 2로 변합니다.\r\n1 = 생성된 챌린지, 2 = 수락된 챌린지, 3 = 완료된 챌린지",
+				"summary": "챌린지 수락 API",
+				"tags": [
+					"challenge controller"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "수락할 챌린지의 ID",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/challenge/complete/{id}": {
+			"patch": {
+				"operationId": "HandleCompleteChallenge",
+				"responses": {
+					"200": {
+						"description": "챌린지 완료 성공 응답",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_ResponseFromChallenge_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SRH-400",
+												"reason": "입력된 id가 없습니다.",
+												"data": null
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "CHL-400",
+												"reason": "해당 챌린지를 완료할 수 없습니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SER-001",
+												"reason": "내부 서버 오류입니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "챌린지를 완료하는 API입니다.",
+				"summary": "챌린지 완료 API",
+				"tags": [
+					"challenge controller"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "완료할 챌린지의 ID",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/challenge/get": {
+			"get": {
+				"operationId": "HandleGetByUserId",
+				"responses": {
+					"200": {
+						"description": "유저 챌린지 조회 성공",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_ResponseFromGetByUserIdReform-Array_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SRH-400",
+												"reason": "req.user 정보가 없습니다.",
+												"data": null
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "CHL-400",
+												"reason": "해당 유저의 챌린지를 찾을 수 없습니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SER-001",
+												"reason": "내부 서버 오류입니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "로그인 되어 있는 유저의 모든 챌린지들을 불러옵니다.",
+				"summary": "유저 챌린지 조회",
+				"tags": [
+					"challenge controller"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/challenge/getGeoCode": {
+			"get": {
+				"operationId": "NaverController",
+				"responses": {
+					"200": {
+						"description": "네이버 API 성공 응답",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_string_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SRH-400",
+												"reason": "query문이 비었습니다. hashedLocation을 입력하세요.",
+												"data": null
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "CHL-500",
+												"reason": "네이버 API 호출에 문제가 있습니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SER-001",
+												"reason": "내부 서버 오류입니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "지오해쉬 값을 입력하면 주소로 변환해줍니다.",
+				"summary": "주소 변환 API",
+				"tags": [
+					"challenge controller"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "해쉬된 위치 정보",
+						"in": "query",
+						"name": "hashedLocation",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/memo/image-format/folders/{folderId}": {
