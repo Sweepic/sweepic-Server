@@ -72,6 +72,12 @@ export class FolderDuplicateError extends BaseError {
   }
 }
 
+export class FolderValidationError extends BaseError {
+  constructor(details: {folderName: string}) {
+    super(400, 'FOL-400', '폴더명을 1자 이상 입력해야 합니다.', details);
+  }
+}
+
 export class FolderNotChangeError extends BaseError {
   constructor(details: {folderId: bigint}) {
     const errorDetails = {
@@ -275,28 +281,28 @@ export class NaverGeoCodeError extends BaseError {
 
 // 히스토리 관련 에러
 export class NoDataFoundError extends BaseError {
-  constructor(details: {reason: string}){
+  constructor(details: {reason: string}) {
     super(404, 'HIS-404', '조회를 요청한 데이터가 없습니다.', details);
   }
 }
 
 // 어워드 중복 에러
 export class DuplicateAwardError extends BaseError {
-  constructor(details: {reason: string}){
+  constructor(details: {reason: string}) {
     super(400, 'HIS-400', '이미 해당 월의 어워드가 존재합니다.', details);
   }
 }
 
 // 어워드 업데이트 에러
 export class AwardUpdateError extends BaseError {
-  constructor(details: {reason: string}){
+  constructor(details: {reason: string}) {
     super(400, 'HIS-400', '어워드 업데이트를 실패했습니다.', details);
   }
 }
 
 // 어워드 사진 에러
 export class AwardImageError extends BaseError {
-  constructor(details: {reason: string}){
+  constructor(details: {reason: string}) {
     super(400, 'HIS-400', '어워드 사진 형식이 잘못되었습니다.', details);
   }
 }

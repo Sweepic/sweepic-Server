@@ -13,7 +13,7 @@ import {
 } from '../services/memo-folder.service.tsoa.js';
 import {memoImageDelete} from '../services/memo-image.service.tsoa.js';
 import {bodyToMemoImagesToDelete} from '../dtos/memo-image.dto.tsoa.js';
-import {DataValidationError} from '../errors.js';
+import {DataValidationError, FolderValidationError} from '../errors.js';
 import {
   Response,
   Body,
@@ -194,6 +194,19 @@ export class MemoFolderController extends Controller {
       data: {folderName: 'string'},
     },
   })
+  @Response<ITsoaErrorResponse>(
+    StatusCodes.BAD_REQUEST,
+    '유효하지 않은 데이터 에러',
+    {
+      resultType: 'FAIL',
+      success: null,
+      error: {
+        errorCode: 'FOL-400',
+        reason: '폴더명을 1자 이상 입력해야 합니다.',
+        data: {folderName: ''},
+      },
+    },
+  )
   @SuccessResponse(StatusCodes.OK, '폴더 생성 성공 응답')
   @Example({
     resultType: 'SUCCESS',
@@ -209,6 +222,11 @@ export class MemoFolderController extends Controller {
   ): Promise<ITsoaSuccessResponse<MemoFolderResponseDto>> {
     try {
       const userId = BigInt(req.user!.id);
+      if (body.folderName === null || body.folderName.trim().length === 0) {
+        throw new FolderValidationError({
+          folderName: body.folderName,
+        });
+      }
       const memoFolder = await memoFolderCreate(userId, bodyToMemoFolder(body));
       return new TsoaSuccessResponse(memoFolder);
     } catch (error) {
@@ -507,6 +525,32 @@ export class MemoFolderController extends Controller {
       data: {folderName: 'string'},
     },
   })
+  @Response<ITsoaErrorResponse>(
+    StatusCodes.BAD_REQUEST,
+    '유효하지 않은 검색 키워드 에러',
+    {
+      resultType: 'FAIL',
+      success: null,
+      error: {
+        errorCode: 'FOL-400',
+        reason: '입력 데이터가 유효하지 않습니다.',
+        data: {folderName: ' '},
+      },
+    },
+  )
+  @Response<ITsoaErrorResponse>(
+    StatusCodes.BAD_REQUEST,
+    '유효하지 않은 데이터 에러',
+    {
+      resultType: 'FAIL',
+      success: null,
+      error: {
+        errorCode: 'FOL-400',
+        reason: '폴더명을 1자 이상 입력해야 합니다.',
+        data: {folderName: ''},
+      },
+    },
+  )
   @SuccessResponse(StatusCodes.OK, '폴더 이름 수정 성공 응답')
   @Example({
     resultType: 'SUCCESS',
@@ -530,6 +574,11 @@ export class MemoFolderController extends Controller {
   ): Promise<ITsoaSuccessResponse<MemoTextImageListResponseDto>> {
     try {
       const userId = BigInt(req.user!.id);
+      if (body.folderName === null || body.folderName.trim().length === 0) {
+        throw new FolderValidationError({
+          folderName: body.folderName,
+        });
+      }
       const folderId = BigInt(folderIdParam);
       const updatedMemoFolder = await memoFolderUpdate(
         userId,

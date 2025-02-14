@@ -2214,6 +2214,32 @@
 												}
 											}
 										}
+									},
+									"Example 3": {
+										"value": {
+											"resultType": "FAIL",
+											"success": null,
+											"error": {
+												"errorCode": "FOL-400",
+												"reason": "입력 데이터가 유효하지 않습니다.",
+												"data": {
+													"folderName": " "
+												}
+											}
+										}
+									},
+									"Example 4": {
+										"value": {
+											"resultType": "FAIL",
+											"success": null,
+											"error": {
+												"errorCode": "FOL-400",
+												"reason": "폴더명을 1자 이상 입력해야 합니다.",
+												"data": {
+													"folderName": ""
+												}
+											}
+										}
 									}
 								}
 							}
@@ -2345,6 +2371,19 @@
 												"data": {
 													"userId": "1",
 													"folderName": "string"
+												}
+											}
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"success": null,
+											"error": {
+												"errorCode": "FOL-400",
+												"reason": "폴더명을 1자 이상 입력해야 합니다.",
+												"data": {
+													"folderName": ""
 												}
 											}
 										}
