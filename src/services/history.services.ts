@@ -1,12 +1,12 @@
 import { Award, AwardImage } from '@prisma/client';
 import { responseFromGetAward, responseFromMostTag, responseFromNewAward, responseFromUpdateAward } from '../dtos/history.dto.js';
 import { AwardUpdateError, DuplicateAwardError, NoDataFoundError } from '../errors.js';
-import { ResponseFromMostTag, ResponseFromMostTagToClient, ResponseFromAward } from '../models/history.model.js';
+import { ResponseFromMostTag, ResponseFromMostTagToClient, ResponseFromAward, ResponseFromAwardImage } from '../models/history.model.js';
 import { getMostTagged, getUserAwards, newUserAward, updateAwardImage } from '../repositories/history.repositories.js';
 
 
-export const serviceGetMostTagged = async (userId: bigint): Promise<ResponseFromMostTagToClient[]> => {
-    const result: ResponseFromMostTag[] = await getMostTagged(userId);
+export const serviceGetMostTagged = async (userId: bigint, year: number, month: number): Promise<ResponseFromMostTagToClient[]> => {
+    const result: ResponseFromMostTag[] = await getMostTagged(userId, year, month);
 
     if(result === null || result.length === 0){
         throw new NoDataFoundError({reason: `유저 ${userId}의 태그를 찾을 수 없습니다.`});
@@ -54,7 +54,7 @@ export const serviceUpdateAward = async (userId: bigint, awardId: bigint, mediaI
 };
 
 export const serviceGetAward = async (userId: bigint): Promise<ResponseFromAward[]> => {
-    const result: Award[] | null = await getUserAwards(userId);
+    const result: ResponseFromAwardImage[] | null = await getUserAwards(userId);
 
     if(result === null || result.length === 0){
         throw new NoDataFoundError({reason: `${userId} 유저의 어워드가 존재하지 않습니다.`});

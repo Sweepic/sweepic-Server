@@ -1,16 +1,17 @@
-import { ResponseFromMostTag } from '../models/history.model.js';
+import { ResponseFromAwardImage, ResponseFromMostTag } from '../models/history.model.js';
 import {prisma} from '../db.config.js';
 import { AwardImageError, DuplicateAwardError, NoDataFoundError } from '../errors.js';
 import { Award, AwardImage } from '@prisma/client';
 
-export const getMostTagged = async (userId: bigint): Promise<ResponseFromMostTag[]> => {
-    const currentTime: Date = new Date();
-    const currentMonth: Date = new Date(currentTime.getFullYear(), currentTime.getMonth(), 1);  //이번 달의 시작
-    const nextMonth: Date = new Date(currentTime.getFullYear() + (
-        currentTime.getMonth() === 1 
+export const getMostTagged = async (userId: bigint, year: number, month: number): Promise<ResponseFromMostTag[]> => {
+    const currentMonth: Date = new Date(year, month - 1, 1);  //이번 달의 시작
+    const nextMonth: Date = new Date(year + (
+        month === 12
         ? 1 
         : 0
-    ),(currentTime.getMonth() + 1) % 12, 1); //다음 달의 시작. 12월이면 하나 올리기
+    ), month % 12, 1); //다음 달의 시작. 12월이면 하나 올리기
+
+    //console.log(currentMonth + ' ' + nextMonth);
 
     const userImages = await prisma.image.findMany({
         where: {
@@ -37,7 +38,8 @@ export const getMostTagged = async (userId: bigint): Promise<ResponseFromMostTag
         where: {
             imageId: {
                 in: userImages.map((value: {id: bigint;}) => value.id)
-            }
+            },
+            status: 1
         },
         select: {
             tagId: true
@@ -139,12 +141,20 @@ export const updateAwardImage = async (userId: bigint, awardId: bigint, imageId:
     return result;
 };
 
-export const getUserAwards = async (userId: bigint): Promise<Award[]> => {
-    const userAwards: Award[] = await prisma.award.findMany({
+export const getUserAwards = async (userId: bigint): Promise<ResponseFromAwardImage[]> => {
+    const userAwards: ResponseFromAwardImage[] = await prisma.award.findMany({
+        include: {
+            images: {
+                select: {
+                    imageId: true
+                }
+            }
+        },
         where: {
             userId: userId
         }
     });
 
+    //console.log(userAwards[0].images);
     return userAwards;
 };
