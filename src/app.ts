@@ -21,9 +21,7 @@ import {ValidateError} from 'tsoa';
 
 // routers
 import {RegisterRoutes} from './routers/tsoaRoutes.js';
-import {challengeRouter} from './routers/challenge.router.js';
 import {authRouter} from './routers/auth.routers.js';
-//import {tagRouter} from './routers/tag.router.js';
 import {trustRouter} from './routers/trust.router.js';
 
 dotenv.config();
@@ -107,7 +105,6 @@ app.use('/oauth2', authRouter);
 app.use(sessionAuthMiddleware);
 
 // 로그인 후
-app.use('/challenge', challengeRouter);
 app.use('/trust', trustRouter);
 
 RegisterRoutes(app);
