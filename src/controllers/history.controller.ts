@@ -10,6 +10,7 @@ import {
     Query,
     Response,
     Body,
+    Path,
 } from 'tsoa';
 import { Request as ExpressRequest } from 'express';
 import { BaseError, DataValidationError, ServerError } from '../errors.js';
@@ -26,9 +27,11 @@ export class MostTaggedController extends Controller{
      * 사용자의 사진들의 카테고리별로 가장 많은 태그를 조회합니다.
      * 
      * @summary 인기 태그 조회 API
+     * @param year 인기태그 년도
+     * @param month 인기태그 월
      * @returns 인기 태그
     */
-    @Get('/history/most_tagged/get')
+    @Get('/history/most_tagged/get/:year/:month')
     @Tags('History')
     @SuccessResponse('200', 'OK')
     @Response<ITsoaErrorResponse>(
@@ -72,13 +75,15 @@ export class MostTaggedController extends Controller{
     )
     public async getMostTagged(
         @Request() req: ExpressRequest,
+        @Path('year') year: number,
+        @Path('month') month: number
     ): Promise<ITsoaSuccessResponse<ResponseFromMostTagToClient[]>> {
         if(!req.user){
            throw new DataValidationError({reason: '유저 정보가 없습니다. 다시 로그인 해주세요.'});
         }
         const userId: bigint = req.user.id;
 
-        const result: ResponseFromMostTagToClient[] = await serviceGetMostTagged(userId)
+        const result: ResponseFromMostTagToClient[] = await serviceGetMostTagged(userId, year, month)
         .then(r => {
             return r;
         })

@@ -30,3 +30,18 @@ export interface ResponseFromUpdateAward{
     status: number;
     awardId: string;
 }
+
+export interface ResponseFromAwardImage{
+    id: bigint,
+    awardMonth: Date,
+    createdAt: Date,
+    updatedAt: Date | null,
+    status: number,
+    userId: bigint,
+    images: {
+        imageId: bigint
+        image: {
+            mediaId: bigint
+        }
+    }[]
+}
