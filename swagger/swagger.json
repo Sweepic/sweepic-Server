@@ -3755,7 +3755,7 @@
 				}
 			}
 		},
-		"/user/history/most_tagged/get": {
+		"/user/history/most_tagged/get/{year}/{month}": {
 			"get": {
 				"operationId": "GetMostTagged",
 				"responses": {
@@ -3845,7 +3845,28 @@
 					"History"
 				],
 				"security": [],
-				"parameters": []
+				"parameters": [
+					{
+						"description": "인기태그 년도",
+						"in": "path",
+						"name": "year",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "인기태그 월",
+						"in": "path",
+						"name": "month",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
 			}
 		},
 		"/user/history/award/create": {
