@@ -1381,8 +1381,10 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsMostTaggedController_getMostTagged: Record<string, TsoaRoute.ParameterSchema> = {
                 req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                year: {"in":"path","name":"year","required":true,"dataType":"double"},
+                month: {"in":"path","name":"month","required":true,"dataType":"double"},
         };
-        app.get('/user/history/most_tagged/get',
+        app.get('/user/history/most_tagged/get/:year/:month',
             ...(fetchMiddlewares<RequestHandler>(MostTaggedController)),
             ...(fetchMiddlewares<RequestHandler>(MostTaggedController.prototype.getMostTagged)),
 
