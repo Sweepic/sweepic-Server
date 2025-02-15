@@ -1,32 +1,32 @@
+import {ImageTag} from '@prisma/client';
 import {prisma} from '../db.config.js';
 import {TagNotFound} from '../errors.js';
-import {
-  ResponseFromTag,
-  BodyToImageTag,
-  ResponseFromImageTag,
-} from '../models/tag.model.js';
+import {ResponseFromTag} from '../models/tag.model.js';
 
 // 태그가 있을 시, 태그를 반환하고 없을 시, 태그를 생성
 export async function addImageTag({
   imageId,
   tags,
-}: BodyToImageTag): Promise<void> {
+}: {
+  imageId: bigint;
+  tags: {content: string; tagCategoryId: bigint}[];
+}): Promise<void> {
   for (let i = 0; i < tags.length; i++) {
     const tag = tags[i];
-    const {content, tag_category_id} = tag;
+    const {content, tagCategoryId} = tag;
 
     // 태그가 빈 값일 경우, 해당 이미지의 태그 상태를 0으로 변경
     if (content === '') {
-      await inActiveTag(imageId, tag_category_id);
+      await inActiveTag(imageId, tagCategoryId);
     }
     // 태그가 동일한 것이 있을 시, 태그를 반환하고 / 태그가 동일한 것이 없을 시, 태그를 생성
     else {
-      const tagData = await getTag(content, tag_category_id);
-      // await activeTag(imageId, tag_category_id);
-      await inActiveTag(imageId, tag_category_id);
+      const tagData = await getTag(content, tagCategoryId);
+      // await activeTag(imageId, tagCategoryId);
+      await inActiveTag(imageId, tagCategoryId);
       // 태그가 동일한 것이 없으면 생성
       if (!tagData) {
-        await newTag(imageId, content, tag_category_id);
+        await newTag(imageId, content, tagCategoryId);
       }
       // 태그가 동일한 것이 있으면 미생성
       else {
@@ -245,7 +245,7 @@ export async function getTag(
 
 export async function getImageTag(
   imageId: bigint | number,
-): Promise<ResponseFromImageTag[]> {
+): Promise<ImageTag[]> {
   const imageTagData = await prisma.imageTag.findMany({
     where: {
       imageId,

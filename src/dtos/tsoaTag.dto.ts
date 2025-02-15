@@ -22,3 +22,25 @@ export class ImageToTags {
     this.mediaId = mediaId;
   }
 }
+
+export interface RequestBodyCreationTags {
+  tags: {
+    content: string;
+    tagCategoryId: string;
+  }[];
+}
+
+export class RequestCreationTags {
+  imageId: bigint;
+  tags: {content: string; tagCategoryId: bigint}[];
+
+  constructor(
+    imageId: string,
+    tags: {content: string; tagCategoryId: string}[],
+  ) {
+    this.imageId = BigInt(imageId);
+    this.tags = tags.map(tag => {
+      return {content: tag.content, tagCategoryId: BigInt(tag.tagCategoryId)};
+    });
+  }
+}

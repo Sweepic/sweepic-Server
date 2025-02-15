@@ -1,6 +1,10 @@
-import {responseFromImageTag} from '../dtos/tag.dto.js';
-import {BodyToTag, ResponseFromImageTag} from '../models/tag.model.js';
+import {RequestCreationTags} from 'src/dtos/tsoaTag.dto.js';
 import {addImageTag, getImageTag} from '../repositories/tag.repositories.js';
+import {
+  ResponseCreationTags,
+  responseCreationTags,
+} from 'src/models/tsoaTag.model.js';
+import {DBError} from 'src/errors.js';
 
 /**
  * 태그 생성
@@ -9,12 +13,16 @@ import {addImageTag, getImageTag} from '../repositories/tag.repositories.js';
 async function tagCreate({
   imageId,
   tags,
-}: BodyToTag): Promise<ResponseFromImageTag[]> {
-  await addImageTag({imageId, tags});
+}: RequestCreationTags): Promise<ResponseCreationTags> {
+  await addImageTag({imageId, tags}).catch(err => {
+    throw new DBError({reason: err.message});
+  });
 
-  const imageTagData = await getImageTag(imageId);
+  const imageTagData = await getImageTag(imageId).catch(err => {
+    throw new DBError({reason: err.message});
+  });
 
-  return responseFromImageTag(imageTagData);
+  return responseCreationTags(imageTagData);
 }
 
 export {tagCreate};
