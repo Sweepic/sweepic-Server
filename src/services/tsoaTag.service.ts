@@ -1,6 +1,16 @@
-import {DateToTags, ImageToTags} from '../dtos/tsoaTag.dto.js';
+import {
+  responseCreationTags,
+  ResponseCreationTags,
+} from '../models/tsoaTag.model.js';
+import {
+  DateToTags,
+  ImageToTags,
+  RequestCreationTags,
+} from '../dtos/tsoaTag.dto.js';
 import {TagNotFound} from '../errors.js';
 import {
+  addImageTag,
+  getImageTag,
   selectTagsByDate,
   selectTagsFromImage,
 } from '../repositories/tsoaTag.repository.js';
@@ -51,3 +61,14 @@ export const findTagsFromImage = async (
   );
   return tags;
 };
+
+export async function tagCreate({
+  imageId,
+  tags,
+}: RequestCreationTags): Promise<ResponseCreationTags> {
+  await addImageTag({imageId, tags});
+
+  const imageTagData = await getImageTag(imageId);
+
+  return responseCreationTags(imageTagData);
+}

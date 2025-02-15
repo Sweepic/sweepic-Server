@@ -18,16 +18,10 @@ import {BaseError} from './errors.js';
 import {sessionAuthMiddleware} from './auth.config.js';
 import cookieParser from 'cookie-parser';
 import {ValidateError} from 'tsoa';
-import {labelDetectionController} from './controllers/tags-ai.controller.js';
 
 // routers
 import {RegisterRoutes} from './routers/tsoaRoutes.js';
 import {authRouter} from './routers/auth.routers.js';
-import {userRouter} from './routers/user.router.js';
-import {tagRouter} from './routers/tag.router.js';
-import {myPageRouter} from './routers/mypage.routers.js';
-import {trustRouter} from './routers/trust.router.js';
-import upload from './ai/ai-upload.js';
 
 dotenv.config();
 
@@ -110,13 +104,6 @@ app.use('/oauth2', authRouter);
 app.use(sessionAuthMiddleware);
 
 // 로그인 후
-app.use('/onboarding', userRouter);
-//app.use('/challenge', challengeRouter);
-app.use('/user/mypage', myPageRouter);
-app.use('/tag', tagRouter);
-app.use('/trust', trustRouter);
-app.post('/image/ai', upload.single('base64_image'), labelDetectionController);
-
 RegisterRoutes(app);
 
 app.get('/', (req: Request, res: Response) => {
@@ -147,7 +134,7 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
       resultType: 'FAIL',
       error: {
         errorCode: 'VAL-001',
-        reason: 'Validation Error',
+        reason: err.message,
         data: err.fields,
       },
       success: null,

@@ -37,7 +37,7 @@ export class MemoCreateUpdateOCRController extends Controller {
    */
   @Post('/text-format/folders')
   @Middlewares(uploadMiddleware)
-  @Tags('memo-ai')
+  @Tags('Memo-AI')
   @Response<ITsoaErrorResponse>(StatusCodes.BAD_REQUEST, '잘못된 요청 데이터', {
     resultType: 'FAIL',
     success: null,
