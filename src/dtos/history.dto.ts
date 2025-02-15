@@ -1,5 +1,5 @@
 import { Award, AwardImage } from '@prisma/client';
-import { ResponseFromMostTag, ResponseFromMostTagToClient, ResponseFromAward, ResponseFromUpdateAward } from '../models/history.model.js';
+import { ResponseFromMostTag, ResponseFromMostTagToClient, ResponseFromAward, ResponseFromUpdateAward, ResponseFromAwardImage } from '../models/history.model.js';
 
 export const responseFromMostTag = (
     arr: ResponseFromMostTag[]
@@ -55,10 +55,14 @@ export const bodyToUpdateAward = (
 };
 
 export const responseFromGetAward = (
-    awards: Award[]
+    awards: ResponseFromAwardImage[]
 ): ResponseFromAward[] => {
-    return awards.map((value: Award) => {
-        const {id, userId, awardMonth, createdAt, updatedAt, status} = value;
+    return awards.map((value: ResponseFromAwardImage) => {
+        const {id, userId, awardMonth, createdAt, updatedAt, status, images } = value;
+
+        const ims: {imageId: string}[] = images.map((value: {image: {mediaId: bigint}}) => {
+            return {imageId: value.image.mediaId.toString()};
+        });
 
         return {
             id: id.toString(),
@@ -66,7 +70,8 @@ export const responseFromGetAward = (
             awardMonth,
             createdAt,
             updatedAt,
-            status
+            status,
+            images: ims
         };
     });
 };
