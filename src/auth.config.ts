@@ -58,7 +58,7 @@ export const naverStrategy = new NaverStrategy(
   {
     clientID: process.env.PASSPORT_NAVER_CLIENT_ID!,
     clientSecret: process.env.PASSPORT_NAVER_CLIENT_SECRET!,
-    callbackURL: 'http://3.37.137.212:3000/oauth2/callback/naver',
+    callbackURL: `https://${process.env.SERVER_DOMAIN}/oauth2/callback/kakao`,
   },
   async (accessToken, refreshToken, profile, cb) => {
     try {
@@ -75,7 +75,7 @@ export const googleStrategy = new GoogleStrategy(
   {
     clientID: process.env.PASSPORT_GOOGLE_CLIENT_ID!,
     clientSecret: process.env.PASSPORT_GOOGLE_CLIENT_SECRET!,
-    callbackURL: 'http://3.37.137.212:3000/oauth2/callback/google',
+    callbackURL: `https://${process.env.SERVER_DOMAIN}/oauth2/callback/google`,
   },
   async (accessToken, refreshToken, profile, cb) => {
     try {
@@ -92,7 +92,7 @@ export const kakaoStrategy = new KakaoStrategy(
   {
     clientID: process.env.PASSPORT_KAKAO_CLIENT_ID!,
     clientSecret: process.env.PASSPORT_KAKAO_CLIENT_SECRET!, // Optional in Kakao
-    callbackURL: 'http://3.37.137.212:3000/oauth2/callback/kakao',
+    callbackURL: `https://${process.env.SERVER_DOMAIN}/oauth2/callback/kakao`,
   },
   async (accessToken, refreshToken, profile, cb) => {
     try {
