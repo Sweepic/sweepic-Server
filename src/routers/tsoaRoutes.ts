@@ -535,6 +535,7 @@ const models: TsoaRoute.Models = {
             "context": {"dataType":"string","required":true},
             "challengeLocation": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"undefined"}],"required":true},
             "challengeDate": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"undefined"}],"required":true},
+            "images": {"dataType":"array","array":{"dataType":"string"},"required":true},
             "requiredCount": {"dataType":"double","required":true},
             "remainingCount": {"dataType":"double","required":true},
             "createdAt": {"dataType":"datetime","required":true},
@@ -1831,6 +1832,38 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'naverController',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsChallengeController_handleChallengeImageUpload: Record<string, TsoaRoute.ParameterSchema> = {
+                challengeId: {"in":"path","name":"challengeId","required":true,"dataType":"string"},
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                body: {"in":"body","name":"body","required":true,"dataType":"array","array":{"dataType":"string"}},
+        };
+        app.post('/challenge/images/upload/:challengeId',
+            ...(fetchMiddlewares<RequestHandler>(ChallengeController)),
+            ...(fetchMiddlewares<RequestHandler>(ChallengeController.prototype.handleChallengeImageUpload)),
+
+            async function ChallengeController_handleChallengeImageUpload(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsChallengeController_handleChallengeImageUpload, request, response });
+
+                const controller = new ChallengeController();
+
+              await templateService.apiHandler({
+                methodName: 'handleChallengeImageUpload',
                 controller,
                 response,
                 next,

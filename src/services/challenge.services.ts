@@ -16,6 +16,7 @@ import {
   acceptChallenge,
   getChallengeByUserId,
   completeChallenge,
+  challengeImageUpload,
 } from '../repositories/challenge.repositories.js';
 import {
   ChallengeUpdateError,
@@ -105,5 +106,20 @@ export const serviceGetByUserId = async (
     return responseFromGetByUserId(challenges);
   } catch (error) {
     throw error;
+  }
+};
+
+export const serviceChallengeImageUpload = async (
+  imageIdList: string[],
+  challengeId: string,
+  userId: bigint
+): Promise<void> => {
+  const imageList: bigint[] = imageIdList.map((value: string) => {return BigInt(value);});
+  const challenge: bigint = BigInt(challengeId);
+
+  const result: {count: number}= await challengeImageUpload(imageList, challenge, userId);
+
+  if(imageIdList.length !== result.count){
+    throw new Error('챌린지에 이미지 업로드 중 문제가 생겼습니다.');
   }
 };
