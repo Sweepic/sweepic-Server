@@ -6,7 +6,7 @@ export const uploadMiddleware = (
   res: Response,
   next: NextFunction,
 ) => {
-  upload.single('base64_image')(req, res, err => {
+  upload.single('image')(req, res, err => {
     if (err) {
       next(err);
     } else {

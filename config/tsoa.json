@@ -14,7 +14,7 @@
           "description": "Sweepic local server"
         },
         {
-          "url": "http://3.37.137.212:3000",
+          "url": "https://sweepic.store",
           "description": "Sweepic server"
         }
       ],
@@ -49,7 +49,7 @@
                   "schema": {
                     "type": "object",
                     "properties": {
-                      "base64_image": {
+                      "image": {
                         "type": "string",
                         "format": "binary",
                         "description": "OCR 처리를 위한 이미지 업로드"
@@ -70,10 +70,31 @@
                   "schema": {
                     "type": "object",
                     "properties": {
-                      "base64_image": {
+                      "image": {
                         "type": "string",
                         "format": "binary",
                         "description": "OCR 처리를 위한 이미지 업로드"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/tags/ai": {
+          "post": {
+            "requestBody": {
+              "content": {
+                "multipart/form-data": {
+                  "schema": {
+                    "required": ["image"],
+                    "type": "object",
+                    "properties": {
+                      "image": {
+                        "type": "string",
+                        "format": "binary",
+                        "description": "태그라벨 자동생성을 위한 이미지 업로드"
                       }
                     }
                   }

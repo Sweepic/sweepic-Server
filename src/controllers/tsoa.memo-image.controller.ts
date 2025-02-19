@@ -47,7 +47,7 @@ export class MemoImageController extends Controller {
    */
   @Post('/image-format/folders/:folderId')
   @Middlewares(ImageUploadMiddleware)
-  @Tags('memo-image-controller')
+  @Tags('Memo-image')
   @Response<ITsoaErrorResponse>(
     StatusCodes.BAD_REQUEST,
     '유효하지 않은 데이터 조회 에러',
@@ -148,7 +148,7 @@ export class MemoImageController extends Controller {
    * @returns 성공 시 사진 이동 결과를 반환합니다.
    */
   @Patch('/folders/:folderId/images')
-  @Tags('memo-image-controller')
+  @Tags('Memo-image')
   @Response<ITsoaErrorResponse>(
     StatusCodes.BAD_REQUEST,
     '유효하지 않은 데이터 조회 에러',
@@ -239,7 +239,7 @@ export class MemoImageController extends Controller {
    * @returns 성공 시 폴더 삭제 결과를 반환합니다.
    */
   @Delete('/folders/:folderId')
-  @Tags('memo-folder-controller')
+  @Tags('Memo-folder')
   @Response<ITsoaErrorResponse>(
     StatusCodes.NOT_FOUND,
     '존재하지 않은 데이터 조회 에러',

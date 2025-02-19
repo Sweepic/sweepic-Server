@@ -171,7 +171,7 @@ export class MemoFolderController extends Controller {
    * @returns 성공 시 폴더 생성 결과를 반환합니다.
    */
   @Post('/folders')
-  @Tags('memo-folder-controller')
+  @Tags('Memo-folder')
   @Response<ITsoaErrorResponse>(
     StatusCodes.BAD_REQUEST,
     '유효하지 않은 데이터 에러',
@@ -224,7 +224,7 @@ export class MemoFolderController extends Controller {
    * @returns 성공 시 메모 조회 결과를 반환합니다.
    */
   @Get('/list')
-  @Tags('memo-folder-controller')
+  @Tags('Memo-folder')
   @SuccessResponse(StatusCodes.OK, '메모 조회 성공 응답')
   @Example({
     resultType: 'SUCCESS',
@@ -264,7 +264,7 @@ export class MemoFolderController extends Controller {
    * @returns 성공 시 메모 검색 결과를 반환합니다.
    */
   @Get('/search')
-  @Tags('memo-folder-controller')
+  @Tags('Memo-folder')
   @Response<ITsoaErrorResponse>(
     StatusCodes.BAD_REQUEST,
     '유효하지 않은 검색 키워드 에러',
@@ -325,7 +325,7 @@ export class MemoFolderController extends Controller {
    * @returns 성공 시 사진 삭제 결과를 반환합니다.
    */
   @Post('/folders/:folderId/images/delete')
-  @Tags('memo-image-controller')
+  @Tags('Memo-image')
   @Response<ITsoaErrorResponse>(
     StatusCodes.NOT_FOUND,
     '존재하지 않은 데이터 조회 에러',
@@ -400,7 +400,7 @@ export class MemoFolderController extends Controller {
    * @returns 성공 시 특정 메모의 조회 결과를 반환합니다.
    */
   @Get('/folders/:folderId')
-  @Tags('memo-folder-controller')
+  @Tags('Memo-folder')
   @Response<ITsoaErrorResponse>(
     StatusCodes.NOT_FOUND,
     '존재하지 않은 데이터 조회 에러',
@@ -456,7 +456,7 @@ export class MemoFolderController extends Controller {
    * @returns 성공 시 메모 폴더 이름 수정 결과를 반환합니다.
    */
   @Patch('/folders/:folderId')
-  @Tags('memo-folder-controller')
+  @Tags('Memo-folder')
   @Response<ITsoaErrorResponse>(
     StatusCodes.BAD_REQUEST,
     '유효하지 않은 데이터 에러',
@@ -552,7 +552,7 @@ export class MemoFolderController extends Controller {
    * @returns 성공 시 메모 텍스트 수정 결과를 반환합니다.
    */
   @Patch('/folders/:folderId/text')
-  @Tags('memo-folder-controller')
+  @Tags('Memo-folder')
   @Response<ITsoaErrorResponse>(
     StatusCodes.NOT_FOUND,
     '존재하지 않은 데이터 조회 에러',
