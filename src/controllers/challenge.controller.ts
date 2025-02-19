@@ -12,9 +12,11 @@ import {
   Get,
   Query,
   Response,
+  Post,
 } from 'tsoa';
 import {
   serviceAcceptChallenge,
+  serviceChallengeImageUpload,
   serviceCompleteChallenge,
   serviceDeleteChallenge,
   serviceGetByUserId,
@@ -437,5 +439,79 @@ export class ChallengeController extends Controller {
       });
 
     return new TsoaSuccessResponse(result);
+  }
+
+  /**
+   * 챌린지의 이미지들을 업로드합니다.
+   * 
+   * @summary 챌린지 이미지 업로드 API
+   * @param challengeId 챌린지 ID
+   * @param req 
+   * @param body 이미지ID의 배열(string[])
+   * @returns 업로드 성공 유무
+   */
+  @Post('/images/upload/:challengeId')
+  @Tags('Challenge')
+  @SuccessResponse(StatusCodes.OK, '챌린지 이미지 업로드 성공 응답')
+  @Response<ITsoaErrorResponse>(StatusCodes.BAD_REQUEST, 'Not Found', {
+    resultType: 'FAIL',
+    error: {
+      errorCode: 'SRH-400',
+      reason: 'req.user 정보가 없습니다.',
+      data: null,
+    },
+    success: null,
+  })
+  @Response<ITsoaErrorResponse>(StatusCodes.BAD_REQUEST, 'Not Found', {
+    resultType: 'FAIL',
+    error: {
+      errorCode: 'CHL-400',
+      reason: '이미지 업로드 중 문제가 발생했습니다.',
+      data: null,
+    },
+    success: null,
+  })
+  @Response<ITsoaErrorResponse>(StatusCodes.NOT_FOUND, 'Not Found', {
+    resultType: 'FAIL',
+    error: {
+      errorCode: 'CHL-404',
+      reason: '이미지가 서버에 존재하지 않습니다.',
+      data: null,
+    },
+    success: null,
+  })
+  @Response<ITsoaErrorResponse>(
+    StatusCodes.INTERNAL_SERVER_ERROR,
+    'Internal Server Error',
+    {
+      resultType: 'FAIL',
+      error: {
+        errorCode: 'SER-001',
+        reason: '내부 서버 오류입니다.',
+        data: null,
+      },
+      success: null,
+    },
+  )
+  public async handleChallengeImageUpload(
+    @Path('challengeId') challengeId: string,
+    @Request() req: ExpressRequest,
+    @Body() body: string[]
+  ): Promise<ITsoaSuccessResponse<string>>{
+    if (!req.user) {
+      throw new DataValidationError({reason: 'req.user 정보가 없습니다.'});
+    }
+
+    await serviceChallengeImageUpload(body, challengeId, req.user.id)
+    .then(() => {return;})
+    .catch(err => {
+      if (!(err instanceof BaseError)) {
+        throw new ServerError();
+      } else {
+        throw err;
+      }
+    });
+
+    return new TsoaSuccessResponse(`${challengeId}챌린지 이미지 업로드 성공`);
   }
 }

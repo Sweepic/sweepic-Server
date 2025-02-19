@@ -90,6 +90,9 @@ export interface ResponseFromGetByUserId {
     dateChallenge: {
         challengeDate: Date;
     } | null;
+    images: {
+        image: {mediaId: bigint}
+    }[];
 
     id: bigint;
     userId: bigint;
@@ -111,6 +114,7 @@ export interface ResponseFromGetByUserIdReform {
     context: string;
     challengeLocation: string | undefined;
     challengeDate: Date | undefined;
+    images: string[];
     requiredCount: number;
     remainingCount: number;
     createdAt: Date;

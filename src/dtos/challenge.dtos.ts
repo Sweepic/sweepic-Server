@@ -83,8 +83,13 @@ export const responseFromGetByUserId = (
 ): ResponseFromGetByUserIdReform[] => {
     return challenges.map((value: ResponseFromGetByUserId) => {
         const {id, title, context, requiredCount, remainingCount, userId,
-            createdAt, updatedAt, acceptedAt, completedAt, status, locationChallenge, dateChallenge
+            createdAt, updatedAt, acceptedAt, completedAt, status, locationChallenge, dateChallenge, images
         } = value;
+
+        const imageList: string[] = images.map((value: {image: {mediaId: bigint}}) => 
+            {
+                return value.image.mediaId.toString();
+            });
 
         return {
             id: id.toString(),
@@ -92,6 +97,7 @@ export const responseFromGetByUserId = (
             context,
             challengeLocation: locationChallenge?.challengeLocation,
             challengeDate: dateChallenge?.challengeDate,
+            images: imageList,
             requiredCount,
             remainingCount,
             userId: userId.toString(),
@@ -128,4 +134,16 @@ export const bodyToWeeklyCreation = (data: BodyToWeeklyCreation, userId: bigint)
         challengeDate,
         required
     };
+};
+
+export const challengeImageUplaodBody = (imageIdList: {id: bigint}[], challengeId: bigint): {
+    imageId: bigint,
+    challengeId: bigint
+}[] => {
+    return imageIdList.map((value: {id: bigint}) => {
+        return {
+            imageId: value.id,
+            challengeId
+        };
+    });
 };
