@@ -12,6 +12,43 @@ import {
 } from '../models/challenge.entities.js';
 import {Challenge, LocationChallenge} from '@prisma/client';
 
+export const challengeExist = async (userId: bigint): Promise<Boolean> => {
+  const currentTime = new Date(); //현재 시간
+  const minute: number = currentTime.getMinutes() > 30 ? 30 : 0;
+  currentTime.setMinutes(minute, 0, 0); //시간 초기화
+  const nextTime = new Date();
+  nextTime.setMinutes(currentTime.getMinutes() + 30, 0, 0);
+
+  // if(minute === 30){
+  //   currentTime.setHours(currentTime.getHours() - 1);
+  //   nextTime.setHours(nextTime.getHours() - 1);
+  // }
+
+  // console.log(currentTime);
+  // console.log(nextTime);
+  // console.log(new Date(currentTime.toUTCString()));
+  // console.log(new Date(nextTime.toUTCString()));
+  
+  const isExistChallenge = await prisma.challenge.findFirst({
+    where: {
+      userId: userId,
+      createdAt: {
+        lt: new Date(nextTime.toUTCString()),
+        gte: new Date(currentTime.toUTCString())
+      }
+    }
+  });
+
+  console.log(isExistChallenge);
+
+  if(isExistChallenge){
+    return true;
+  }
+  else{
+    return false;
+  }
+};
+
 export const newLocationChallenge = async (
   data: LocationChallengeCreation,
 ): Promise<Challenge | null> => {
