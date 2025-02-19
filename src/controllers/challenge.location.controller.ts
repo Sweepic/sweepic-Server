@@ -12,7 +12,7 @@ import {
   ResponseFromLocationChallenge,
 } from '../models/challenge.entities.js';
 import {bodyToLocationCreation} from '../dtos/challenge.dtos.js';
-import {BaseError, DataValidationError, ServerError} from '../errors.js';
+import {BaseError, DataValidationError, LocationChallengeCreationError, ServerError} from '../errors.js';
 import {
   Controller,
   Post,
@@ -30,6 +30,7 @@ import {
   ITsoaSuccessResponse,
   TsoaSuccessResponse,
 } from '../models/tsoaResponse.js';
+import { challengeExist } from 'src/repositories/challenge.repositories.js';
 
 @Route('challenge')
 export class LocationController extends Controller {
@@ -240,6 +241,16 @@ export class LocationController extends Controller {
       timestamp: Date;
     }[],
   ): Promise<ITsoaSuccessResponse<PhotoInfo[]>> {
+    if (!req.user) {
+      throw new DataValidationError({
+        reason: '유저 정보가 없습니다. 다시 로그인 해주세요.',
+      });
+    }
+
+    if(await challengeExist(req.user.id)){
+      throw new LocationChallengeCreationError({reason: '이미 챌린지가 존재합니다.'});
+    }
+
     if (!body) {
       throw new DataValidationError({reason: '사진 데이터가 없습니다.'});
     }

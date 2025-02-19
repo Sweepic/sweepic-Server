@@ -73,7 +73,7 @@ export const getMostTagged = async (userId: bigint, year: number, month: number)
 
 export const newUserAward = async (id: bigint): Promise<Award | null> => {
     const currentDate: Date = new Date();
-    currentDate.setMonth(currentDate.getMonth() + 1);
+    currentDate.setMonth(currentDate.getMonth());
     currentDate.setDate(1);
     currentDate.setHours(0, 0, 0, 0);
 
