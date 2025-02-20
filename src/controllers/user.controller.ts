@@ -353,6 +353,12 @@ export class MypageController extends Controller {
   ): Promise<ITsoaSuccessResponse<string>> {
     const userId = req.user!.id;
     const success = await removeUser(userId);
+    const sessionID = req.sessionID;
+    if (sessionID.trim() === '') {
+      throw new AuthError({reason: 'Session ID가 존재하지 않습니다'});
+    }
+    await logoutUserService(sessionID);
+    req.session.destroy(() => {});
 
     if (!success) {
       throw new AuthError({reason: 'user를 찾을 수 없습니다'});

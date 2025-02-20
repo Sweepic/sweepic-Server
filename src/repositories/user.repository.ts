@@ -18,9 +18,8 @@ export const findUserById = async (
 
 export const deleteUser = async (userId: bigint): Promise<boolean> => {
   await prisma.user
-    .update({
+    .delete({
       where: {id: userId},
-      data: {status: 0},
     })
     .catch(err => {
       throw new DBError({reason: err.message});
