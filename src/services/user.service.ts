@@ -5,7 +5,7 @@ export const updateUserName = async (id: bigint, name: string) => {
   return await prisma.user
     .update({
       where: {id},
-      data: {name},
+      data: {name, status: 1},
     })
     .then(result => {
       return {
@@ -27,7 +27,7 @@ export const updateUserGoalCount = async (id: bigint, goalCount: number) => {
   return await prisma.user
     .update({
       where: {id},
-      data: {goalCount},
+      data: {goalCount, status: 1},
     })
     .then(result => {
       return {
