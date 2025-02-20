@@ -71,7 +71,10 @@ export const serviceLocationLogic = async (
     const hashPosition: Map<string, number> = new Map<string, number>(); //hash된 위치의 map 각 key를 위치로, value를 개수로 설정함
 
     for (const [, photo] of iterator) {   //lint 규칙에 어긋나지만 문법 상 index가 필요하지만, 밑의 반복문에서는 필요하지 않습니다.
-      if (photo.latitude === null || photo.longitude === null) {
+      if (
+        photo.latitude === null || photo.longitude === null
+        || photo.latitude === 0 || photo.longitude === 0
+      ) {
         continue;
       }
 
