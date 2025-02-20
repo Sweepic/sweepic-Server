@@ -151,7 +151,7 @@ const verifyUser = async (
       goalCount: 0, // default
       createdAt: new Date(),
       updatedAt: new Date(),
-      status: 1,
+      status: 2,
     },
   });
 
