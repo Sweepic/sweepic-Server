@@ -17,7 +17,7 @@ export const getMostTagged = async (userId: bigint, year: number, month: number)
         where: {
             AND: [
                 {userId: userId},
-                {updatedAt: {
+                {createdAt: {
                     lt: nextMonth,
                     gte: currentMonth
                 }}
