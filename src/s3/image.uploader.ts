@@ -40,5 +40,5 @@ export const imageUploader = multer({
     },
     acl: 'private', // 비공개 설정 (업로드 파일을 버킷 소유자만 접근 가능)
   }),
-  limits: {fileSize: 5 * 1024 * 1024}, // 이미지 용량 제한 (5MB)
+  limits: {fileSize: 10 * 1024 * 1024}, // 이미지 용량 제한 (10MB)
 });
