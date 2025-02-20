@@ -266,6 +266,20 @@ export class DateChallengeNotFoundError extends BaseError {
   }
 }
 
+// 챌린지 이미지 업로드 에러
+export class ChallengeImageUploadError extends BaseError {
+  constructor(details: {reason: string}) {
+    super(400, 'CHL-400', '이미지 업로드 중 문제가 발생했습니다.', details);
+  }
+}
+
+// 챌린지 이미지 존재하지 않음 에러
+export class ChallengeImageMissingError extends BaseError {
+  constructor(details: {reason: string}) {
+    super(404, 'CHL-404', '이미지가 서버에 존재하지 않습니다.', details);
+  }
+}
+
 // 네이버 API 관련 에러
 export class NaverGeoCodeError extends BaseError {
   constructor(details: {reason: string}) {

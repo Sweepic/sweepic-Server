@@ -1464,6 +1464,12 @@
 						"type": "string",
 						"format": "date-time"
 					},
+					"images": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
 					"requiredCount": {
 						"type": "number",
 						"format": "double"
@@ -1501,6 +1507,7 @@
 					"userId",
 					"title",
 					"context",
+					"images",
 					"requiredCount",
 					"remainingCount",
 					"createdAt",
@@ -1563,7 +1570,7 @@
 			"description": "Sweepic local server"
 		},
 		{
-			"url": "http://3.37.137.212:3000",
+			"url": "https://sweepic.store",
 			"description": "Sweepic server"
 		}
 	],
@@ -5296,6 +5303,135 @@
 						}
 					}
 				]
+			}
+		},
+		"/challenge/images/upload/{challengeId}": {
+			"post": {
+				"operationId": "HandleChallengeImageUpload",
+				"responses": {
+					"200": {
+						"description": "챌린지 이미지 업로드 성공 응답",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaSuccessResponse_string_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SRH-400",
+												"reason": "req.user 정보가 없습니다.",
+												"data": null
+											},
+											"success": null
+										}
+									},
+									"Example 2": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "CHL-400",
+												"reason": "이미지 업로드 중 문제가 발생했습니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "CHL-404",
+												"reason": "이미지가 서버에 존재하지 않습니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ITsoaErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"resultType": "FAIL",
+											"error": {
+												"errorCode": "SER-001",
+												"reason": "내부 서버 오류입니다.",
+												"data": null
+											},
+											"success": null
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "챌린지의 이미지들을 업로드합니다.",
+				"summary": "챌린지 이미지 업로드 API",
+				"tags": [
+					"Challenge"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "챌린지 ID",
+						"in": "path",
+						"name": "challengeId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "이미지ID의 배열(string[])",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"items": {
+									"type": "string"
+								},
+								"type": "array",
+								"description": "이미지ID의 배열(string[])"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/memo/image-format/folders/{folderId}": {

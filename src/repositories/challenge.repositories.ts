@@ -1,8 +1,11 @@
+import { challengeImageUplaodBody } from 'src/dtos/challenge.dtos.js';
 import {prisma} from '../db.config.js';
 import {
   ChallengeAcceptError, 
   ChallengeCompleteError, 
   ChallengeDeletionError, 
+  ChallengeImageMissingError, 
+  ChallengeImageUploadError, 
   ChallengeUpdateError
 } from '../errors.js';
 import {
@@ -38,8 +41,6 @@ export const challengeExist = async (userId: bigint): Promise<Boolean> => {
       }
     }
   });
-
-  console.log(isExistChallenge);
 
   if(isExistChallenge){
     return true;
@@ -216,8 +217,59 @@ export const getChallengeByUserId = async (
           challengeDate: true,
         },
       },
+      images: {
+        select: {
+          image: {
+            select: {
+              mediaId: true
+            }
+          }
+        }
+      }
     },
   });
 
+  //console.log(challenges[0].images);
+
   return challenges;
+};
+
+export const challengeImageUpload = async (
+  imageIdList: bigint[], 
+  challengeId: bigint, 
+  userId: bigint
+): Promise<{count: number}> => {
+  const duplicateChallenge = await prisma.challengeImage.findFirst({
+    where: {
+      challengeId: challengeId
+    }
+  });
+
+  if(duplicateChallenge){
+    throw new ChallengeImageUploadError({reason: `${challengeId}챌린지에 이미지가 이미 존재합니다.`});
+  }
+  
+  const foundImage = await prisma.image.findMany({
+    where: {
+      mediaId: {
+        in: imageIdList
+      },
+      userId: userId
+    },
+    select: {
+      id: true
+    }
+  });
+
+  if(foundImage.length !== imageIdList.length){
+    throw new ChallengeImageMissingError({reason: '서버에 존재하지 않는 이미지가 있습니다.'});
+  }
+
+  const inputData = challengeImageUplaodBody(foundImage, challengeId);
+
+  const upload = await prisma.challengeImage.createMany({
+    data: inputData
+  });
+
+  return upload;
 };
